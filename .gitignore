@@ -1,0 +1,30 @@
+# macOS / OS
+.DS_Store
+**/.DS_Store
+*.swp
+*~
+
+# Node / build
+node_modules/
+dist/
+build/
+.next/
+.cache/
+
+# Env / secrets
+.env
+.env.*
+*.key
+*.pem
+
+# IDE
+.vscode/
+.idea/
+
+# Drupal third-party / runtime noise (Patronus source is scrubbed to custom code + config;
+# these are ignored in case a fuller source is ever dropped in)
+**/vendor/
+**/web/core/
+**/web/modules/contrib/
+**/web/themes/contrib/
+**/web/libraries/

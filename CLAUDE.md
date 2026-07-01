@@ -1,0 +1,160 @@
+# Project Constitution — Patronus current-state reconstruction (bid-patron-deti)
+
+This workspace reconstructs the **current-state documentation of the "Patronus" platform** using
+ApplicationRenaissance (AR) orchestration tooling, as input to the `bid-patron-deti` rebuild.
+
+It is a documentation-first reconstruction effort. The goal is to:
+
+- extract the current system's business logic faithfully,
+- reconstruct the Patronus system deterministically,
+- produce rewrite-ready, layered specifications **without modifying the analyzed application**,
+- publish a drop-in `_ar/spec-final/BA|UX/**` hand-off for the rebuild.
+
+---
+
+## Project context — what Patronus is
+
+Patronus is a **donation / child-patronage platform** built on **Drupal (PHP)**, operating across
+**CZ / RO / MD** (Czech / Romania / Moldova). The current source is in
+`intake/current-solution/_source/patronus/` — 52 custom modules + custom themes + config, GDPR-scrubbed,
+no Drupal core/contrib/vendor.
+
+Core domain entities (see `intake/statuses/`): **Lead**, **Application (Žádost)**, **Story (Příběh)**
+— with ~60 statuses across CZ/RO/MD and multiple story types (incl. group and collection-account).
+Current-state behavior spans 7 process areas: **ŽÁDOST FRONT/BACK, RISK, DONATIONS, FINANCE,
+CONTENT, AFFIL**.
+
+Project language is **Czech**. AR canonical terminology is English-primary with Czech equivalents;
+the final publication (`spec-final`) is translated to Czech.
+
+---
+
+## Evidence map — where current-state truth lives
+
+AR reconstructs the **CURRENT** system. Evidence, by authority:
+
+| Source | Path | Role for reconstruction |
+|--------|------|-------------------------|
+| Patronus source + config | `intake/current-solution/_source/patronus/` | **Current-state truth** for behavior & contracts (custom modules + config) |
+| Process maps | `intake/process-maps/` | **Current-state** flow (7 areas × CZ/RO/MD); on conflict with code, record it |
+| Status model | `intake/statuses/` | Canonical current status vocabulary (Lead/Application/Story, aliases, translations) |
+| Test scenarios | `intake/test-scenarios/` | Acceptance vocabulary + Notification Matrix (status → role → text → channel) |
+| Current-solution analysis | `intake/current-solution-analysis/` | **Derived** scope/state/gap maps (helpful, not authoritative alone) |
+| Meetings | `intake/meetings/` | Client **intent/context** — not acceptance, not a contract |
+| IT assignment | `intake/it-zadani/` | **TARGET state** (var. A rewrite / var. B upgrade, N1–N13). Highest authority for what to *build* — **NOT current-state truth** |
+
+**Current vs. target rule (critical):** AR documents the system **as it is today**. `it-zadani`
+describes the future target and must **not** be conflated with reconstructed current behavior. When
+target and current-state disagree, that is expected — record both, do not "correct" the current
+state toward the target.
+
+---
+
+## Tooling location
+
+AR tooling is available under `tooling/` (symlinks to the framework copied at the repo root:
+`tooling/docs -> ../docs`, `tooling/orchestration -> ../orchestration`, `tooling/templates -> ../templates`).
+
+Core locations: `tooling/orchestration/{01-evidence-collection, 02-system-reconstruction,
+03-spec-driven-documentation, 04-spec-driven-closure, 90-optional-bonus, 99-legacy}/`,
+`tooling/docs/`, `tooling/templates/`.
+
+## AR job invocation
+
+When the user writes `Run AR:<AgentName>`: (1) load the matching agent spec under
+`tooling/orchestration/`, (2) load the matching `AgentName-task.md` if present, (3) strictly follow
+both, (4) resolve all paths relative to this repo root.
+
+## Pipeline (recommended order)
+
+1. **Evidence collection** — repo mapping (over `intake/`), config/model extraction, flow scouting/mining, PDF/doc evidence (process-maps, statuses, test-scenarios, meetings), changelog if any.
+2. **System reconstruction** — entity extraction, use-case composition, domain kernel, aggregate boundaries, architecture overview.
+3. **Spec-driven documentation** — UC atomization, EN canonicalization, ARCH domain assembly, FN/ES/MSG/BR synthesis, then CrossLayerAuditor, RefIntegrityValidator, RewriteDecisionCompiler, SpecClosureEvaluator, spec-final-generator.
+4. **Spec-driven closure (04)** — API/JOB/ACL/QUERY contracts when generation-grade output is wanted.
+5. **Optional (90)** — UI coverage and **UX reconstruction** (IA/WIRE/COMP/COPY) when screenshots/UI evidence exist.
+
+---
+
+## Write scope (STRICT)
+
+You may write ONLY to `_ar/**`.
+
+NEVER modify: the `intake/**` source and evidence, the AR framework (`tooling/`, `orchestration/`,
+`docs/`, `templates/`, `scripts/`), production source code, config, CI/CD, manifests, lock files,
+schema, or infrastructure. Exception: only if explicitly instructed.
+
+## Ignore during analysis
+
+`node_modules/`, `build/`, `dist/`, `.git/`, `vendor/`, `web/core/`, `web/modules/contrib/`,
+`web/themes/contrib/`, generated assets. (Patronus is already scrubbed to custom code + config; treat
+`intake/current-solution/_source/patronus/web/files/` as uploaded media, not domain logic.)
+
+---
+
+## Documentation layers (strict discipline)
+
+Canonical layers: **EN** (entities/invariants), **UC** (behavior/orchestration), **ARCH**
+(structure/navigation), **FN** (capabilities), **ES** (external systems), **MSG** (transactional
+messages), **BR** (business rules), **CS** (observed FE-evidence scenarios). Supporting: SRV, FLOW,
+Evidence.
+
+Cross-layer discipline (single-source): each fact has one owning layer; other layers reference it by
+`doc_id`, never restate it. See `tooling/docs/cross-layer-discipline.md`. Referential integrity is
+built and checked in the draft phase (`RefIntegrityValidator` → `_ar/spec-draft/<LAYER>/_REGISTRY.md`
++ `REFERENCE-INTEGRITY.md`), and `CrossLayerAuditor` de-duplicates restatement.
+
+Publication tier: drafts are flat in `_ar/spec-draft/<LAYER>/`; the final publishable layer is tiered
+into `_ar/spec-final/BA/<LAYER>/` + `_ar/spec-final/UX/<LAYER>/` with a `_REGISTRY.md` per layer, as a
+drop-in for the rebuild. See `tooling/docs/rules-spec-final.md`.
+
+Do not mix layers (no code detail in UC/ARCH; no workflow in BR; no message contract in ES; etc.).
+
+---
+
+## Evidence-first & anti-hallucination
+
+No business/architectural claim unless traceable to: `intake/**` source or evidence,
+`_ar/evidence/**`, `_ar/pdf/**`, or already-reconstructed AR artifacts. If uncertain, mark
+`Hypothesis — Not evidenced in current sources.` If planned-not-built, mark
+`Status: Planned / Implemented / Unknown`.
+
+If information is missing: do NOT guess, invent, or fill gaps silently — state the absence. If
+sources disagree: do NOT resolve silently — record in `_ar/evidence/**` and mark
+`Conflict — requires clarification.` (Trust default: code wins for current behavior/contracts;
+process-maps for current flow; `it-zadani` only for target intent, never for current behavior.)
+
+Classify claims with the AR evidence vocabulary: `Confirmed` / `Partial` / `Uncertain` / `Blocked`.
+
+---
+
+## Architecture discipline
+
+Reconstruct faithfully; do not redesign or "improve" the current system unless a dedicated analysis
+agent is running. Describe how Patronus works today; keep current-state evidence separate from
+future-state (`it-zadani`) recommendations.
+
+---
+
+## Glossary governance
+
+Terminology is governed by the AR glossary workflow. Canonical: `_ar/repo-map/glossary-master.csv`
+(machine-readable) → `_ar/repo-map/glossary.md` (published). Scope and approved sources:
+`_ar/tasks/glossary-scope.md`, `_ar/tasks/glossary-source-pack.md`; conflicts:
+`_ar/tasks/glossary-arbitration-decisions.md`. No canonical term without source backing; Czech is
+the source language, English canonical is primary, Czech equivalents maintained for publication;
+CZ/RO/MD variants are allowed synonyms, not separate canonical rows.
+
+## Runtime truth policy
+
+See `_ar/tasks/Runtime-truth-policy.md`. This pass is **static** (no running Patronus instance
+configured); reconstruction is from source, config, and intake docs. If a live instance becomes
+available, update that policy before treating runtime as evidence.
+
+---
+
+## Primary objective
+
+Reconstruct Patronus to a level where its current behavior is understandable without reading raw
+Drupal code constantly, its architecture is explicit, and the `bid-patron-deti` rebuild can start
+from a clear, layered, evidence-based, Czech-publishable specification — cleanly separated from the
+target assignment.
