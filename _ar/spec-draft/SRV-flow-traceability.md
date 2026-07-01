@@ -66,3 +66,43 @@
 - The **SRV0007↔SRV0008 split** (payment domain vs gateway adapter) is validated: gateway callbacks (FLW0003–0005) are thin controllers; all domain effect is in the shared TransactionEntity → supports extracting a `PaymentGateway` port + moving side-effects out of the entity into SRV0007.
 
 > Batch 1 covers 10 of the 20 shortlisted flows. Remaining shortlist (batch 2): FL029/FL030/FL031 (reconciliation), FL011/FL013 (auth), FL039/FL040 (scoring), FL026 (voucher), FL048 (messaging), FL044/FL045 (campaign).
+
+---
+
+## Batch 2 addendum (FLW0011–FLW0020)
+
+### FlowID → SRV dependencies (batch 2)
+| FlowID | Flow | Primary | Depends on |
+|---|---|---|---|
+| FLW0011 | Moneta AISP import | SRV0009 | SRV0005, SRV0013, SRV0016, SRV0018 (via TransactionEntity hooks) |
+| FLW0012 | Bank-mail IMAP import | SRV0009 | SRV0007, SRV0013, SRV0016, SRV0018 |
+| FLW0013 | ComGate transfer sync | SRV0009 | — (raw-SQL only) |
+| FLW0014 | API login | SRV0015 | — |
+| FLW0015 | API register | SRV0015 | SRV0001, SRV0013, SRV0014 |
+| FLW0016 | Scoring form (manual) | SRV0003 | SRV0004, SRV0002, SRV0013, SRV0014, SRV0001 |
+| FLW0017 | Low-risk auto-scoring | SRV0003 | SRV0002 |
+| FLW0018 | Voucher apply/validate | SRV0011 | SRV0007 |
+| FLW0019 | Transactional email dispatch | SRV0013 | — (called by nearly all contexts) |
+| FLW0020 | GDPR anonymization | SRV0015 | SRV0013, SRV0014 |
+
+### New cross-context writes (batch 2)
+- **Scoring (SRV0003) → Party/Contact (SRV0012):** `ScoringService::setBlacklistType` raw-SQL UPDATE of `contact.blacklist_type` **by email with NO LIMIT** → overwrites ALL contacts sharing the email. `Evidence:` FLW0016 (`scoring/src/ScoringService.php:29-35`).
+- **Reconciliation (SRV0009) → Payments/Campaign/Messaging:** Moneta/IMAP importers create `ext_status=PAID` transactions → fire the full TransactionEntity donation side-effect chain (email, Slack, ES, campaign recompute). `Evidence:` FLW0011, FLW0012.
+- **Reconciliation (SRV0009) writes `transaction` via raw SQL** bypassing entity layer (`bank_vs`, `is_sent_to_bank`). `Evidence:` FLW0013.
+- **Identity (SRV0015) → Marketing/Search:** `PatronUser::postSave` enqueues `mautic_queue` + `es_upload_queue` on every user save (incl. registration & GDPR anonymization). `Evidence:` FLW0015, FLW0020.
+- **Voucher (SRV0011) → Payments (SRV0007):** apply re-points the funding `transaction.campaign`. `Evidence:` FLW0018.
+
+### New boundary violations / defects (batch 2 — high value)
+1. **GDPR NOT compliant (Legal/Gov):** `GDPRMailForm::deleteUser` only clears `user.mail`+`user.name`; **application/contact PII (names, RČ, addresses, phone) left intact; no cascade**; `deleteContact` is an empty stub; Mautic queue **re-UPSERTS** the anonymized user (anti-erasure). `Evidence:` FLW0020.
+2. **API register is a dead stub:** `/api/2.3/account/register` returns 200 with no logic; real creation is the shared `AccountService::register` (not reachable from the endpoint). `Evidence:` FLW0015.
+3. **Login security:** `login_history` write hook fully commented out (no login records); `floodControl()` return ignored on v2.3/v3.1 (brute-force limits inactive); v3.2 hash branch calls an undefined method (likely fatal); magic-token TTL 90 days. `Evidence:` FLW0014.
+4. **Voucher endpoints anonymous + no unique key:** anonymous can POST apply/validate (money endpoint, brute-forceable); `voucher.name` has no unique key (duplicate codes resolve arbitrarily); all failures return HTTP 200. `Evidence:` FLW0018.
+5. **Reconciliation gap:** `monetaapi.last_run` set BEFORE the API work → a failed day is never re-fetched (silent permanent gap); `createBankovniReference()` missing `return` (always null); fragile bank-email HTML parse still creates a transaction on drift. `Evidence:` FLW0011, FLW0012.
+6. **Messaging:** `mailing_queue` is dead (`USE_QUEUE=FALSE`) → all sends synchronous; real client is Mautic (despite `smartmailing` name); `email.sent`/`email.error` never written (archive can't tell sent vs failed). `Evidence:` FLW0019.
+
+### Corrections to the flow-index (recorded, not silently fixed)
+- **FL031/FLW0013:** transferList reconciliation lives ONLY in the CLI `comgatesync` command — `comgate_cron` is the *recurring-charge* path (FL024/FLW0007), which does no reconciliation. And FL031 writes `transaction` (raw SQL), **not** `transaction_comtobank` (that is the manual `ComgateToBankForm`, FL032). `Conflict — flow-index secondary-trigger/entity assumptions corrected here.`
+- **FL039/FLW0016:** manual `ScoringForm` writes `application.scoring` (JSON) + `contact.blacklist_type` + application state — **not** `scoring_entity` (that is the REST/low-risk path).
+- **FL013/FLW0015:** the described `/api/user/register` endpoint is a stub; substantive behavior is in a shared service (overall confidence Partial).
+
+> Batch 2 complete → 20 of 20 shortlisted flows mined. Optional batch 3 candidates: FL044/FL045 (campaign lifecycle), FL052 (contact dedup), FL008 (create user from application), FL033 (CSV export PII), FL038 (OneDrive import), FL050 (FB lead webhook).

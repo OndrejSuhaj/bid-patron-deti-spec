@@ -76,3 +76,43 @@
 | status 0 (unapplied) → 1 (applied) + applied timestamp on PAID | `TransactionEntity::updateVoucherStatus` | Confirmed | FLW0003 |
 
 > Gaps for ENExtractor: exact application `complete`/`completed_partly` source labels (Partial, FLW0003); `contact.blacklist_type` transition table (Partial); campaign publish/uncompleted transitions (not deep-mined — batch 2 FL044/FL045).
+
+---
+
+## Batch 2 addendum (FLW0011–FLW0020)
+
+### application (scoring / reconciliation paths)
+| Transition | Evidence | Conf | Flow |
+|---|---|---|---|
+| `scoring` → `scoring_ok` (only when current==`scoring` AND submitted `approved==yes`) | `scoring/src/Form/ScoringForm.php:176-178`; `setState` | Confirmed | FLW0016 |
+| no state change for `approved ∈ {na,no,yes_but,empty}` (only `application.scoring` JSON + blacklist persisted) | `ScoringForm.php:176` gate | Confirmed | FLW0016 |
+| state==`to_check` → `scoring_low_risk_score`+`scoring_low_risk` recomputed (raw UPDATE); NULL when patron/fundraiser/profiles missing | scoring `ApplicationStatusUpdateSubscriber.php:72,96-118` | Confirmed | FLW0017 |
+| (manual) score ≥ 30 & state ∈ {to_check,application_processing,waiting,suspended} → coordinator may `setState('scoring_ok')` | `ScoringLowRiskForm.php:212-233` | Confirmed | FLW0017 |
+
+### transaction (reconciliation imports)
+| Transition | Evidence | Conf | Flow |
+|---|---|---|---|
+| (none) → created `ext_status=PAID`, campaign=3100 (Moneta AISP import) | `monetaapi/src/MonetaAPI.php:120,139-140` | Confirmed | FLW0011 |
+| (none) → created PAID donation (bank-to-bank IMAP branch) | `accounting/src/Form/BankForm.php:285-309` | Confirmed | FLW0012 |
+| existing → reconciled (`bank_date`/`bank_month`, `is_sent_to_bank=1`) for ComGate-VS match | `BankForm.php:137-147` | Confirmed | FLW0012 |
+| unreconciled → reconciled (`bank_vs` set, `is_sent_to_bank 0→1`) via CLI transferList | `ComgateSyncCommand.php:204-206` (raw SQL UPDATE) | Confirmed | FLW0013 |
+
+### user / session / login_history
+| Transition | Evidence | Conf | Flow |
+|---|---|---|---|
+| anonymous → authenticated (session; login/access ts) | `AccountLoginResource.php:169-171` `user_login_finalize()` | Confirmed | FLW0014 |
+| blocked → active + password reset (magic-link side effect) | `AccountService::getUserMagicLink` L275-279 | Confirmed | FLW0014, FLW0015 |
+| (none) → created (active, no password) + role supporter/patron/fundraiser + `contact` | `AccountService::register` L41-81 | Confirmed | FLW0015 |
+| **login_history: NO row written** (write hook commented out) | `login_history_user_login()` commented | Confirmed | FLW0014 |
+| active → **anonymized-in-place** (`mail=''`, `name`=random); account NOT deleted/cancelled; **related PII retained** | `gdpr/src/Form/GDPRMailForm.php:70-72` | Confirmed | FLW0020 |
+
+### voucher / contact / email (batch 2)
+| Transition | Evidence | Conf | Flow |
+|---|---|---|---|
+| voucher 0 (unpaid) → 1 (paid) after ComGate PAID | `TransactionEntity::updateVoucherStatus` L806-819 | Confirmed | FLW0018 |
+| voucher paid/unapplied (`is_applied=0`) → applied (`is_applied=1`, `applied=time()`, campaign set) | `VoucherApplyResource.php:116-127` | Confirmed | FLW0018 |
+| `contact.blacklist_type` → wl_n\|bl\|wl_zd\|wl_z (raw UPDATE by email, no LIMIT) | `ScoringService::setBlacklistType` L29 | Confirmed | FLW0016 |
+| email (none) → created/published (`sent`/`error` never written afterwards) | `APIMailingService.php:217-230`; `EmailEntity.php:339-345` | Confirmed | FLW0019 |
+| Mautic contact absent → upserted by email (incl. anonymized GDPR user — anti-erasure) | `APIMailingService.php:246-248`; `MauticQueue.php:61` | Confirmed | FLW0019, FLW0020 |
+
+> Batch-2 gaps/notes: FL013 register endpoint is a stub (real path is shared `AccountService::register`); scoring reads `gift_payment_type`/`patron_occupation_list` from `fundraiser_profile` (likely-unintended owner coupling); GDPR erasure is incomplete (application/contact PII not cascaded) — all flagged for ENExtractor / target-state.

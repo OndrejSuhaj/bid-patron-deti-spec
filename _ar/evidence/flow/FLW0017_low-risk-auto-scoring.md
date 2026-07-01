@@ -1,0 +1,46 @@
+# FLW0017 — Low-risk auto-scoring on status change
+> AR:FlowMiner dossier · 2026-07-01 · source FlowID FL040 · see [../flow-index.md](../flow-index.md)
+
+## A. Header
+- FlowID: FL040 (dossier FLW0017)
+- Flow Name: Low-risk auto-scoring on status change
+- Primary SRV: SRV0003
+- Trigger Evidence: `scoring/src/EventSubscriber/ApplicationStatusUpdateSubscriber::updateApplicationStatus` (`web/modules/custom/scoring/src/EventSubscriber/ApplicationStatusUpdateSubscriber.php:67`), subscribed to `ApplicationStatusUpdateEvent::STATUS_UPDATE_EVENT` (`getSubscribedEvents` :54), dispatched from `application/src/Entity/ApplicationEntity::dispatchStatusUpdateEvent` (:229-230) inside `postSave` (:202).
+- Confidence Level: Confirmed
+
+## B. Behavior Digest
+- Trigger: On every `ApplicationEntity::postSave` (`ApplicationEntity.php:197`), `dispatchStatusUpdateEvent()` fires `application.status.update.event`. This scoring subscriber is one of ~3 subscribers on that event (cross-ref FLW0001/FL005). It acts only when both guards pass: `isApplicationModified()` (new entity, or `state != original->state`; :81-93) AND `application->getState() === 'to_check'` (:72). This is the auto-recalc complement to the manual coordinator form `ScoringLowRiskForm` (FL039-family, `scoring/src/Form/ScoringLowRiskForm.php`).
+- Preconditions: Application persisted; new moderation state is `to_check`; state actually changed (or entity is new). Score is only *computed* if all four are non-null: `getPatron()`, `getFundraiser()`, and both application profiles `getApplicationProfile('fundraiser')`/`('patron')` (:104). If any is missing, `score = NULL` and note = `"chybi data pro vypocet low risk score"` (:105-106) — the row is still UPDATEd.
+- Main Steps (`setLowRiskScoringLog` :96-118 → `getScore` :122-150):
+  1. Resolve actors: `fundraiser = application->getFundraiser()` (er→`user`), `patron = application->getPatron()` (er→`user`), `fundraiser_profile`/`patron_profile = application->getApplicationProfile(type)` (er→`aprofile`) — `ApplicationEntity.php:379-390, 535-557`.
+  2. `comperePatronAndFundraiser` (:154-163): if `patron->id() === fundraiser->id()` → contributes `-1` (self-patronage), which forces the running total to sentinel `-1`; else `0`. Uses actor **emails** in the human-readable note.
+  3. `getPatronScore` (:248-269): reads `patron->getEmail()`, calls `scoring` service `getBlacklistType(email)` → maps `wl_zd=10, wl_z=10, wl_n=0, bl=-1, ''=0` (`in_array` lookup; unknown→0).
+  4. Conditional `getPatronOccupationScore` (:215-241) — only if `patron_score <= 0`: reads `fundraiser_profile->get('patron_occupation_list')->value` (list_integer 0–6); OSPOD (index `0`) → `+10`, all others → `0`. (Note: read from **fundraiser_profile**, not patron_profile.)
+  5. `getFundraiserScore` (:276-299): `fundraiser->getEmail()` → `getBlacklistType` → `wl_zd=10, wl_z=10, wl_n=0, bl=-1` (unknown→0 via `?? 0`).
+  6. `getGiftScore` (:165-178): `application->checkGiftRisk()` (`ApplicationEntity.php:1247-1263`) → band key from category taxonomy-term JSON `description` vs `fundraiser_profile.gift_price`; `low=10, high=-1, medium=0`; null band defaults to `medium`.
+  7. `getGiftPaymentTypeScore` (:185-208): `fundraiser_profile->get('gift_payment_type')->value` (list_integer 0–2); index `1` (Výplata na BÚ žadatele) → `-1`, else `0`.
+  8. Sum: each partial score >=0 is added; any partial that returns `-1` (or already-`-1` running total) collapses the total to `-1` (:126-144). Total appended to note under `total_score`.
+  9. Persist: **raw SQL** `UPDATE {application} SET scoring_low_risk_score=:score, scoring_low_risk=:json WHERE id=:id` (:112-117); `scoring_low_risk` = `json_encode(score_note_array)` (per-component breakdown).
+- Postconditions: `application.scoring_low_risk_score` (integer, or NULL) and `application.scoring_low_risk` (JSON string) updated on the just-saved row; no revision, no `changed` bump, no entity validation.
+- Side Effects: Direct DB mutation of the `application` row **outside** the entity API (no revision created, no `application_field_revision`, no validation, no `preSave`/`postSave` re-entry). `score_note` (pre-formatted text) is built but discarded in this path — only used by the sibling `ScoringLowRiskForm`. No email/log/queue writes in this subscriber.
+- Integration Calls: None directly. `getBlacklistType` reads local `contact` table (not an external service). (`ScoringService::isIcoValid` calls ARES externally but is NOT on this path.)
+- Failure Modes:
+  - Missing actor/profile → `score = NULL` written; downstream coordinator gating (`hasPermissionToSubmit` requires `>=30`) then treats it as non-auto-approvable. Silent data-quality degradation (note records the reason).
+  - `getGiftScore` indexes `$scores[$gift_risk]` before the `?? 0` fallback (:174-175) — if `checkGiftRisk()` returned an unexpected non-empty band key, note-building emits a PHP undefined-index notice; `?: 'medium'` guards only falsy values. `Hypothesis` (depends on category JSON well-formedness).
+  - `getGiftPaymentTypeScore`/`getPatronOccupationScore` read profile fields with `->value`; if profile relation resolves but field is unset, `null` index falls through `?? 0`.
+  - Raw UPDATE bypasses optimistic-concurrency/revisions: a concurrent entity save could be clobbered (last-writer-wins on these two columns). No idempotence key — re-firing on repeated `to_check` transitions recomputes and overwrites (idempotent in value, but unconditional write each time).
+  - If the event fires mid-`postSave` and the score computation throws, it propagates up through `dispatchStatusUpdateEvent` and can abort the surrounding save transaction (no try/catch in subscriber). `Hypothesis`.
+
+## C. Data Footprint
+- Entities Written: `application` (columns `scoring_low_risk_score`, `scoring_low_risk`) via raw SQL UPDATE (`ApplicationStatusUpdateSubscriber.php:112`). No other writes.
+- Entities Read: `application` (state via `getState`; relations `patron`, `fundraiser`, `fundraiser_profile`, `patron_profile`, `category`); `user` (patron + fundraiser: `id`, `getEmail`); `aprofile` (fundraiser_profile fields `gift_payment_type`, `patron_occupation_list`, `gift_price` via `checkGiftRisk`); `taxonomy_term` category (`description` JSON risk bands, via `checkGiftRisk`); `contact` (`blacklist_type` by email, via `scoring` service `getBlacklistType` — `SELECT blacklist_type FROM {contact} WHERE email=:email LIMIT 1`, `ScoringService.php:21-27`).
+- Constraints involved: `scoring_low_risk_score` integer / `scoring_low_risk` string_long (db-models.md:102-103); no unique/index enforcement on these; raw UPDATE bypasses the `min_price`/`id_number` and other entity validation constraints. `contact.blacklist_type` is `list_string` (`wl_zd/wl_z/wl_n/bl`, db-models.md:385) — unknown values silently score 0.
+- Multi-tenant scope assumptions: No explicit CZ/RO/MD scoping in this subscriber; it acts on whatever `application` fired the event. Score component semantics (OSPOD occupation index, gift-payment-type indices, ARES-oriented context) are CZ-shaped; RO/MD applicability is `Uncertain` — not evidenced here.
+
+## D. Evidence Block
+- Controller paths: none (event-driven, no HTTP controller). Sibling manual entry point: `scoring/src/Form/ScoringLowRiskForm.php` (route via `scoring.routing.yml`) — same scoring algebra, plus coordinator decision + `application->setState('scoring_ok')` when `getScore() >= 30` (`ScoringLowRiskForm.php:212-224, hasPermissionToSubmit :228-233`).
+- Service methods: `Drupal\scoring\ScoringService::getBlacklistType` (`scoring/src/ScoringService.php:21`); entity helpers `ApplicationEntity::getPatron/getFundraiser` (:379/388), `getApplicationProfile` (:535), `checkGiftRisk` (:1247), `getState` (:283). Registered service id `scoring` (`scoring.services.yml:6-8`, `arguments: ['@database']`).
+- Repository usage: raw `\Drupal::database()->query(UPDATE {application} ...)` in `setLowRiskScoringLog` (`ApplicationStatusUpdateSubscriber.php:112`); raw `SELECT blacklist_type FROM {contact}` in `ScoringService::getBlacklistType`. No entity storage save in this path.
+- Event listeners: `scoring.application.status.update.subscriber` tagged `event_subscriber` (`scoring.services.yml:10-14`); subscribes `ApplicationStatusUpdateEvent::STATUS_UPDATE_EVENT` = `'application.status.update.event'` (`application/src/Event/ApplicationStatusUpdateEvent.php:13`). Co-subscribers on same event: notification + application_reaction (cross-ref FLW0001/FL005).
+- Async messages: none emitted by this subscriber. (The surrounding `postSave` separately enqueues an ES-upload queue item via `patron_base.default->addToQueue`, `ApplicationEntity.php:199` — not part of scoring.)
+- Config evidence: `scoring.services.yml` (subscriber + `scoring` service). Score weight tables are hard-coded in PHP (not config): patron/fundraiser blacklist maps (:249-255, :277-282), gift-risk band map (:166-170), gift-payment-type map (:194-197), occupation OSPOD=+10 (:229-231). Gift-risk *bands* themselves are data-driven from category `taxonomy_term.description` JSON (via `checkGiftRisk`). Auto-approve threshold `>=30` lives in `ScoringLowRiskForm::hasPermissionToSubmit` (not this subscriber).
