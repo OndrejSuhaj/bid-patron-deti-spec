@@ -116,3 +116,44 @@
 | Mautic contact absent → upserted by email (incl. anonymized GDPR user — anti-erasure) | `APIMailingService.php:246-248`; `MauticQueue.php:61` | Confirmed | FLW0019, FLW0020 |
 
 > Batch-2 gaps/notes: FL013 register endpoint is a stub (real path is shared `AccountService::register`); scoring reads `gift_payment_type`/`patron_occupation_list` from `fundraiser_profile` (likely-unintended owner coupling); GDPR erasure is incomplete (application/contact PII not cascaded) — all flagged for ENExtractor / target-state.
+
+---
+
+## Batch 3 addendum (FLW0021–FLW0030)
+
+### campaign (publish + cron lifecycle)
+| Transition | Evidence | Conf | Flow |
+|---|---|---|---|
+| in-progress → active (`campaign_status`; `published`+`published_user_id` stamped) | `CampaignEntity.php:1459-1473 activate()`; `PublishController.php:30` | Confirmed | FLW0021 |
+| active → completed (raised ≥ gift_price at save; `campaign_order=1000`; success emails in prod) — in `preSave`, payment-driven | `CampaignEntity.php:922-935`, `isCampaignReadyToComplete:1114` | Confirmed | FLW0021, FLW0022 |
+| active → `campaign_uncompleted` (deadline passed AND raised < gift_price) | `CampaignCron.php:34-59` + `setState('campaign_uncompleted'):43` | Confirmed | FLW0022 |
+| campaign media unblurred → blurred (feature_blur_pictures, ≤10/run) | `CampaignCron.php:270-307 blurPictures` | Confirmed | FLW0022 |
+
+### application (via campaign / merges / provisioning)
+| Transition | Evidence | Conf | Flow |
+|---|---|---|---|
+| (prior) → active (on campaign set-active; `application_states` row + revision) | `PublishController.php:34-35`; `ApplicationEntity.php:292-310` | Confirmed | FLW0021 |
+| → completed (cascaded when campaign auto-completes: `setApplicationComplete`→`complete`) | `CampaignEntity.php:382-388`; `ApplicationEntity.php:1235-1240` | Partial | FLW0021 |
+| duplicate lead: `<state>` → `duplicate` (+ profiles/refs nulled) | `PairingForm::updateApplicationDuplicate setState('duplicate'):134` | Confirmed | FLW0025 |
+| main lead: state UNCHANGED, `patron_profile`(+patron) reassigned (lossy merge) | `PairingForm.php:108-115` | Confirmed | FLW0025 |
+| contact/user refs reassigned to survivor on contact dedup (then re-saved → postSave cascade) | `ContactRemoveDuplicatesController.php:290-368` | Confirmed | FLW0023 |
+| attachments_audit append (no intended status change; still fires status event) | `OnedriveCommand.php:167-171`; `ApplicationEntity.php:202,228-230` | Confirmed | FLW0028 |
+
+### contact / user / organisation (destructive + provisioning)
+| Transition | Evidence | Conf | Flow |
+|---|---|---|---|
+| contact (duplicate) active → **hard-deleted** (revisions dropped) | `ContactRemoveDuplicatesController.php:287 delete()` | Confirmed | FLW0023 |
+| user (owner of duplicate contact) active → **hard-deleted** (bypasses cancel/anonymise) | `ContactRemoveDuplicatesController.php:365-367 User->delete()` | Confirmed | FLW0023 |
+| user (nonexistent/plain) → `organisation_worker` (role + contact link; blocked→activation email) | `OrganisationWorkerForm.php:127,160-162` | Confirmed | FLW0024 |
+| organisation (duplicate) active → deleted (merge into main; `application.patron_employer_id` reparented) | `OrganisationRemoveDuplicatesForm.php:106-112` | Confirmed | FLW0024 |
+| user (new, from application) → created **blocked/password-less**, role patron/fundraiser + contact | `CreateUserController.php:122-147,176-196`; `AccountService.php:34-90` | Confirmed | FLW0026 |
+| Elastic Cloud `organisations` doc upserted daily | `OrganisationCron.php:18,24-38` | Confirmed | FLW0024 |
+
+### file / dormant
+| Transition | Evidence | Conf | Flow |
+|---|---|---|---|
+| file (none) → created (managed, `private://attachments_audit`) from OneDrive PDF | `OnedriveCommand.php:164` | Confirmed | FLW0028 |
+| `user.model` empty → serialized php-ml classifier — **DORMANT, never executes** | `PatronUser.php:574-593` | Partial | FLW0030 |
+| `user.campaign_recommendation` unset → ranked list — **field storage commented out; impossible today** | `account.module:205-213` | Hypothesis | FLW0030 |
+
+> Batch-3 notes: campaign auto-complete is payment-driven (`preSave`), not the cron; CSV export (FLW0027) is read-only (no transitions); FB lead webhook (FLW0029) writes nothing (planned-not-built); recommendation (FLW0030) confirmed dormant on 5 grounds. New integrations for integrations.md: Nager.Date (RO holiday, fail-open), Elastic Cloud (org index).

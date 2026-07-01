@@ -106,3 +106,45 @@
 - **FL013/FLW0015:** the described `/api/user/register` endpoint is a stub; substantive behavior is in a shared service (overall confidence Partial).
 
 > Batch 2 complete → 20 of 20 shortlisted flows mined. Optional batch 3 candidates: FL044/FL045 (campaign lifecycle), FL052 (contact dedup), FL008 (create user from application), FL033 (CSV export PII), FL038 (OneDrive import), FL050 (FB lead webhook).
+
+---
+
+## Batch 3 addendum (FLW0021–FLW0030)
+
+### FlowID → SRV dependencies (batch 3)
+| FlowID | Flow | Primary | Depends on |
+|---|---|---|---|
+| FLW0021 | Campaign publish/set-active | SRV0005 | SRV0002, SRV0016, SRV0013, SRV0018 |
+| FLW0022 | Campaign lifecycle cron | SRV0005 | SRV0002, SRV0013, SRV0016, SRV0018 |
+| FLW0023 | Contact dedup/merge | SRV0012 | SRV0001, SRV0015, SRV0016 |
+| FLW0024 | Organisation dedup + workers | SRV0012 | SRV0015, SRV0013, SRV0016 |
+| FLW0025 | Lead pairing/merge | SRV0001 | SRV0016, SRV0005, SRV0018, SRV0012 |
+| FLW0026 | Create user from application | SRV0015 | SRV0001, SRV0016, SRV0014, SRV0002, SRV0003 |
+| FLW0027 | CSV export | SRV0010 | — (read-only) |
+| FLW0028 | OneDrive invoice import | SRV0019 | SRV0002, SRV0013, SRV0016, SRV0018 |
+| FLW0029 | Facebook Lead webhook | SRV0014 | — (planned-not-built) |
+| FLW0030 | Transaction PAID → recommendation | SRV0006 | SRV0007, SRV0015 — **DORMANT** |
+
+### New defects / boundary violations (batch 3 — high value)
+1. 🔴 **SQL injection** — `OrganisationRemoveDuplicatesForm.php:106`: `main_organisation` + duplicate ids interpolated from request into `UPDATE application ...` with no binding. `Evidence:` FLW0024.
+2. 🔴 **Facebook Lead webhook is planned-not-built** — `FacebookLeadWebhookResource::post()` is a broken no-op (undefined `$request_data`), always returns `{status:failed}` at HTTP 200 → **silent total loss of inbound leads**; anonymous POST allowed; hardcoded verify token. Only the GET subscription handshake works. `Status: Planned / Not Implemented`. `Evidence:` FLW0029.
+3. 🔴 **CSV export writes raw PII to plaintext `/tmp`** via MySQL `SELECT ... INTO OUTFILE` (RČ/birth numbers, names, addresses, contract nrs); temp files never cleaned; blacklist/scoring exports gated only by `access reports`; no tenant scoping. `Evidence:` FLW0027.
+4. 🔴 **Destructive merges without transaction/dry-run** — contact dedup hard-DELETEs contact **and user** accounts (GDPR delete as merge side effect); lead merge is lossy (only `patron_profile` carried, rest nulled/orphaned); org merge non-transactional. All gated by ordinary edit permissions. `Evidence:` FLW0023, FLW0025, FLW0024.
+5. **Open-redirect** — `PublishController` redirects to unvalidated `HTTP_REFERER`; `drupal_flush_all_caches()` on every campaign activation. `Evidence:` FLW0021.
+6. **State-changing GET without CSRF** — create-user-from-application mutates via GET, permission-only guard; no transaction → orphan contact on failure; leaves users blocked/password-less. `Evidence:` FLW0026.
+7. **OneDrive**: hardcoded cleartext tenant/client/secret + ROPC user/pass; no dedupe (duplicate attachments); fires app status event fan-out on attachment-only change. `Evidence:` FLW0028.
+
+### New integration surfaces discovered (fold into integrations.md later)
+- **Nager.Date** holiday API `date.nager.at/api/v3/IsPublicHoliday/{date}/RO` — RO deadline validation constraint, **fail-open**. `Evidence:` FLW0021 (`CampaignDeadlineWorkingDayConstraintValidator`).
+- **Elastic Cloud** hardcoded endpoint `my-deployment.es.eu-central-1.aws.cloud.es.io:9243` index `organisations` (creds `ELASTIC_USERNAME/ELASTIC_PASS`) — distinct from patron_search App Search AND the elasticsearch audit module. `Evidence:` FLW0024 (`OrganisationCron`).
+
+### Dormant / dead paths confirmed
+- **FL028/FLW0030 campaign recommendation is DORMANT on 5 independent grounds:** `TransactionUpdateEvent` dispatch commented; `campaign_recommendation` module not in `core.extension.yml`; classifier service commented; `php-ml` absent from composer/source; `buildSetPredict`/`user.campaign_recommendation` field commented. If revived: `unserialize()` object-injection risk + no tenant scoping.
+- **CampaignUpdateEvent** (FLW0021) has no in-repo subscriber (likely tied to the absent firebase module) — `Uncertain`.
+
+### Corrections to earlier assumptions (recorded)
+- **FL045/FLW0022:** `RomanianWorkingDayChecker` is a field-validation constraint (Nager.Date), NOT used by `campaign_cron`; auto-complete lives in `CampaignEntity::preSave` (payment-driven), not the cron.
+- **FL044/FLW0021:** slug archival is a direct DB INSERT in preSave (not `SlugHistory`); image processing is not on the set-active path.
+- **FL008/FLW0026:** does NOT send activation/magic-link (contra hint); users stay blocked.
+
+> **FlowMiner complete: 30 flow dossiers (FLW0001–FLW0030).** Batches 1–3 cover the payment/finance core, application/status spine, identity, scoring, documents, campaign lifecycle, data-hygiene merges, exports, and integration adapters (incl. dormant paths). Sufficient behavioral evidence for **02 System reconstruction (ENExtractor → UCComposer)**.
