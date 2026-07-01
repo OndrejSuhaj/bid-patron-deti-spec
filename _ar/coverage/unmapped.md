@@ -49,6 +49,20 @@ RepoCartographer indexed these as files/structure but did **not** read their con
 
 ---
 
+## DB / data model — Indexed only / Unmapped (DBIntrospector)
+
+| Area | Status | Note |
+|---|---|---|
+| Production DB DSN / credentials / topology | **Unmapped** | `Blocked — scrubbed`; no `settings.php`/`.env`/`sites/*` in intake |
+| Physical column DDL for ~35 entity tables | **Unmapped** | No `hook_schema()`; types/NOT NULL/indexes are Drupal-generated, not source-verified (no running instance) |
+| `field.field.*` per-instance semantics (37 instances) | **Indexed only** | Counted + located by bundle; individual instance config not fully expanded |
+| Custom field-type storage internals (`rc`, `eligible_email`, `country_phone`, `worker_entity_reference`, `campaign_entity_reference`) | **Indexed only** | `worker_entity_reference.schema()` read; others not expanded; organisation verdict couldn't re-confirm |
+| Annotation-vs-config translation conflicts; dangling entity_keys | **Indexed only** | Recorded per entity as `Conflict — requires clarification` in [db-models.md](_ar/evidence/db-models.md) / [db-inventory.md §6](_ar/evidence/db-inventory.md) |
+| Drupal core table schemas (node/user/taxonomy/media/file) | **Unmapped** | Out of scope (core excluded); custom entities reference them as soft links |
+| Runtime row-level data | **Unmapped** | Static pass, no running instance |
+
+---
+
 ## Explicitly excluded (not "unmapped" — ignored by project rules)
 `node_modules/`, `vendor/`, `web/core/`, `web/modules/contrib/`, `web/themes/contrib/`, generated/build assets, and [web/files/](intake/current-solution/_source/patronus/web/files/) (uploaded media, not domain logic).
 

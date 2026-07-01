@@ -39,6 +39,19 @@
 
 ---
 
+## DB / data model (DBIntrospector)
+
+| Area | What was established | Output | Evidence |
+|---|---|---|---|
+| DB technology & API | MariaDB (MySQL-compatible) + Drupal 10 Entity/Field API; MySQL driver enabled; no ORM | [db-inventory.md §1](_ar/evidence/db-inventory.md) | [docker-compose.yml](intake/current-solution/_source/patronus/docker-compose.yml), [config/core.extension.yml](intake/current-solution/_source/patronus/config/core.extension.yml) |
+| 37 custom entity types | Fields, relations, constraints, revisionable/translatable extracted per entity (36 content + 1 config) | [db-models.md](_ar/evidence/db-models.md), [db-inventory.md §2](_ar/evidence/db-inventory.md) | [web/modules/custom/](intake/current-solution/_source/patronus/web/modules/custom/) `*/src/Entity/*.php` |
+| 8 core entities adversarially verified | application, campaign, contact, contract, organisation(Partial), transaction, transaction_recurring, voucher | [db-models.md](_ar/evidence/db-models.md) "Verification:" lines | verify verdicts |
+| Custom DB tables (non-entity) | 2 `hook_schema()` (login_history, maib_example) + raw-SQL/update-hook tables (application_states, email_domain, tax_payer) | [db-inventory.md §4](_ar/evidence/db-inventory.md) | `*/*.install` |
+| Status enum & config model | `application_workflow` (~66 states/~40 transitions), enums, 5 node types, 10 vocabularies, 15 roles | [db-inventory.md §5](_ar/evidence/db-inventory.md) | [config/workflows.workflow.application_workflow.yml](intake/current-solution/_source/patronus/config/workflows.workflow.application_workflow.yml) |
+| Data-model index (core entities, aggregates, outputs) | Cross-mapped to Lead/Application/Story domain (Hypothesis) | [data-model-signals.md](_ar/repo-map/data-model-signals.md) | derived from db-models.md |
+
+---
+
 ## Notes
 - Coverage reflects **repository navigation** only. Business logic, runtime behavior, and evidence-document *content* are intentionally out of scope for RepoCartographer — see [unmapped.md](_ar/coverage/unmapped.md).
 - Ignored per project rules (not counted as unmapped): `node_modules/`, `vendor/`, `web/core/`, `web/modules/contrib/`, `web/themes/contrib/`, generated assets, `web/files/` uploaded media.
