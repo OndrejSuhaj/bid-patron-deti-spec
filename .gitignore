@@ -28,3 +28,8 @@ build/
 **/web/modules/contrib/
 **/web/themes/contrib/
 **/web/libraries/
+
+# Analyzed client source — kept on disk as local evidence, NOT tracked/pushed.
+# Contains live client code (and real secrets caught by GitHub push protection);
+# AR agents read it from disk, it must never reach the remote. Removed from history 2026-07-01.
+intake/current-solution/_source/patronus/
