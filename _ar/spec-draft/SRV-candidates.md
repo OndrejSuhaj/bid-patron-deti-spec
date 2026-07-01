@@ -149,3 +149,19 @@ Cross-context dependencies to enforce as explicit ports (currently implicit coup
 ## Notes
 - This is a **draft** (`_ar/spec-draft/`), architecture-first. SRVs are boundaries, not a function inventory. Per-SRV detail (Trigger/Input/Output, structural issues, target shape, boundaries) is in each `SRVxxxx_<Name>.md`.
 - All LOC and the event dispatcher were re-verified against the **restored real source** on 2026-07-01 (an earlier scouting pass had read a depleted working tree and over-relied on derived `current-solution-analysis/` docs — those figures were corrected here, e.g. ContactEntity 985 not ~3500).
+
+---
+
+## Architecture-First Restructuring Summary
+
+> Appended by **AR:SRVRestructurer** · 2026-07-01 (append-only; discovery notes above unchanged).
+
+The 19 discovery SRVs were normalized into the canonical **4-layer taxonomy** (Domain · Orchestrator · Adapter · Processor) and consolidated into a rewrite-ready target map. Full detail:
+[SRV-architecture-map.md](SRV-architecture-map.md) · [SRV-restructuring-actions.md](SRV-restructuring-actions.md) · [SRV-target-list.md](SRV-target-list.md).
+
+- **Target SRVs:** 36 (Domain 10 · Orchestrator 3 · Adapter 16 · Processor 7). The increase over 19 is driven by **atomizing multi-vendor adapters to one boundary each** (SRV0008→3 gateways; SRV0009→IMAP/Moneta/ComGate-transfer; SRV0004→MVČR/ARES; SRV0014→Mautic/FB-CAPI/GTM; SRV0013→email/WhoisXML).
+- **Key splits:** payment domain vs gateway adapters (SRV0007/SRV0008); reconciliation domain vs inbound adapters (SRV0009); platform kernel → workflow-engine + scheduled-publish-processor + reference-data (SRV0017); reporting read-model vs CSV-export-processor (SRV0010).
+- **Kept clean (do-not-touch):** SRV0019 (OneDrive), SRV0002 (orchestrator), SRV0012/SRV0001/SRV0005/SRV0011 (domain), SRV0015 (identity).
+- **Transitional (legacy-only):** SRV0006 Campaign Recommendation (dead ML); ES-audit half of SRV0018; patron_devel debug endpoints.
+- **Unclear from SRV drafts (carried to FlowInspector/FlowMiner):** `patron.action` real-vs-pseudo service; per-cron production gating; SmartMailing vs Mautic split in messaging.
+
