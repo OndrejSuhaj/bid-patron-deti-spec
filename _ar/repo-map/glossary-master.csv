@@ -1,0 +1,120 @@
+concept_id,preferred_cz,allowed_synonyms_cz,preferred_en,allowed_synonyms_en,source,locator,status
+C001,žádost,,application,request; case,DUL; STAT,"DUL §1 Application (Žádost); STAT rows entity=Application",Confirmed
+C002,sloučení leadů,párování leadů,lead pairing / merge,lead merge,DUL; FLIDX,"DUL §1 Lead (Sloučení leadu); FLIDX FL007 (/admin/application/form/pairing)",Confirmed
+C003,příběh,kampaň (doménově); RO/MD: poveste,story,campaign (domain sense only); collection story,DUL; STAT,"DUL §1 Campaign / Story (Příběh); STAT entity=Story",Confirmed
+C004,typ příběhu,základní; promo; dlouhodobý; krátkodobý,story type,basic / promo / long-term / short-term,DUL; DK,"DUL §1 Story type; DK §1 Story type",Confirmed
+C005,profil žádosti,superprofil; profil (fundraiser/patron),application profile,questionnaire; aprofile,DUL; SCMAP,"DUL §1 ApplicationProfile; SCMAP aprofile (125+ sloupců)",Confirmed
+C006,organizace,zaměstnavatel; profi organizace,organisation,employer; professional partner org,DUL; SCMAP,"DUL §1 Organisation; SCMAP organisation",Confirmed
+C007,dodavatel,,supplier,vendor,DUL; SCMAP,"DUL §1 Supplier; SCMAP supplier (registr dodavatelů)",Confirmed
+C008,zpětná vazba,poděkování dárcům,feedback,donor thank-you,DUL; STAT,"DUL §1 Feedback (post-campaign); STAT feedback_sent",Confirmed
+C009,poznámka,poznámka ke kontaktu,user note,note,DUL; SCMAP,"DUL §1 UserNote; SCMAP user_note",Confirmed
+C010,aktivita,log žádosti,application log / activity,activity note; audit row,DUL; SCMAP,"DUL §1 ApplicationLog (Activity); SCMAP application_log",Confirmed
+C011,patron,,patron,guarantor (guarantee context),DUL; EN08,"DUL §1 Patron (role); EN08 Core Fields roles (patron)",Confirmed
+C012,obdarovaný / dítě,dítě; příjemce,child,beneficiary; recipient,DUL; EN06,"DUL §1 Child; EN06 Core Fields field_name = child",Confirmed
+C013,uživatel,strana; aktér,user (party),party; actor,DUL; EN08,"DUL §1 User (Party); EN08 Description",Confirmed
+C014,kontakt,,contact,party record,DUL; EN06,"DUL §1 Contact; EN06 Description",Confirmed
+C015,dar,příspěvek,donation,payment; transaction,DUL; SCMAP,"DUL §1 Transaction (Donation / Payment); SCMAP transaction",Confirmed
+C016,transakce,platba,transaction,payment,DUL; SCMAP,"DUL §1 Transaction; SCMAP transaction",Confirmed
+C017,trvalý dar,opakovaný dar; pravidelný dar,recurring donation,subscription; standing order,DUL; TSCEN,"DUL §1 RecurringTransaction; TSCEN SC-10E (standing order)",Confirmed
+C018,platební brána,brána,payment gateway,gateway,DUL; SCMAP,"DUL §1 Payment gateway; SCMAP Platební brány",Confirmed
+C019,ComGate,,ComGate,Comgate (CZ gateway),DUL; SCMAP; FLIDX,"DUL §1 (ComGate CZ); SCMAP comgate (CZ); FLIDX FL021",Confirmed
+C020,Netopia / MobilPay,,Netopia / MobilPay,Netopia (RO gateway),DUL; SCMAP; FLIDX,"DUL §1 (Netopia RO); SCMAP netopia (RO); FLIDX FL023",Confirmed
+C021,MAIB,,MAIB,MAIB (MD gateway),DUL; SCMAP; FLIDX,"DUL §1 (MAIB MD); SCMAP maib (MD); FLIDX FL022",Confirmed
+C022,platební stav,ext-status,external payment status,payment status,DUL; DK,"DUL §1 Transaction (ext-status); DK §3.3 states",Confirmed
+C023,dárkový poukaz,dobrošek,voucher,gift voucher; gift card,DUL; EN13,"DUL §1 Voucher (Dobrošek); EN13 Description + Core Fields (price = Hodnota)",Confirmed
+C024,uplatnění poukazu,uplatnit dobrošek,voucher redemption,redeem / apply voucher,EN13; FLIDX,"EN13 Lifecycle (is_applied 0->1); FLIDX FL026 (/api/voucher/apply)",Confirmed
+C025,smlouva,darovací smlouva,contract,donation contract,DUL; SCMAP,"DUL §1 Contract; SCMAP contract (+ contract_template)",Confirmed
+C026,šablona smlouvy,,contract template,,DUL; SCMAP,"DUL §1 ContractTemplate; SCMAP contract_template",Confirmed
+C027,potvrzení o daru,daňové potvrzení,donation confirmation (CZ tax certificate),tax confirmation; tax certificate (CZ),DUL; EN14,"DUL §1 DonationConfirmation; EN14 Description (Potvrzení o daru)",Confirmed
+C028,daňový poplatník (RO přesměrování daně),RO: redirecționare 2% / 3.5%,tax payer (RO tax redirection),2% / 3.5% tax redirect; RO tax redirection payer,DUL; EN15,"DUL §1 TaxPayer (RO tax redirection); EN15 Description (2% / 3.5%, CNP)",Confirmed
+C029,rodné číslo,rč,birth number (rc),personal number (CZ),EN14; EN06,"EN14 Core Fields rodne_cislo; EN06 Core Fields rc (Rodné číslo)",Confirmed
+C030,osobní číselný kód (cnp),RO: cod numeric personal,personal numeric code (cnp),cnp,EN15,"EN15 Core Fields numeric_code = Personal Numeric Code / CNP",Confirmed
+C031,rok potvrzení,daňový rok,confirmation year,tax year,EN14,"EN14 Core Fields confirmation_year",Confirmed
+C032,elektronický podpis,digitální podpis,e-signature,digital signature,DUL; FLIDX,"DUL §1 Contract (two-step e-signature); FLIDX FL035 (sign route)",Confirmed
+C033,párování plateb,párování banka-platba; párování bez vs,bank reconciliation,reconciliation; bank settlement,DUL; SCMAP,"DUL §1 Bank reconciliation; SCMAP párování v accounting (bez VS)",Confirmed
+C034,variabilní symbol,vs; bank-vs,variable symbol (vs),variable symbol,DUL; SCMAP,"DUL §1 Bank reconciliation (bank-vs); SCMAP párování bez variabilního symbolu",Confirmed
+C035,avízo,aviz,bank notification (aviz),bank-mail,DUL,"DUL §1 BankTransactionMail (Aviz import record)",Confirmed
+C036,export csv,,csv export,reporting export,SCMAP; FLIDX,"SCMAP export_csv; FLIDX FL033",Confirmed
+C037,pracovník organizace,uživatel organizace,organisation worker,org worker; org admin,DUL; EN08,"DUL §1 Organisation worker; EN08 Lifecycle (organisation_worker)",Partial
+C038,typ smlouvy,dobropis/dodatek (amendment),contract type,good/service/transfer/nno/amendment/delivery-note/acceptance-protocol/ukraine,DUL,"DUL §1 Contract type",Partial
+C039,protokol o převzetí daru,protokol o převzetí,handover / takeover protocol,acceptance protocol; takeover protocol; delivery-note,DUL; STMAP,"DUL §1 Contract (handover/takeover protocol); STMAP gift_confirmation_approved",Partial
+C040,číslo smlouvy,,contract number,contract number (per-country),DUL; DK,"DUL §1 Contract (per-country number); DK INV22",Partial
+C041,rozdělení přeplatku,dělení transakce,overpayment split,divide transaction,DK; FLIDX,"DK INV07; FLIDX FL025 (/transaction/form/divide_transaction)",Partial
+C042,příznaky daru,,donation type / flags,donation-kind flags,DUL,"DUL §1 Donation type / flags (is-donation / is-voucher / is-recurring)",Partial
+C043,reakce na stav,zone status message,application reaction,status reaction,DUL,"DUL §1 ApplicationReaction",Partial
+C044,automatický přechod stavu,cron akce,application action (auto transition),auto action,DUL,"DUL §1 ApplicationAction (Auto status transition)",Partial
+C045,log příběhu,,campaign log,campaign audit,DUL; DK,"DUL §1 CampaignLog; DK §1 CampaignLog (writer Hypothesis)",Partial
+C046,výsledek scoringu,scoring ok / ko,scoring outcome,ok/ko verdict; low-risk score,DUL; DK,"DUL §1 Scoring outcome (ok/ko, low-risk); DK INV16",Partial
+C047,low-risk,nízké riziko,low risk,low-risk score,DK; SCMAP,"DK INV16 (threshold >=30); SCMAP workflow scoring phase",Partial
+C048,ares,,ares,CZ business registry,FLIDX; SCMAP,"FLIDX FL041 (ares_search_by_ico); SCMAP integrations",Partial
+C049,mvčr,ministerstvo vnitra,mvčr (id-card verification),interior-ministry ID check,FLIDX,"FLIDX FL042 (IdentityCardService, MVČR)",Partial
+C050,ičo,,ico (business number),company registration number,EN06; FLIDX,"EN06 Core Fields ico (IČO); FLIDX FL041 (by ico)",Confirmed
+C051,vypořádání comgate -> banka,comgate_to_bank; převod,comgate -> bank settlement,ComGate transfer sync,DUL; FLIDX,"DUL §1 ComgateBankReconciliation; FLIDX FL031 (comgatesync)",Partial
+C052,náklady / cíle (report),snímek nákladů; obědy školákům,costs snapshot,costs/targets report input,DUL,"DUL §1 CostsSnapshot (obědy školákům)",Partial
+C053,snímek reportu,,report snapshot,report metric snapshot,DUL,"DUL §1 ReportSnapshot",Partial
+C054,e-mail,,email (channel),,TSCEN,"TSCEN Matrix col Email (YES/NO)",Confirmed
+C055,notifikace v účtu / zóně,zone status message; notifikace v zóně,user account notification (in-app zone message),in-app notification,TSCEN; DUL,"TSCEN Matrix col User account notification; DUL §1 ApplicationReaction",Confirmed
+C056,status zpráva,zone status message,status message,,TSCEN; DUL,"TSCEN Matrix col Status message; DUL §1 ApplicationReaction",Confirmed
+C057,notifikace při změně stavu,event-based notifikace,status-change notification,status notification,DUL; SCMAP,"DUL §1 Transactional message / Notification; SCMAP Notifikace (event-based při změně stavu)",Confirmed
+C058,1. urgence,solicitant - 1 reamintire (RO),lead - 1. reminder,,STAT,"STAT alias reminder_1",Confirmed
+C059,2. urgence,solicitant - 2 reamintire (RO),lead - 2. reminder,,STAT,"STAT alias reminder_2",Confirmed
+C060,nový,solicitant nou (RO),new lead,,STAT,"STAT alias new",Confirmed
+C061,zrušeno uživatelem,anulat de către utilizator (RO),canceled by user,,STAT,"STAT alias canceled_by_user",Confirmed
+C062,zrušený lead,lead anulat (RO),canceled lead,,STAT,"STAT alias canceled_lead",Confirmed
+C063,zpracování žádosti,cerere in procesare (RO),application processing,,STAT,"STAT alias application_processing",Confirmed
+C064,ke kontrole,necesită verificare (RO),for control,,STAT,"STAT alias to_check",Confirmed
+C065,čeká na doplnění,în așteptarea informației adiționale (RO),waiting for additional info,,STAT,"STAT alias waiting",Confirmed
+C066,čeká na doplnění - 1. urgence,RO: ... - 1 reamintire,waiting for additional info - 1. reminder,,STAT,"STAT alias waiting_reminder_1",Confirmed
+C067,čeká na doplnění - 2. urgence,RO: ... - 2 reamintire,waiting for additional info - 2. reminder,,STAT,"STAT alias waiting_reminder_2",Confirmed
+C068,žádost doplněna uživatelem,solicitare - informatii adaugate de utilizator (RO),application - info added by user,,STAT,"STAT alias refiled",Confirmed
+C069,čeká na žádost zz,în așteptarea solicitantului (RO); zákonný zástupce (ZZ),waiting for applicant,,STAT,"STAT alias waiting_for_fundraiser",Confirmed
+C070,čeká na žádost zz - 1. urgence,RO: ... - 1 reamintire,waiting for applicant - 1. reminder,,STAT,"STAT alias reminder_1_fundraiser",Confirmed
+C071,čeká na žádost zz - 2. urgence,RO: ... - 2 reamintire,waiting for applicant - 2. reminder,,STAT,"STAT alias reminder_2_fundraiser",Confirmed
+C072,čeká na žádost patrona,în așteptarea persoanei garantă (RO),waiting for patron,,STAT,"STAT alias waiting_for_patron",Confirmed
+C073,čeká na žádost patrona - 1. urgence,RO: ... - 1 reamintire,waiting for patron - 1. reminder,,STAT,"STAT alias reminder_1_patron",Confirmed
+C074,čeká na žádost patrona - 2. urgence,RO: ... - 2 reamintire,waiting for patron - 2. reminder,,STAT,"STAT alias reminder_2_patron",Confirmed
+C075,vrácená žádost (nový patron),solicitare returnată (persoana garantă nouă) (RO),application returned - waiting for new patron,,STAT,"STAT alias returned_new_patron",Confirmed
+C076,příprava příběhu,procesarea povestii solicitantului (RO),story processing,,STAT,"STAT alias in_progress",Confirmed
+C077,scoring kontrola,controlul punctajului (RO),scoring control,,STAT,"STAT alias scoring",Confirmed
+C078,scoring ok,punctaj ok (RO),scoring ok,,STAT,"STAT alias scoring_ok",Confirmed
+C079,scoring ko,punctaj ko (RO),scoring ko,,STAT,"STAT alias scoring_ko",Confirmed
+C080,scoring k doplnění,punctajul urmează să fie finalizat (RO),scoring additional info,,STAT,"STAT alias scoring_waiting",Confirmed
+C081,smlouva ke schválení,contract spre aprobare (RO),contract for approval,,STAT,"STAT alias contract",Confirmed
+C082,smlouva podepsána žadatelem,contract semnat de solicitant (RO),contract signed by applicant,,STAT,"STAT alias contract_signed",Confirmed
+C083,pozastavená žádost,solicitare suspendată (RO),application on hold,,STAT,"STAT alias suspended",Confirmed
+C084,zrušená žádost,cerere anulată (RO),canceled application,,STAT,"STAT alias canceled_application",Confirmed
+C085,zrušená žádost (timeout),cerere anulată (timp expirat) (RO),canceled application (timeout),,STAT,"STAT alias canceled_timeout",Confirmed
+C086,aktivní příběh,poveste activă (RO),active story,,STAT,"STAT alias active",Confirmed
+C087,cílová částka nevybrána,suma tinta nu a fost stransa (RO),target amount not collected,,STAT,"STAT alias campaign_uncompleted",Confirmed
+C088,nesplněný příběh - vypořádání darů,poveste fără succes - necesită decontarea donaţiilor (RO),unsuccessful story - donations,,STAT,"STAT alias campaign_uncompleted_inprocess",Confirmed
+C089,čeká na podpis,se așteaptă semnătura (RO),waiting for signature,,STAT,"STAT alias waiting_signature",Confirmed
+C090,čeká na podpis - 1. urgence,RO: ... - 1 reamintire,waiting for signature - 1. reminder,,STAT,"STAT alias waiting_signature_reminder_1",Confirmed
+C091,čeká na podpis - 2. urgence,RO: ... - 2 reamintire,waiting for signature - 2. reminder,,STAT,"STAT alias waiting_signature_reminder_2",Confirmed
+C092,čeká na podpis - nespolupracující,RO: ... - necooperant,waiting for signature - uncooperative,,STAT,"STAT alias waiting_signature_uncooperative",Confirmed
+C093,čeká na zpětnou vazbu,se așteaptă feedback (RO),waiting for feedback,,STAT,"STAT alias waiting_for_feetback (alias typo verbatim)",Confirmed
+C094,čeká na zpětnou vazbu - 1. urgence,RO: ... - 1 reamintire,waiting for feedback - 1. reminder,,STAT,"STAT alias waiting_feedback_reminder_1",Confirmed
+C095,čeká na zpětnou vazbu - 2. urgence,RO: ... - 2 reamintire,waiting for feedback - 2. reminder,,STAT,"STAT alias waiting_feedback_reminder_2",Confirmed
+C096,čeká na zpětnou vazbu - nespolupracující,RO: ... - necooperant,waiting for feedback - uncooperative,,STAT,"STAT alias waiting_feedback_uncooperative",Confirmed
+C097,čeká na účetní doklad,în așteptarea facturii/documentului contabil (RO),waiting for accounting doc,,STAT,"STAT alias waiting_for_bill",Confirmed
+C098,čeká na konečný doklad,în așteptarea documentului contabil final (RO),waiting for final accounting doc,,STAT,"STAT alias waiting_for_final_doc (isolated, no transition)",Confirmed
+C099,chyba,greşeală/eroare (RO),mistake,,STAT,"STAT alias mistake (entity blank)",Confirmed
+C100,dar uhrazen,cadou plătit (RO),gift paid,,STAT,"STAT alias gift_paid",Confirmed
+C101,duplikát,duplicat (RO),duplicate,,STAT,"STAT alias duplicate (entity blank)",Confirmed
+C102,nesplněný příběh,poveste fără succes (RO),unsuccessful story,,STAT,"STAT alias uncompleted",Confirmed
+C103,out of scope,scop incompatibil (RO),out of scope,,STAT,"STAT alias out_of_scope (entity blank)",Confirmed
+C104,pozastavený příběh,poveste suspendată (RO),story on hold,,STAT,"STAT alias suspended_campaign",Confirmed
+C105,splněný příběh - částečné plnění,poveste de succes - parțial (RO),successful story - partly,,STAT,"STAT alias completed_partly_1",Confirmed
+C106,splněný příběh,poveste de succes (RO),successful story,,STAT,"STAT alias completed (set programmatically/cron)",Confirmed
+C107,zrušený příběh,poveste anulata (RO),canceled story,,STAT,"STAT alias canceled_campaign",Confirmed
+C108,zpětná vazba ke zpracování,feedback in procesare (RO),feedback processing,,STAT,"STAT alias feedback_to_proccess (alias typo verbatim)",Confirmed
+C109,zpětná vazba odeslána,feedback trimis (RO),feedback sent,,STAT,"STAT alias feedback_sent",Confirmed
+C110,úhrada daru,plata cadoului (RO),gift payment,,STAT,"STAT alias gift_payment",Confirmed
+C111,uzavřeno,poveste finalizata cu succes (RO),closed story,,STAT,"STAT alias closed",Confirmed
+C112,uzavřeno - částečné plnění,poveste finalizata parțial (RO),partly closed story,,STAT,"STAT alias completed_partly",Confirmed
+C113,komunikace před žádostí,,communications,,STMAP,"STMAP Jen v kódu, alias communications",Partial
+C114,přebráno,,taken,,STMAP,"STMAP Jen v kódu, alias taken",Partial
+C115,zrušeno,,canceled,,STMAP,"STMAP Jen v kódu, alias canceled",Partial
+C116,zrušená žádost (nevyplněno žadatelem),,canceled (applicant did not complete),,STMAP; TSCEN,"STMAP alias canceled_fundraiser; TSCEN Matrix canceled_fundraiser",Partial
+C117,žadatel poskytl zpětnou vazbu,,feedback received,,STMAP; TSCEN,"STMAP alias feedback_received; TSCEN Matrix feedback_received",Partial
+C118,čeká na protokol o převzetí,,waiting for handover protocol,,STMAP; TSCEN,"STMAP alias waiting_for_protocol (isolated); TSCEN Matrix waiting_for_protocol",Partial
+C119,potvrzený protokol o převzetí daru,,gift-handover protocol approved,,STMAP; TSCEN,"STMAP alias gift_confirmation_approved (isolated); TSCEN Matrix gift_confirmation_approved",Partial
