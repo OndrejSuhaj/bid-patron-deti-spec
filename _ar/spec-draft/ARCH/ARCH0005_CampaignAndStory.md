@@ -97,3 +97,12 @@ Per [ARCH0002](../ARCH0002_ContextInteractionMap.md):
   ([../BR/BR-CampaignStoryLifecycle.md](../BR/BR-CampaignStoryLifecycle.md)),
   BR-CampaignRecommendationDormant
   ([../BR/BR-CampaignRecommendationDormant.md](../BR/BR-CampaignRecommendationDormant.md))
+
+---
+
+## Open Questions
+
+- CampaignLog's writer is not evidenced — `Hypothesis`
+  ([DOMAIN-aggregates](../DOMAIN-aggregates.md) AG2 / §5).
+- The recommendation subsystem is navigable here but marked dormant throughout; a rewrite needs an
+  explicit drop-or-rebuild decision before treating it as current behaviour (ARCH0001 §8 Risk 5).

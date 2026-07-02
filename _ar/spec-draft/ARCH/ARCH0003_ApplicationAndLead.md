@@ -116,7 +116,7 @@ and §(a)/(c) — all synchronous in-request today unless noted):
 
 ---
 
-## Cross-links
+## Related Artifacts
 
 - **relatedEN:** EN0001, EN0002, EN0003, EN0025, EN0026, EN0027
 - **relatedUC:** UC0001, UC0002, UC0016, UC0019
