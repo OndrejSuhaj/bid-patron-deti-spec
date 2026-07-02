@@ -21,7 +21,7 @@ references:
   - MSG0005
   - MSG0006
   - BR-TransactionalMessaging
-  - BR-MarketingAndAnalyticsRelay
+  - BR-DataProtectionAndErasure
 ---
 
 # ARCH0010 – Messaging & Marketing Domain
@@ -98,6 +98,7 @@ Per [ARCH0002](../ARCH0002_ContextInteractionMap.md) §(a)/(b)/(c):
 - **relatedMSG:** MSG0005, MSG0006 (the grouped status-fan-out catch-alls; C8 owns the transport for
   all 30 MSGs — each higher-salience message is navigated from its triggering domain, MSG-message-map)
 - **relatedBR:** BR-TransactionalMessaging
-  ([../BR/BR-TransactionalMessaging.md](../BR/BR-TransactionalMessaging.md)); BR-MarketingAndAnalyticsRelay
-  is referenced by the erasure rules but was **not authored** in the BR pass (BR-rule-map §C7/C9 note)
-  — recorded as an open downstream gap, not restated here.
+  ([../BR/BR-TransactionalMessaging.md](../BR/BR-TransactionalMessaging.md)); the marketing
+  anti-erasure rule lives in BR-DataProtectionAndErasure. **Open Question:** a dedicated
+  BR-MarketingAndAnalyticsRelay was anticipated but **not authored** in the BR pass
+  (BR-rule-map §C7/C9 note) — recorded as a downstream gap, not restated here.
