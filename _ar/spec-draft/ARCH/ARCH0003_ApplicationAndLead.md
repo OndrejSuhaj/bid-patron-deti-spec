@@ -55,12 +55,13 @@ first of the three primary domain concepts.
 
 ## System Overview
 
-C1 owns the aggregate whose single status field carries the ~66-state workflow spanning both lead-era
-and application-era states on one record — "Lead" is the intake phase of the *same* Application, not a
-separate entity ([EN0001](../EN/EN0001_Application.md); [ARCH0001](../ARCH0001_ApplicationOverview.md)
-§1). The case record is the heavyweight root of the domain: it ties together the applicant/patron
-profiles, role-scoped access sessions, and an append-only activity log, and it is the source of the
-status event that fans out to risk, documents, messaging and campaign (ARCH0002 chain B).
+C1 owns aggregate AG1, rooted on the Application ([EN0001](../EN/EN0001_Application.md) — the
+single-status-field, lead-plus-application-era case record; single-status-field model and
+Lead-as-intake-phase are owned by [EN0001](../EN/EN0001_Application.md) /
+[BR-ApplicationStatusGovernance](../BR/BR-ApplicationStatusGovernance.md)). The case record is the
+heavyweight root of the domain: it ties together the applicant/patron profiles, role-scoped access
+sessions, and an append-only activity log, and it is the source of the status event that fans out to
+risk, documents, messaging and campaign (ARCH0002 chain B).
 
 The context's defining architectural trait is that status orchestration is realised as an
 **entity-save side-effect** rather than a first-class service — the platform's main orchestration seam

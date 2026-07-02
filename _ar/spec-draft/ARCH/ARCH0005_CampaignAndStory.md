@@ -41,9 +41,9 @@ covers the **dormant** campaign-recommendation subsystem present in the codebase
 
 ## System Overview
 
-C3 owns the campaign lifecycle (in-progress → active → completed / campaign_uncompleted). A campaign
-is 1:1 with its owning Application (C1) and kept in status lock-step with it; the raised total is a
-derived sum of paid donations that lives in C4 ([EN0004](../EN/EN0004_Campaign.md); ARCH0001 §4). The
+C3 owns the campaign/story lifecycle (states and transitions owned by [EN0004](../EN/EN0004_Campaign.md)).
+A campaign is 1:1 with its owning Application (C1) and kept in status lock-step with it; the raised
+total is a derived sum of paid donations that lives in C4 ([EN0004](../EN/EN0004_Campaign.md); ARCH0001 §4). The
 context also hosts the public patron display profile, post-campaign feedback, and a campaign audit log.
 
 Two architectural traits stand out: publish transitions both the Campaign and its Application without a

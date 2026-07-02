@@ -16,6 +16,7 @@ references:
   - EN0013
   - EN0010
   - EN0008
+  - BR-PaymentAndMoneyIntegrity
 ---
 
 # FN0007 – Donation & Payment Processing (Money Hub)
@@ -39,8 +40,8 @@ reconciliation, and voucher purchase/redemption.
   its completion (FN0006); split overpayment into a child Transaction against the transparent
   account; promote a linked Voucher (FN0011) and RecurringTransaction (FN0010); grant the owner the
   supporter role (FN0018); and trigger a thank-you confirmation (FN0019).
-- Support overpayment splitting so the raised amount never exceeds the target on the funded
-  Campaign, regardless of which path produced the confirmed payment.
+- Split overpayment into a child Transaction on the transparent account per the overpayment-split
+  rule (BR-PaymentAndMoneyIntegrity), regardless of the confirming path.
 - Serve as the shared PAID entry point for reconciliation-created Transactions (bank/AISP import and
   gateway-settlement matching, FN0012), recurring-charged Transactions (FN0010), and voucher-purchase
   Transactions (FN0011) alike — every path that confirms money received converges on the same

@@ -91,8 +91,8 @@ Outcome: the Admin receives a campaign-scoped subset of the payments export inst
 - Zero or more CSV export files exist for the current day, one per export type, available for repeated same-day download without re-assembly.
 - No Application (EN0001), ApplicationProfile (EN0002), Contact (EN0006), Transaction (EN0009), Campaign (EN0004), or Contract (EN0011) record is created, updated, or transitioned by this use case — it is read-only with respect to domain entities.
 - A log entry exists per completed or failed export in a scheduled batch.
-- Exported CSV content may contain personally identifiable information (identification numbers, names, addresses, emails, phone numbers, contract numbers); no additional protection is applied beyond the permission check at request time.
-- No tenant/country (CZ/RO/MD) scoping is applied to any export — all exports are global across tenants.
+- Exported CSV content and its sensitive-data handling follow BR-ReportingAndDataAccess § Sensitive-data handling (current-state) (BR-ReportingAndDataAccess — export PII, no extra protection).
+- Export tenant/country scoping is governed by BR-MultiTenantCountryScoping § Cross-tenant data-path scoping (current-state) (BR-MultiTenantCountryScoping — exports global, no country filter).
 
 ## Traceability
 
@@ -112,6 +112,10 @@ EN entities:
 
 Integration boundaries:
 - None (no external system integration; the only boundary is the local export/storage sink used to persist and re-serve CSV files).
+
+BR rules:
+- BR-ReportingAndDataAccess — read-only reporting, request-time permission gating, and sensitive-data (PII) handling of exported files.
+- BR-MultiTenantCountryScoping — absence of CZ/RO/MD country scoping on exports (exports global across tenants).
 
 Flow Evidence:
 - FLW0027 (mined) — scheduled and on-demand CSV export batch, covers UC0017.1, UC0017.2, AF1, AF2, AF3.

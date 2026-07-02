@@ -85,8 +85,8 @@ Conflict — requires clarification: REFUNDED is a declared status value; whethe
 
 - A Transaction's contribution to its Campaign's raised total is counted only while in the paid state; see BR-PaymentAndMoneyIntegrity.
 - A donation target's raised total is a derived sum over its paid Transactions, recomputed whenever a Transaction is saved; see BR-PaymentAndMoneyIntegrity.
-- A new Transaction cannot be created against a Campaign whose raised total already meets its target; see BR-PaymentAndMoneyIntegrity.
-- An overpaying paid Transaction is split so the excess is booked to a new child Transaction linked to the parent via the self-referencing relationship, preserving the "raised does not exceed target" invariant; see BR-PaymentAndMoneyIntegrity.
+- Money-record admissibility against a funded Campaign is governed by BR-PaymentAndMoneyIntegrity (INV06).
+- The parent/child self-reference exists to carry an overpayment split (overpayment-split rule owned by BR-PaymentAndMoneyIntegrity, INV07).
 - Gateway callback status mapping and callback authenticity are governed by BR-PaymentGatewayCallbacks; a Transaction's status must only change through a route permitted by that policy.
 - The payment-identity key is intended to be unique per Transaction, but this uniqueness is enforced only at the application level, not by a database-level constraint; see Invariants gap in Open Questions and BR-PaymentAndMoneyIntegrity.
 - A RecurringTransaction's activation depends on its originating Transaction reaching paid; see BR-RecurringDonationPolicy.

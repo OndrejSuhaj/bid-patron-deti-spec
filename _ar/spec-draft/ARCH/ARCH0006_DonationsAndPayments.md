@@ -52,10 +52,11 @@ is the third primary domain concept (ARCH0001 §1) and the origin of most cross-
 
 C4 owns the transaction record and its external payment status
 (PENDING → AUTHORIZED / PAID / CANCELLED / REFUNDED), the recurring-subscription schedule, and the
-prepaid voucher (Dobrošek). Its architectural centre of gravity is the **first transition to PAID**:
-that save recomputes the campaign, splits overpayment, activates recurring, promotes vouchers, grants
-the supporter role, and sends thank-you mail — all synchronously from every write path, non-transactional
-and without callback idempotence ([ARCH0001](../ARCH0001_ApplicationOverview.md) §7, §8 Risk 1;
+prepaid voucher (Dobrošek). Its architectural centre of gravity is the **first transition to PAID**,
+the platform's most consequential save-time cascade: its multi-effect side-effect contract
+(recompute/split/activate/promote/grant/notify) and its non-transactional, non-idempotent current-state
+are owned by [BR-PaymentAndMoneyIntegrity](../BR/BR-PaymentAndMoneyIntegrity.md), §"Effects on first
+transition to PAID" ([ARCH0001](../ARCH0001_ApplicationOverview.md) §7, §8 Risk 1;
 ARCH0002 chain A; the money-hub hazard is HS03). One payment gateway serves each region (CZ/RO/MD), and
 the callback route is effectively public with no HMAC (HS12).
 

@@ -87,7 +87,7 @@ Confirm the outcome of a payment initiated at a gateway and, on confirmation, up
 1. Integration(ComGate): Send a status callback with a missing or mismatched shared secret or merchant identification.
 2. System: Reject the callback without changing the Transaction; respond with a failure acknowledgement.
 
-Outcome: The Transaction remains in its prior status; no side effects run. (Evidence: the endpoint accepts any caller and relies solely on the shared secret comparison — no cryptographic signature is verified.)
+Outcome: The Transaction remains in its prior status; no side effects run. (Callback authenticity is governed by BR-PaymentGatewayCallbacks § Confirmation authentication — shared-secret-only, no signature/replay guard.)
 
 ### AF2 — Repeated or out-of-order gateway notifications
 
@@ -142,6 +142,9 @@ Integration boundaries:
 - ComGate (CZ payment gateway)
 - Netopia/MobilPay (RO payment gateway)
 - MAIB (MD payment gateway)
+
+Governing rules:
+- BR-PaymentGatewayCallbacks — callback authenticity & status mapping
 
 Flow Evidence:
 - FLW0003 (ComGate payment status callback)

@@ -12,6 +12,7 @@ references:
   - EN0002
   - FN0002
   - FN0019
+  - BR-ContractAndESignature
 ---
 
 # FN0009 – Contract Generation & E-Signature
@@ -25,9 +26,9 @@ toward its active story. This is the C6 document-and-signature capability exerci
 
 ## Responsibilities
 
-- Create a Contract from the chosen contract type, assign a per-country contract number with a
-  sequential per-year counter, substitute Application/ApplicationProfile data into the matching
-  ContractTemplate, and render it to PDF.
+- Create a Contract from the chosen contract type, assign its human-readable number per the
+  contract-numbering rule (BR-ContractAndESignature), substitute Application/ApplicationProfile data
+  into the matching ContractTemplate, and render it to PDF.
 - Route the Contract through the manager-check step (notify the checking recipient) and stamp the
   manager signature image and date into the document when digital signature is enabled.
 - Present the fundraiser an in-zone signing session, validate the typed name against the fundraiser's

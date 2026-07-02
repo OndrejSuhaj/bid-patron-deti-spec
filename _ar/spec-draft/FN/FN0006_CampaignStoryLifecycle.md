@@ -13,6 +13,8 @@ references:
   - EN0021
   - EN0028
   - EN0001
+  - BR-CampaignStoryLifecycle
+  - FN0007
 ---
 
 # FN0006 – Campaign / Story Lifecycle Management
@@ -27,9 +29,9 @@ deadline — and keep it consistent with its owning case. This is the C3 story c
 
 - Generate and publish/activate a Campaign (EN0004) from an approved Application, subject to a publish-readiness
   gate.
-- Recompute the running raised total and percentage funded from paid donations and auto-complete the story when
-  raised meets or exceeds target (delegating the summation trigger to FN0007's money side-effects).
-- Uncomplete a story after its deadline when the target was not reached (deadline-driven lifecycle).
+- Recompute the running raised total and percentage funded from paid donations (delegating the summation trigger to
+  FN0007's money side-effects), then auto-complete and deadline-uncomplete the story per the campaign
+  completion/uncompletion rules (BR-CampaignStoryLifecycle).
 - Maintain the public patron display profile (Patron, EN0005), post-campaign feedback (Feedback, EN0021), and the
   campaign audit log (CampaignLog, EN0028).
 - Keep the story's status/category in lock-step with the owning Application (EN0001), delegating the case side to

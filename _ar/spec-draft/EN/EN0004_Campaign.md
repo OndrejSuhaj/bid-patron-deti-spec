@@ -97,8 +97,8 @@ active → completed_partly — Hypothesis, no confirmed trigger evidenced.
 - At most one public Patron profile (EN0005) per Campaign — see BR-CampaignStoryLifecycle.
 - Auto-completion and deadline-driven uncompletion, and their cascade to the linked Application — see BR-CampaignStoryLifecycle.
 - Romania-market deadline working-day rule — see BR-CampaignStoryLifecycle.
-- A donation cannot be admitted against an already-funded Campaign — see BR-PaymentAndMoneyIntegrity.
-- Overpayment beyond the target amount is redirected rather than accumulated on the Campaign — see BR-PaymentAndMoneyIntegrity.
+- Donation admissibility against a funded Campaign — see BR-PaymentAndMoneyIntegrity (money admissibility).
+- Overpayment handling for this Campaign — see BR-PaymentAndMoneyIntegrity (overpayment split).
 - Any Campaign-recommendation coupling is dormant and not an active current-state invariant — see BR-CampaignRecommendationDormant.
 
 Conflict — Application status and Campaign status are intended to stay mutually consistent, but the
