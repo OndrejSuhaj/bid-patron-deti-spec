@@ -10,6 +10,8 @@ references:
   - UC0015
   - EN0006
   - EN0008
+  - BR-MarketingAndAnalyticsRelay
+  - BR-DataProtectionAndErasure
 ---
 
 # FN0015 – Marketing / CRM Synchronisation

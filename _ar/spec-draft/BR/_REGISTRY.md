@@ -12,6 +12,7 @@
 | BR-ContractAndESignature | Contract & E-Signature | draft | [] | AR | 2026-07-02 |
 | BR-DataProtectionAndErasure | Data Protection & GDPR Erasure | draft | [] | AR | 2026-07-02 |
 | BR-DonationConfirmationAndTax | Donation & Tax Confirmation | draft | [] | AR | 2026-07-02 |
+| BR-MarketingAndAnalyticsRelay | Marketing / CRM Sync & Analytics Relay | draft | [] | AR | 2026-07-02 |
 | BR-MultiTenantCountryScoping | Multi-Tenant CZ/RO/MD Scoping | draft | [] | AR | 2026-07-02 |
 | BR-OperationalAlerting | Operational Alerting & Audit Trail | draft | [] | AR | 2026-07-02 |
 | BR-PartyIdentityAndDeduplication | Party Identity, Uniqueness & Deduplication / Merge | draft | [] | AR | 2026-07-02 |

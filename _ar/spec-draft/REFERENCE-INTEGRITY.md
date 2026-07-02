@@ -12,7 +12,7 @@
 | FN | 26 |
 | ES | 16 |
 | MSG | 30 |
-| BR | 19 |
+| BR | 20 |
 | ARCH | 12 |
 
 - **doc_id collisions:** 0
@@ -20,7 +20,7 @@
 - **deferred references:** 0
 - **orphans (registry row ↔ doc atomicity):** 0
 - **unreferenced docs (informational):** 7
-- **resolved references (declared + inline):** 935
+- **resolved references (declared + inline):** 949
 
 ## Collisions
 

@@ -11,9 +11,9 @@ tooling/docs/registry-format.md (draft rows: Status=draft, Owner mode=AR, Create
 - FN: 26 docs → `_ar/spec-draft/FN/_REGISTRY.md`
 - ES: 16 docs → `_ar/spec-draft/ES/_REGISTRY.md`
 - MSG: 30 docs → `_ar/spec-draft/MSG/_REGISTRY.md`
-- BR: 19 docs → `_ar/spec-draft/BR/_REGISTRY.md`
+- BR: 20 docs → `_ar/spec-draft/BR/_REGISTRY.md`
 - ARCH: 12 docs → `_ar/spec-draft/ARCH/_REGISTRY.md`
-- Total registered doc_ids: 157
+- Total registered doc_ids: 158
 
 ## 3. doc_id collisions
 None.

@@ -22,6 +22,7 @@ references:
   - MSG0006
   - BR-TransactionalMessaging
   - BR-DataProtectionAndErasure
+  - BR-MarketingAndAnalyticsRelay
 ---
 
 # ARCH0010 – Messaging & Marketing Domain
@@ -99,6 +100,5 @@ Per [ARCH0002](../ARCH0002_ContextInteractionMap.md) §(a)/(b)/(c):
   all 30 MSGs — each higher-salience message is navigated from its triggering domain, MSG-message-map)
 - **relatedBR:** BR-TransactionalMessaging
   ([../BR/BR-TransactionalMessaging.md](../BR/BR-TransactionalMessaging.md)); the marketing
-  anti-erasure rule lives in BR-DataProtectionAndErasure. **Open Question:** a dedicated
-  marketing / analytics-relay business rule was anticipated but **not authored** in the BR pass
-  (BR-rule-map §C7/C9 note) — recorded as a downstream gap.
+  anti-erasure rule lives in BR-DataProtectionAndErasure; the marketing CRM-sync, conversion/analytics
+  relay, and inbound-lead-intake rules are owned by BR-MarketingAndAnalyticsRelay.
