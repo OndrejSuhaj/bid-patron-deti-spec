@@ -100,5 +100,5 @@ Per [ARCH0002](../ARCH0002_ContextInteractionMap.md) §(a)/(b)/(c):
 - **relatedBR:** BR-TransactionalMessaging
   ([../BR/BR-TransactionalMessaging.md](../BR/BR-TransactionalMessaging.md)); the marketing
   anti-erasure rule lives in BR-DataProtectionAndErasure. **Open Question:** a dedicated
-  BR-MarketingAndAnalyticsRelay was anticipated but **not authored** in the BR pass
-  (BR-rule-map §C7/C9 note) — recorded as a downstream gap, not restated here.
+  marketing / analytics-relay business rule was anticipated but **not authored** in the BR pass
+  (BR-rule-map §C7/C9 note) — recorded as a downstream gap.

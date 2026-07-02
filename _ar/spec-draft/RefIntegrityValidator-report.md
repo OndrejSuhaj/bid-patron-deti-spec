@@ -19,7 +19,7 @@ tooling/docs/registry-format.md (draft rows: Status=draft, Owner mode=AR, Create
 None.
 
 ## 4. Dangling references (Open Questions)
-- ARCH0010 (ARCH) → BR-MarketingAndAnalyticsRelay (body)
+None — all canonical references resolve.
 
 ## 5. Deferred cross-layer references
 None.

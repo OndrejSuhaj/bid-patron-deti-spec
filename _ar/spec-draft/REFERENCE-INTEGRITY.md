@@ -16,7 +16,7 @@
 | ARCH | 12 |
 
 - **doc_id collisions:** 0
-- **dangling references:** 1
+- **dangling references:** 0
 - **deferred references:** 0
 - **orphans (registry row ↔ doc atomicity):** 0
 - **unreferenced docs (informational):** 7
@@ -28,9 +28,7 @@ None — every doc_id is unique.
 
 ## Dangling references (Open Questions)
 
-| Citing doc | Field | Referenced ID | Note |
-|---|---|---|---|
-| ARCH0010 (ARCH) | body | BR-MarketingAndAnalyticsRelay | inline mention |
+None — every declared/inline canonical reference resolves to a registry row.
 
 ## Deferred references (target layer not synthesized this pass)
 
