@@ -7,61 +7,102 @@ status: draft
 references:
   - EN0004  # Campaign (Story) — donation target
   - EN0008  # User — owner / donor
-  - EN0010  # RecurringTransaction — subscription schedule promoted from a paid txn
-  - EN0013  # Voucher — Dobrošek promoted from a paid txn
+  - EN0010  # RecurringTransaction — subscription schedule promoted from a paid transaction
+  - EN0013  # Voucher — Dobrošek promoted from a paid transaction
+  - BR-PaymentAndMoneyIntegrity
+  - BR-PaymentGatewayCallbacks
+  - BR-BankReconciliationAndMatching
+  - BR-RecurringDonationPolicy
+  - BR-VoucherPolicy
 ---
 
 # EN0009 — Transaction
 
-## Description
-Core payment / donation record. Every incoming money movement (one-off donation, corporate gift, voucher purchase, recurring child charge, bank/AISP import) is a `transaction`. Its `preSave`/`postSave` is the money-side hub of the domain: on save it recomputes the target campaign, splits overpayments, promotes recurring/voucher records, sends buyer e-mail + Slack, and enqueues Elasticsearch indexing.
+## Purpose
 
-## Entity Category
-Persisted · Confidence: High
-
-## Origin
-- DB artifacts: base_table `transaction` (content, not revisionable, not translatable, source *mixed* — updates 8001–8004, no `hook_schema`); 3 declared indexes in `TransactionEntityStorageSchema`.
-- Code touchpoints: `TransactionEntity` (866 LOC) — `preSave`/`postSave`, `updateRecurringStatus`, `updateVoucherStatus`; gateway resources/controllers `v32/TransactionResource`, `comgate` `TransactionStatusUpdate`, `NetopiaConfirmController`, `MaibController`, cron `ComgateCron`/`NetopiaCron`; imports `MonetaAPI`, `accounting/BankForm`.
-Evidence: [transaction/src/Entity/TransactionEntity.php](../../intake/current-solution/_source/patronus/web/modules/custom/transaction/src/Entity/TransactionEntity.php); db-models.md `transaction` (Verification: Confirmed).
-
-## Core Fields
-- price (integer; optional; donation amount) · original_price (integer; set from `price` on create)
-- ext_status (list_string; optional; values: PENDING / PAID / CANCELLED / AUTHORIZED / REFUNDED — Evidence: `TransactionEntity` L456-460)
-- ext_fee (decimal 10,2; gateway fee) · method (string 50; payment method) · type (list_string; corporate / owner)
-- campaign (reference → EN0004; donation target Story) · original_campaign (reference → EN0004)
-- ext_trans_id (string 40; gateway id) · message_id (string 40; app-level unique — `preSave` throws, no DB key)
-- comment (string 200) · vouchers_data (string_long; JSON of voucher values, drives voucher generation)
-
-## Technical Fields
-- parent (reference → EN0009 self; overpayment-split / divided child transactions)
-- bank_date / bank_month (int, derived from bank_date) / bank_vs (12) / bank_account (50) — bank reconciliation
-- flags (boolean): is_donation (default TRUE), is_voucher, is_recurring, is_sent_to_bank, is_email_sent, is_embedded, is_authenticated, test, transparent
-- ip_address (20, ReadOnly) / user_agent (250, ReadOnly); status (boolean; publish flag)
-
-## Relations
-- campaign → EN0004 (Campaign) · original_campaign → EN0004
-- user_id → EN0008 (User; owner/donor)
-- parent → EN0009 (self; split transactions)
-- Promotes/updates: EN0010 (RecurringTransaction), EN0013 (Voucher) — outbound side effects, not FK fields on this entity
-
-## Allowed Statuses
-`ext_status`: PENDING, PAID, CANCELLED, AUTHORIZED, REFUNDED.
-Evidence: `TransactionEntity` L456-460 (allowed_values); L161/168 (isPaid/isCancelled read `ext_status`).
+A Transaction is the record of a single money movement into the platform: a one-off donation, a
+corporate gift, a voucher purchase, a recurring child charge, or an imported bank/gateway credit.
+It is the central money-side entity of the domain — reaching the paid state on a Transaction is
+what drives the donation target's raised total, promotes recurring schedules and vouchers, and
+triggers donor-facing confirmation.
 
 ## Lifecycle
-Confirmed transitions (per FLW dossiers + code):
-- (create) → PENDING with `ext_trans_id` from gateway — `v32/TransactionResource` L183/190/254/310 (FLW0006).
-- PENDING/AUTHORIZED → PAID | CANCELLED | REFUNDED (ComGate) — `comgate TransactionStatusUpdate::update_status` (FLW0003); Netopia IPN action map `NetopiaConfirmController` L70-141 (FLW0004); MAIB re-poll `MaibController` L60-72 (FLW0005).
-- (import) none → created PAID — Moneta AISP `MonetaAPI` L120/139-140 (FLW0011); bank IMAP `BankForm` L285-309 (FLW0012).
-- reconciled (`bank_date`/`bank_month`, `is_sent_to_bank 0→1`) — `BankForm` L137-147 (FLW0012); `ComgateSyncCommand` L204-206 raw SQL (FLW0013).
-- `is_email_sent` false→true on first PAID — L612-624/760 (FLW0004).
-- overpayment split → new child transaction to transparent account — `postSave` L663-689 (FLW0003/04/05/07).
-On PAID, side-effects promote EN0010 (`updateRecurringStatus` L703-711) and EN0013 (`updateVoucherStatus` L806-819).
 
-## Spec Alignment
-N/A — No EN spec files found in repository.
+- PENDING
+- AUTHORIZED
+- PAID
+- CANCELLED
+- REFUNDED
+
+## State Transitions
+
+(none) → PENDING
+trigger: UC0005 – Make a Donation (transaction created with a gateway reference at donation/voucher purchase)
+
+PENDING | AUTHORIZED → PAID | CANCELLED | REFUNDED
+trigger: UC0006 – Confirm Payment (Gateway Callback)
+
+(none) → PAID
+trigger: UC0008 – Reconcile Bank Transactions (bank/AISP import creates a Transaction already in the paid state)
+
+PAID (unreconciled) → PAID (reconciled)
+trigger: UC0008 – Reconcile Bank Transactions (bank date/period and matching identifiers are stamped on the Transaction; see BR-BankReconciliationAndMatching)
+
+PAID → new child Transaction (overpayment split)
+trigger: UC0005 / UC0006 / UC0007 (a paid Transaction whose donation target is overfunded is split into a new child Transaction booked to the transparent/collection account; see BR-PaymentAndMoneyIntegrity)
+
+PAID → promotes EN0010 (RecurringTransaction) and EN0013 (Voucher)
+trigger: UC0006 – Confirm Payment (Gateway Callback) (first reaching paid activates a linked RecurringTransaction and/or marks a linked Voucher as paid; see BR-RecurringDonationPolicy, BR-VoucherPolicy)
+
+Conflict — requires clarification: REFUNDED is a declared status value; whether it is reachable only via a gateway callback (UC0006) or through another path is not evidenced (see Open Questions).
+
+## Attributes
+
+### System-managed attributes
+
+- status (enumeration; required; values: PENDING, AUTHORIZED, PAID, CANCELLED, REFUNDED — the external payment status)
+- fee (decimal; optional; gateway-reported processing fee)
+- gateway reference (string; optional; the payment gateway's identifier for this Transaction)
+- payment-identity key (string; optional; intended application-level unique identity for the Transaction; see Invariants)
+- reconciliation markers (date/period and matching identifiers; optional; set when a Transaction is matched to a bank credit — see BR-BankReconciliationAndMatching)
+- confirmation-sent flag (boolean; optional; whether the donor confirmation/thank-you has been sent for this Transaction)
+- reconciled flag (boolean; optional; whether the Transaction has been matched to a bank/gateway settlement)
+- donation-kind flags (boolean set; optional; donation / voucher / recurring / transparent-account — describe what the Transaction represents; not a single enumeration)
+- kind (enumeration; optional; values: corporate, owner)
+- parent (reference to EN0009 – Transaction; optional; set on a child Transaction created by an overpayment split)
+- original donation target (reference to EN0004 – Campaign; optional; the donation target recorded at Transaction creation, retained if the target is later changed)
+
+### User-provided attributes
+
+- amount (decimal; required; the donated/paid amount)
+- donation target (reference to EN0004 – Campaign; required; the Campaign the Transaction contributes to)
+- owner (reference to EN0008 – User; optional; the donor/buyer, when identifiable)
+- payment method (string; optional)
+- comment (string; optional; donor-supplied note)
+- voucher selection data (structured value; optional; present on a voucher-purchase Transaction; drives voucher creation — see EN0013, BR-VoucherPolicy)
+
+## Invariants
+
+- A Transaction's contribution to its Campaign's raised total is counted only while in the paid state; see BR-PaymentAndMoneyIntegrity.
+- A donation target's raised total is a derived sum over its paid Transactions, recomputed whenever a Transaction is saved; see BR-PaymentAndMoneyIntegrity.
+- A new Transaction cannot be created against a Campaign whose raised total already meets its target; see BR-PaymentAndMoneyIntegrity.
+- An overpaying paid Transaction is split so the excess is booked to a new child Transaction linked to the parent via the self-referencing relationship, preserving the "raised does not exceed target" invariant; see BR-PaymentAndMoneyIntegrity.
+- Gateway callback status mapping and callback authenticity are governed by BR-PaymentGatewayCallbacks; a Transaction's status must only change through a route permitted by that policy.
+- The payment-identity key is intended to be unique per Transaction, but this uniqueness is enforced only at the application level, not by a database-level constraint; see Invariants gap in Open Questions and BR-PaymentAndMoneyIntegrity.
+- A RecurringTransaction's activation depends on its originating Transaction reaching paid; see BR-RecurringDonationPolicy.
+- A Voucher's paid/published state depends on its purchasing Transaction reaching paid; see BR-VoucherPolicy.
+- The first Transaction an owning User brings to paid grants that User a donor-role promotion; rule content owned by BR-PaymentAndMoneyIntegrity (party-role side effect).
+
+## Relationships
+
+- EN0004 – Campaign (Story): donation target and original donation target
+- EN0008 – User: owner/donor
+- EN0009 – Transaction (self): parent, for a child Transaction created by an overpayment split
+- EN0010 – RecurringTransaction: promoted/activated when this Transaction reaches paid
+- EN0013 – Voucher: promoted/marked paid when this Transaction reaches paid
 
 ## Open Questions
-1. Is REFUNDED reachable from PAID, or only via gateway callback? (enum present; refund path not deep-mined.)
-2. AUTHORIZED→PAID capture path — where is capture triggered outside recurring cron?
-3. `message_id` uniqueness is app-level only (no DB key) — race exposure under concurrent callbacks.
+
+1. Is REFUNDED reachable only from PAID via a gateway callback route, or through another path? Not fully evidenced.
+2. What drives an AUTHORIZED → PAID capture outside the recurring-charge cron path? Not fully evidenced.
+3. The payment-identity key has no database-level uniqueness constraint — concurrent callbacks or repeated submissions may be able to create duplicate Transactions or race the identity check. Flagged as a money-integrity gap under BR-PaymentAndMoneyIntegrity rather than a confirmed invariant.

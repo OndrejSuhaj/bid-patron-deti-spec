@@ -5,56 +5,98 @@ canonical_layer: EN
 spec_type: entity
 status: draft
 references:
-  - EN0004  # Campaign (Story) — optional linked story
-  - EN0008  # User — author
+  - BR-DonationConfirmationAndTax
+  - BR-MultiTenantCountryScoping
+  - EN0004
+  - EN0008
+  - EN0009
+  - EN0015
+  - EN0022
+  - UC0010
 ---
 
 # EN0014 — DonationConfirmation
 
-## Description
-Czech tax donation certificate ("Potvrzení o daru") — an immutable snapshot of a donor's identifying and donation-total data captured at request time, used to issue a tax-deductible donation confirmation for a given year. Stores the donor's name/address/birth number, the confirmed donation total, and GDPR consent flags as a point-in-time record rather than live references.
+## Purpose
 
-## Entity Category
-Persisted · Confidence: High
+A Czech tax donation certificate ("Potvrzení o daru"): an immutable, write-once snapshot of a
+donor's identifying data and confirmed donation total for a given tax year, issued to support a
+tax deduction. The snapshot captures donor identity, the confirmed donation total, and GDPR
+consent as point-in-time values rather than live references to the donor or to underlying
+Transactions (EN0009).
 
-## Origin
-- DB artifacts: base_table `donation_confirmation` (content, not revisionable, not translatable; no `hook_schema`).
-- Code touchpoints: `DonationConfirmationEntity`; created + saved from the confirmation form and `v32` endpoint.
-Evidence: [donation_confirmation/src/Entity/DonationConfirmationEntity.php](../../intake/current-solution/_source/patronus/web/modules/custom/donation_confirmation/src/Entity/DonationConfirmationEntity.php); db-models.md `donation_confirmation`.
+Country availability, the server-computed nature of the confirmed total, and the current-state
+absence of an idempotency safeguard are governed by `BR-DonationConfirmationAndTax` and
+`BR-MultiTenantCountryScoping`.
 
-## Core Fields
-- name (string 50; required; donor name; entity label)
-- email (string 200; required; plain string — no format validation at data layer)
-- address (string 250; required)
-- rodne_cislo (string 20; optional; Czech birth/personal number)
-- donation_total (integer; confirmed donation amount "Částka")
-- donation_in_words (string 250; amount in words)
-- confirmation_year (integer; the tax year the confirmation covers)
-- number_of_requests (integer; count of confirmation requests)
-
-## Technical Fields
-- campaign (reference → EN0004; optional linked Story; no explicit handler)
-- agreement_truthfulness / agreement_personal_data (boolean, ReadOnly; required; GDPR consent; default TRUE)
-- ip_address (20, ReadOnly) / user_agent (250, ReadOnly)
-- status (boolean; publish flag; default TRUE)
-
-## Relations
-- campaign → EN0004 (Campaign; optional)
-- user_id → EN0008 (User; author)
-
-## Allowed Statuses
-No status enum. `status` is only the Drupal publish boolean, default TRUE (published on create).
-Evidence: db-models.md `donation_confirmation`; EN-lifecycle-evidence `status` default TRUE.
+---
 
 ## Lifecycle
-Confirmed:
-- (none) → created / published (`status` default TRUE) — `DonationConfirmationEntity::create()->save()` from the form (L330-344) and `v32` endpoint (L139-156) (FLW0009).
-Snapshot semantics: donor identity fields (name/email/rodne_cislo/address) and `donation_total` are captured values, not live entity references — no subsequent state change observed. Treated as write-once.
 
-## Spec Alignment
-N/A — No EN spec files found in repository.
+Issued — the only observed state. A DonationConfirmation is created already complete and
+published; no further state change is observed after creation (see Invariants).
+
+---
+
+## State Transitions
+
+(none) → Issued
+trigger: UC0010 — Issue Donation Confirmation (Tax)
+
+No further transitions are observed; see Invariants (write-once snapshot).
+
+---
+
+## Attributes
+
+### System-managed attributes
+
+- donation_total (integer; required; the confirmed donation amount for the confirmation year; server-computed — see Invariants)
+- donation_in_words (string, max 250; required; the confirmed total expressed in words)
+- number_of_requests (integer; optional; count of confirmation requests observed for the donor)
+- ip_address (string, max 20; system-captured at request time)
+- user_agent (string, max 250; system-captured at request time)
+- published (boolean; default true; no further status vocabulary is defined for this entity)
+
+### User-provided attributes
+
+- name (string, max 50; required; donor or requester name; serves as the entity's label)
+- email (string, max 200; required; requester's email address)
+- address (string, max 250; required; donor or requester address)
+- rodne_cislo (string, max 20; optional; Czech birth/personal identification number)
+- confirmation_year (integer; required; the tax year the confirmation covers)
+- campaign (optional; reference to EN0004 — Campaign the confirmed donations are scoped to, when the request is campaign-specific)
+- agreement_truthfulness (boolean; required; default true; GDPR/accuracy consent captured at request time)
+- agreement_personal_data (boolean; required; default true; GDPR personal-data consent captured at request time)
+
+---
+
+## Invariants
+
+- The confirmed `donation_total` is server-computed, not user-entered — see `BR-DonationConfirmationAndTax`.
+- Donor identity fields and the confirmed total are captured as an immutable, write-once snapshot — see `BR-DonationConfirmationAndTax`.
+- Available only for the CZ country; no equivalent DonationConfirmation record is produced for RO or MD — see `BR-DonationConfirmationAndTax`, `BR-MultiTenantCountryScoping`.
+- Not protected by an idempotency safeguard: repeated requests for the same donor and year each independently produce a separate DonationConfirmation — see `BR-DonationConfirmationAndTax`.
+
+---
+
+## Relationships
+
+- EN0004 — Campaign (optional; donation total may be scoped to a campaign)
+- EN0008 — User (the donor/requester whose donations are confirmed)
+- EN0009 — Transaction (read-only source of the confirmed total; not referenced live after snapshot creation)
+- EN0015 — TaxPayer (RO counterpart entity for the equivalent RO tax-redirect mechanism; not the same lifecycle — see Open Questions)
+- EN0022 — EmailArchive (archive record of the dispatched confirmation document/email)
+
+---
 
 ## Open Questions
-1. PDF issuance/e-mailing of the certificate — is generation part of this entity's flow or a downstream job? (not evidenced here).
-2. `donation_total` — is it computed from EN0009 transactions at creation, or user-entered? (snapshot value; source not traced).
-3. CZ-only? No country field present — is scope enforced elsewhere (RO uses EN0015 TaxPayer instead)?
+
+1. Document rendering/dispatch of the confirmation (PDF generation, email delivery) — is this
+   part of the entity's own lifecycle or entirely a downstream, non-entity-owned effect of
+   UC0010? Current draft treats the DonationConfirmation record itself as complete at creation,
+   with rendering/dispatch as a use-case-level side effect (see UC0010 AF2 for the partial-dispatch
+   case).
+2. Whether the RO TaxPayer (EN0015) mechanism should be modeled as a lifecycle variant of this
+   entity or as a fully distinct entity is unresolved — current evidence treats them as parallel,
+   country-specific mechanisms rather than shared lifecycle states.

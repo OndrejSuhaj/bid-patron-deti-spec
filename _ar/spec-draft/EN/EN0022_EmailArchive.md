@@ -5,62 +5,102 @@ canonical_layer: EN
 spec_type: entity
 status: draft
 references:
-  - EN0001  # Application — email.application (required) → application
-  - EN0004  # Campaign — email.campaign → campaign
-  - EN0008  # User — email.user_id (author) + email.to_user_id (recipient)
+  - EN0001  # Application — required reference on every archive record
+  - EN0004  # Campaign — optional reference
+  - EN0008  # User — author and resolved-recipient references
+  - BR-TransactionalMessaging  # governs archiving / delivery-status policy
+  - UC0012  # Dispatch Transactional Message — sole creation trigger
 ---
 
 # EN0022 — EmailArchive
 
-## Description
-Per-send archive of an outbound transactional email. One row is written for **every** recipient each time the mailing service dispatches a templated message, regardless of send outcome. Records the resolved to/from addresses, subject, rendered body, the template name and its serialized arguments, and links to the originating Application and Campaign. The transport is Mautic (despite the "SmartMailing" service naming).
+## Purpose
 
-## Entity Category
-Content · Confidence: High
-(Schema confirmed + heavy write usage: one insert per recipient on every dispatch across ~30 caller sites — FLW0019.)
+EmailArchive is the durable, per-recipient record of an outbound transactional message. Every time
+the messaging orchestrator dispatches a templated message, one EmailArchive record is written for
+each recipient, independent of whether the message was actually transmitted. It captures what was
+sent (or attempted): the resolved addresses, subject, rendered body, the template used, and the
+arguments supplied to that template, together with the business context the message relates to
+(the driving Application, and optionally a Campaign). EmailArchive functions as an audit trail for
+transactional messaging rather than as a business workflow object in its own right.
 
-## Origin
-- DB artifacts: base_table `email`. `email.install` defines a **separate** `email_domain` table (update_8001) — NOT a schema for `email`; no hook_schema for `email` itself.
-- Code touchpoints:
-  - `email/src/Entity/EmailEntity.php` — entity; `preCreate:63` stamps `user_id`; `preSave:70-81` resolves `to_user_id` from `to` via user.mail lookup; `setError:102` defined.
-  - `patron_base/src/APIMailingService.php:217-230` — `EmailEntity::create()->save()` per recipient (the single archiver).
-Evidence: db-models.md `email`; FLW0019 (§C, one insert per recipient; §D archiving).
-
-## Core Fields
-- `name` (string 200; required; Subject; entity label)
-- `to` / `from` (string 50 each; required; addresses — capped at 50 chars, long addresses truncate)
-- `body` (text_long; optional; rendered body)
-- `template_name` (string 50; required; template key mapped to a per-country Mautic email id)
-- `arguments` (string_long; optional; serialized/JSON template args)
-- `application` (er → EN0001 Application; **required**; "Lead")
-- `campaign` (er → EN0004 Campaign; optional; "Příběh")
-- `status` (boolean; publish flag; default TRUE)
-
-## Technical Fields
-- `user_id` (er → EN0008 User; optional; author — current user at create)
-- `to_user_id` (er → EN0008 User; optional; recipient, auto-resolved in preSave from `to`)
-- `sent` (timestamp; **defined but never written** — no `set('sent')` on email anywhere)
-- `error` (string_long; `setError()` defined at :102 but **never called**)
-- `created` / `changed` (timestamps)
-Evidence: db-models.md `email`; FLW0019 failure-mode (no send-status write-back); grep confirms `setError` defined, uncalled, and no `set('sent')` on email.
-
-## Relations
-- `application` → EN0001 Application (required). Evidence: db-models.md; EmailEntity.php:243-249.
-- `campaign` → EN0004 Campaign. Evidence: db-models.md.
-- `user_id` → EN0008 User (author); `to_user_id` → EN0008 User (recipient, resolved by mail). Evidence: db-models.md; EmailEntity.php:70-81.
-
-## Allowed Statuses
-`status` boolean only (published, default TRUE). No sent/failed/suppressed state is recorded — the archive cannot distinguish delivered vs. failed vs. env-suppressed sends (see Lifecycle). Evidence: FLW0019 failure-mode.
+---
 
 ## Lifecycle
-- (none) → created/published per recipient on each dispatch (`APIMailingService::sendEmail` → `EmailEntity::create()->save()`). Confirmed (FLW0019; EN-lifecycle-evidence FLW0019).
-- After create: `sent`/`error` are never updated; actual send is gated by environment (prod / allow-list) but the archive row is written either way. Confirmed (FLW0019: "email (none) → created/published, `sent`/`error` never written afterwards").
 
-## Spec Alignment
-N/A — No EN spec files found in repository.
+- Created (published)
+
+EmailArchive has a single effective lifecycle state after creation: it exists and is published. It
+does not carry a delivery-status state (e.g. sent, failed, suppressed) — see Invariants.
+
+---
+
+## State Transitions
+
+(none) → Created  
+trigger: UC0012 (Dispatch Transactional Message) — one EmailArchive record is created per recipient
+during archiving (UC0012.2), for every dispatch attempt that passed template resolution.
+
+No further state transitions occur after creation: EmailArchive records are not updated with a
+delivery outcome (see Invariants).
+
+---
+
+## Attributes
+
+### System-managed attributes
+
+- to (string; required; resolved recipient address)
+- from (string; required; resolved sender address)
+- body (text; optional; rendered message body)
+- template_name (string; required; identifies the template used, resolved per country)
+- arguments (text; optional; the template's substitution values, recorded as supplied)
+- to_user (reference to EN0008 – User; optional; recipient, auto-resolved from the `to` address)
+- author (reference to EN0008 – User; optional; the user context active at creation time)
+- status (boolean; published flag; defaults to published)
+
+### User-provided attributes
+
+- application (reference to EN0001 – Application; required; the business context the message relates to)
+- campaign (reference to EN0004 – Campaign; optional; the campaign context the message relates to, when applicable)
+
+Note: "user-provided" here means supplied by the calling business context that requests the
+dispatch (per UC0012 preconditions), not entered by an end user through a form.
+
+---
+
+## Invariants
+
+- Exactly one EmailArchive record is created per recipient per dispatch attempt that passes
+  template resolution; a dispatch attempt with an unresolvable template name creates none
+  (archiving policy owned by BR-TransactionalMessaging; see UC0012, AF1).
+- An EmailArchive record, once created, does not carry a delivery-status outcome — a delivered
+  message is indistinguishable from a suppressed or failed one (per BR-TransactionalMessaging; see
+  UC0012 AF2, Postconditions).
+- An EmailArchive record always references an Application (EN0001); no confirmed case of a valid
+  EmailArchive without one is evidenced.
+
+---
+
+## Relationships
+
+- EN0001 – Application (required; the business context of the message)
+- EN0004 – Campaign (optional)
+- EN0008 – User (author, and separately the resolved recipient)
+
+---
 
 ## Open Questions
-1. `sent`/`error` fields exist but are dead — is send-status tracking a planned-but-abandoned feature (target-state candidate)?
-2. `to`/`from` capped at 50 chars truncates long addresses — data-integrity risk; intended?
-3. `application` is validation-required but the table has no DB NOT NULL, and callers can pass empty `application` (FLW0019) — is an empty-application archive row valid?
-4. No idempotency key — re-invocation (e.g. entity postSave loops) re-archives and re-sends. Acceptable?
+
+1. EmailArchive's data model reserves fields for a delivery outcome (sent/error), but no confirmed
+   path ever populates them after creation — is delivery-status tracking a planned-but-unrealized
+   capability, or intentionally out of scope for this entity?
+2. The `to`/`from` attributes truncate long addresses at a fixed length in the current
+   implementation — unclear whether this is an accepted constraint or a data-integrity gap.
+3. `application` is treated as required by validation, but current evidence does not confirm this
+   is enforced at the data-storage level — is an EmailArchive record with no Application reference
+   ever valid?
+4. No de-duplication or idempotency key exists on EmailArchive — re-invocation of a dispatch for the
+   same logical message produces additional archive records and, where the send-gate allows it,
+   additional transmissions. Uncertain — Not evidenced whether this is an accepted characteristic or
+   an unaddressed gap.

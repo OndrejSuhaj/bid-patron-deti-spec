@@ -5,57 +5,96 @@ canonical_layer: EN
 spec_type: entity
 status: draft
 references:
-  - EN0006  # Contact — contact.user_note → user_note
-  - EN0008  # User — user_note.user_id (owner)
+  - EN0006 (Contact)
+  - EN0008 (User)
+  - UC0016
+  - BR-DataProtectionAndErasure
 ---
 
 # EN0023 — UserNote
 
-## Description
-A free-text note/annotation attached to a Contact. Each Contact carries a single `user_note` reference (EN0006 `contact.user_note`), so UserNote acts as the extended-details / annotation record for a party. It is **revisionable** (full revision history with revert/delete revision routes), allowing back-office edits to be tracked over time.
+## Purpose
 
-## Entity Category
-Content · Confidence: Medium
-(Schema confirmed + create/manage usage via UserNote forms + controller linking to contact. Revisionable machinery present.)
+UserNote is a free-text annotation record attached to a party. It carries the extended back-office
+commentary that staff keep on a Contact (EN0006), which holds a single linked UserNote. Each edit to
+a UserNote is preserved as a distinct, retrievable revision, so back-office annotation history is
+auditable over time.
 
-## Origin
-- DB artifacts: base_table `user_note`; revision tables `user_note_revision` / `user_note_field_revision`. No `.install` / no hook_schema.
-- Code touchpoints:
-  - `user_note/src/Entity/UserNoteEntity.php` — entity (revisionable; publishedBaseFieldDefinitions).
-  - `user_note/src/Form/UserNoteEntityCreateForm.php:78` — `UserNoteEntity::create([...])`.
-  - `user_note/src/Controller/UserNoteEntityController.php:118,162,172` — links a saved note to a `contact` (`'user_note' => $user_note->id()`); full-history controller.
-  - `user_note/src/UserNoteEntityHtmlRouteProvider.php` — revision overview / revert / delete routes.
-  - `contact/src/Entity/ContactEntity.php:747-750` — `contact.user_note` (er → user_note).
-Evidence: db-models.md `user_note`; grep (UserNoteEntity::create at CreateForm:78; controller sets contact.user_note; ContactEntity.php:747).
-
-## Core Fields
-- `name` (string 50; required; entity label)
-- `note` (string_long; required; the note text)
-- `status` (boolean; publish flag; via publishedBaseFieldDefinitions())
-
-## Technical Fields
-- `user_id` (er → EN0008 User; optional; owner; revisionable)
-- `revision_user` (er → EN0008 User; revision author)
-- `created` / `changed` (timestamps)
-Evidence: db-models.md `user_note` (revision tables; no custom constraints, no TTL/expiry).
-
-## Relations
-- `user_id` → EN0008 User (owner). Evidence: db-models.md.
-- Inbound: EN0006 Contact `user_note` → user_note (the primary linkage). Evidence: db-models.md `contact`; ContactEntity.php:747-750; UserNoteEntityController.php:118.
-- `revision_user` → EN0008 User; `revision_link` → self (revision tables). Evidence: db-models.md.
-
-## Allowed Statuses
-`status` boolean only (published / unpublished); no domain status enum. Evidence: db-models.md `user_note`.
+---
 
 ## Lifecycle
-- (create) → published (via UserNoteEntityCreateForm) → contact linked (`contact.user_note` set to the new note id). Confirmed (UserNoteEntityCreateForm.php:78; UserNoteEntityController.php:118,162,172).
-- edit → new revision (revisionable; revert/delete-revision routes exist). Confirmed by revision route provider (UserNoteEntityHtmlRouteProvider.php).
-- No expiry/archival transition observed. Hypothesis — no lifecycle beyond create/revise/publish in current sources.
 
-## Spec Alignment
-N/A — No EN spec files found in repository.
+- Active — the note exists, is linked to its owning Contact, and is either published or unpublished
+  (see Attributes).
+- Revised — an edit to an existing note is preserved as a prior revision, retrievable and revertible
+  independently of the current content.
+
+Open Question: no expiry, archival, or deletion transition is evidenced beyond create and revise — see
+Open Questions.
+
+---
+
+## State Transitions
+
+(none) → Active
+trigger: UC0016 — Maintain Party Records (creation of the annotation and its link to the owning
+Contact)
+
+Active → Revised
+trigger: UC0016 — Maintain Party Records (edit to note content, preserved as a new revision; prior
+revisions remain revertible)
+
+Open Question: UC0016 as reconstructed describes contact/organisation/lead deduplication and merge; it
+is the only use case identified as touching party records and is cited here as the best-available
+trigger for note creation/edit, but no flow step naming UserNote specifically has been confirmed —
+evidence is Partial.
+
+---
+
+## Attributes
+
+### System-managed attributes
+
+- Publish flag (boolean; required; publish/unpublish state of the note; no domain status vocabulary
+  beyond this flag)
+- Created / changed timestamps (date-time; required)
+- Revision author (reference to EN0008 – User; required per revision; identifies who authored a given
+  revision)
+
+### User-provided attributes
+
+- Name (text; required; short label/title for the note)
+- Note text (text; required; the free-text annotation content)
+- Owner (reference to EN0008 – User; optional; the User associated with the note)
+
+---
+
+## Invariants
+
+- A UserNote's personal-data content is not cascaded by the GDPR erasure use case — see
+  BR-DataProtectionAndErasure.
+
+Open Question: whether a Contact may hold at most one UserNote (single current link) or whether
+multiple notes can accumulate is unresolved — see Open Questions. No BR governing UserNote uniqueness,
+retention, or attachment scope has been identified in the current source set.
+
+---
+
+## Relationships
+
+- EN0006 (Contact) — a Contact holds a single linked UserNote as its annotation record.
+- EN0008 (User) — a UserNote may reference an owning User; each revision records its authoring User.
+
+---
 
 ## Open Questions
-1. Is UserNote strictly one-per-Contact (single `contact.user_note` ref), or can multiple notes accumulate via revisions only?
-2. GDPR: notes may hold PII but are not cascaded in the anonymization flow (FLW0020 gap) — retained indefinitely; intended?
-3. Can a note attach to anything other than a Contact (e.g. directly to a User)? Only the Contact linkage is evidenced.
+
+1. Is UserNote strictly one-per-Contact, or can multiple notes accumulate over time (with only the
+   latest linked from the Contact)?
+2. Can a UserNote attach to a party other than a Contact (e.g. directly to a User)? Only the Contact
+   linkage is evidenced.
+3. GDPR: UserNote content may hold personal data but is not cascaded by the erasure use case (see
+   BR-DataProtectionAndErasure) — is indefinite retention intended, current-state incompleteness, or a
+   gap?
+4. No expiry/archival lifecycle transition beyond create/revise/publish is evidenced — is this a
+   deliberate design choice or an unreconstructed gap?

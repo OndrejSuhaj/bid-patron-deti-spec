@@ -6,51 +6,83 @@ spec_type: entity
 status: draft
 references:
   - EN0001 (Application)
+  - EN0026 (ApplicationReaction)
+  - UC0001 (Submit Application)
+  - UC0002 (Orchestrate Application Status Change)
 ---
 
 # EN0003 — ApplicationSession
 
-## Description
-An ApplicationSession governs *how* and *by whom* a given Application form can be accessed during the multi-step intake. Each session pairs a role (fundraiser/patron) with an interface variant and a JSON form schema, and can be active or deactivated. Sessions are created when an Application is created (one per relevant role) and are bulk-deactivated when the Application enters a state configured to invalidate sessions. It is the access/interface control record for front-end application editing.
+## Purpose
 
-## Entity Category
-Persisted  ·  Confidence: High
+An ApplicationSession governs *how* and *by whom* a given Application (EN0001) form can be accessed
+during the multi-step intake and its subsequent status-driven interactions (e.g. signing, feedback).
+Each session pairs a role (fundraiser or patron) with an access interface variant and a form
+definition, and is either active or deactivated. It is the access/interface control record for
+front-end Application editing.
 
-## Origin
-- DB artifacts: base_table `application_session`; not revisionable, not translatable; source = base fields (no hook_schema).
-- Code touchpoints: `application/src/Entity/ApplicationSessionEntity.php` (`deactivate()`); `ApplicationSessionEntityStorageSchema.php` (composite index); created by `ApplicationEntity::postCreate` (`createPatronSession`/`createFundraiserSession`); deactivated via application_reaction `cancelSessions` → `ApplicationService::deactivateSessions`.
-Evidence: `ApplicationSessionEntity.php`; `ApplicationSessionEntityStorageSchema.php`; `ApplicationEntity::postCreate`
-
-## Core Fields
-- application_uuid (string(128); optional; holds an Application UUID **by naming convention** — plain string, no entity_reference/FK — logical link to EN0001 Application)
-- interface (string(30); optional; runtime values: invited, authenticated_invited, custom)
-- role (list_string; optional; fundraiser / patron)
-- schema (string_long; optional; JSON form definition `{"sections":…}`)
-- status (boolean; default TRUE; `deactivate()` sets FALSE)
-- readonly (boolean; default FALSE)
-
-## Technical Fields
-- session_id (uuid; **required**; entity_keys.uuid = session_id — this uuid IS the session identifier).
-- langcode; created / changed.
-
-## Relations
-Logical (not declared) link: `application_uuid` → EN0001 Application, matched by UUID string, NOT a Drupal entity_reference and NOT a DB FK. No hard relations declared.
-
-## Allowed Statuses
-`status` boolean: TRUE (active) / FALSE (deactivated). `role` enum: fundraiser / patron. `interface` is an open string with observed runtime values (invited, authenticated_invited, custom).
-Evidence: `ApplicationSessionEntity.php` baseFieldDefinitions
+---
 
 ## Lifecycle
-Confirmed transitions (code-path evidenced):
-- (create) → status=TRUE, interface per role — `ApplicationEntity::postCreate createPatron/FundraiserSession`. [FLW0010]
-- active → deactivated (all sessions of an Application) when new Application state ∈ `invalidate_sessions` config — application_reaction `cancelSessions` → `ApplicationService::deactivateSessions`. [FLW0001]
 
-Missing evidence: no re-activation path observed; `readonly` toggle trigger not traced to a specific flow.
+- Active
+- Deactivated
 
-## Spec Alignment
-N/A — No EN spec files found in repository (see EN-candidates.md §Spec Discovery).
+---
+
+## State Transitions
+
+(create) → Active
+trigger: UC0001 — Submit Application (two sessions created at Application creation, one per role — patron and fundraiser)
+
+(create) → Active
+trigger: UC0002.2 — Downstream reaction fan-out on status change (a matching ApplicationReaction, EN0026, specifies a session interface for the new status/role)
+
+(create) → Active
+trigger: UC0002.2 — Downstream reaction fan-out on status change (entry into a signature-waiting or feedback-waiting status creates a session carrying a signing or feedback form)
+
+Active → Deactivated (all sessions of the Application)
+trigger: UC0002.2 — Downstream reaction fan-out on status change (new status is configured to invalidate sessions)
+
+Open — no re-activation transition (Deactivated → Active) is evidenced; no trigger confirmed for a `readonly` state change.
+
+---
+
+## Attributes
+
+### System-managed attributes
+
+- session identifier (identifier; required; uniquely identifies the session)
+- status (boolean-valued; required; default Active; set to Deactivated by the session-cancellation reaction — see State Transitions)
+- readonly (boolean-valued; optional; default not-readonly; trigger for change not evidenced)
+- application reference (reference to EN0001 – Application; optional; identifies the owning Application)
+
+### User-provided attributes
+
+- interface (enumerated; optional; observed values: invited, authenticated_invited, custom — no canonical definition of the selection rule is evidenced; see Open Questions)
+- role (enumerated; optional; values: fundraiser, patron)
+- schema (structured form definition; optional; the form content the session grants access to, e.g. sections of the intake/signing/feedback form)
+
+---
+
+## Invariants
+
+- A deactivated session SHALL NOT grant Application-editing access (role/authority content owned by BR-AccessControlAndRoles).
+
+(An at-most-one-active-session-per-role constraint is NOT asserted as an invariant — it is not evidenced; it is tracked under Open Questions.)
+
+---
+
+## Relationships
+
+- EN0001 – Application (the session's owning Application)
+- EN0026 – ApplicationReaction (configuration that determines when a session with a given interface/role is created)
+
+---
 
 ## Open Questions
-- What determines `interface` = invited vs. authenticated_invited vs. custom at creation?
-- Since `application_uuid` is a plain string, how are orphaned sessions (deleted Application) handled?
-- Can a deactivated session be re-activated, or is a new one always created?
+
+- What determines `interface` = invited vs. authenticated_invited vs. custom at creation? (No canonical rule evidenced.)
+- Since the Application reference is not evidenced as an enforced relational link, how are orphaned sessions (deleted Application) handled?
+- Can a deactivated session be re-activated, or is a new one always created instead?
+- Is the one-active-session-per-role constraint a hard invariant or an emergent effect of the reaction configuration? No owning BR doc_id currently states it explicitly.

@@ -6,53 +6,109 @@ spec_type: entity
 status: draft
 references:
   - EN0009  # Transaction — the originating / linked payment
+  - BR-RecurringDonationPolicy
+  - BR-PaymentGatewayCallbacks
+  - UC0005
+  - UC0006
+  - UC0007
 ---
 
 # EN0010 — RecurringTransaction
 
-## Description
-Recurring-payment schedule and gateway token for a repeating donation ("recurring" / subscription). Created (inactive) alongside the first payment and activated when that payment is confirmed PAID; a scheduled cron then charges it periodically. Holds the gateway token, charge period, day-of-month, and last-charge / cancellation timestamps.
+## Purpose
 
-## Entity Category
-Persisted · Confidence: High
+A recurring donation schedule: the standing arrangement that authorizes a donor's payment to be
+charged repeatedly (a "recurring" / subscription donation) rather than once. It carries the
+recurring contribution amount, charging period and day-of-month, the gateway authorization needed
+to charge future payments without donor re-entry, and the record of when it was last charged or
+cancelled.
 
-## Origin
-- DB artifacts: base_table `transaction_recurring` (content, not revisionable, not translatable; no `hook_schema`).
-- Code touchpoints: `TransactionRecurringEntity`; created in `v32/TransactionResource`; activated by `TransactionEntity::updateRecurringStatus`; charged by `ComgateCron`/`NetopiaCron`; token set by `NetopiaConfirmController`.
-Evidence: [transaction_recurring/src/Entity/TransactionRecurringEntity.php](../../intake/current-solution/_source/patronus/web/modules/custom/transaction_recurring/src/Entity/TransactionRecurringEntity.php); db-models.md `transaction_recurring` (Verification: Confirmed).
-
-## Core Fields
-- name (string 50; required; entity label)
-- price (integer; optional; recurring contribution "Příspěvek")
-- transaction_id (reference → EN0009; the linked payment — the ONLY relation)
-- period (string 50; recurring period) · payment_provider (string 50)
-- day (integer, tiny unsigned; day-of-month to charge)
-- status (boolean; 0 = inactive, 1 = active — see Allowed Statuses)
-
-## Technical Fields
-- token_id (string 150; payment token)
-- token_expiration_date (datetime; required; "Deadline pro získání peněz" — RO)
-- last_recurring_payment (timestamp; last successful charge) · canceled (timestamp; cancellation)
-
-## Relations
-- transaction_id → EN0009 (Transaction) — sole relation
-
-## Allowed Statuses
-Boolean `status`: 0 (inactive, at create) / 1 (active). No enum; the two states are a boolean.
-Evidence: created `status=0` — `v32/TransactionResource` L206 (FLW0006); set to 1 — `TransactionEntity::updateRecurringStatus` L703-711.
+---
 
 ## Lifecycle
-Confirmed:
-- (create) → status 0 (inactive) — `v32/TransactionResource` L206 (FLW0006).
-- 0 → 1 (activated) when linked EN0009 transaction reaches PAID — `TransactionEntity::updateRecurringStatus` L703-711 (idempotent: returns if already active) (FLW0003/04/05).
-- token_id / token_expiration set from IPN (RO) — `NetopiaConfirmController` L157-163 (FLW0004).
-- due → charged (`last_recurring_payment=now`) on cron success — `ComgateCron` L93-94; `NetopiaCron` L83-84 (FLW0007).
-Cancellation writes `canceled` timestamp — Hypothesis (field present; cancel code path not deep-mined). Missing evidence.
 
-## Spec Alignment
-N/A — No EN spec files found in repository.
+- Inactive — created alongside the donor's first payment; not yet authorized to charge.
+- Active — authorized; eligible for periodic charging by its configured schedule.
+
+Hypothesis — Not evidenced: a distinct Cancelled state may exist once a cancellation timestamp is
+recorded; whether cancellation flips the Activation state (vs. only stamping a timestamp) is
+unresolved — see Open Questions #1. The Activation state attribute evidences only Inactive / Active.
+
+---
+
+## State Transitions
+
+(none) → Inactive
+trigger: UC0005 — Make a Donation (created together with the first, originating payment)
+
+Inactive → Active
+trigger: UC0006 — Confirm Payment (Gateway Callback), when the linked Transaction (EN0009) reaches
+its PAID state; see INV01. The transition is idempotent — re-confirmation while already Active has
+no further effect.
+
+Active → Active (charged)
+trigger: UC0007 — Process Recurring Donation; a periodic charge creates a new child Transaction
+(EN0009) and, on success, advances the schedule's last-successful-charge record; see INV02.
+
+Active → Active (gateway authorization updated)
+trigger: UC0006 — Confirm Payment (Gateway Callback); the gateway authorization used for future
+charges may be (re-)established from a region's confirmation callback.
+
+(No Active → Cancelled transition is listed: its trigger and even the existence of a distinct
+Cancelled state are not evidenced — see Lifecycle Hypothesis note and Open Questions #1.)
+
+---
+
+## Attributes
+
+### System-managed attributes
+
+- Recurring contribution amount (numeric; optional; the periodic donation amount)
+- Charging period (categorical; the recurrence cadence)
+- Payment provider (categorical; the gateway routing this schedule's charges)
+- Charge day (numeric; the day-of-month on which the schedule becomes due)
+- Activation state (categorical; values: Inactive / Active — see Lifecycle)
+- Gateway authorization (opaque; conditional; the token enabling future charges without donor
+  re-entry; not established for every gateway — see Open Questions)
+- Gateway authorization expiry (date/time; conditional; when present, the point after which the
+  gateway authorization is no longer usable)
+- Last successful charge (date/time; optional; timestamp of the most recent successful periodic
+  charge)
+- Cancellation timestamp (date/time; optional; when a cancellation was recorded)
+
+### User-provided attributes
+
+- Label (text; required; the schedule's identifying name)
+
+---
+
+## Invariants
+
+- INV01 — Activation depends on the originating Transaction (EN0009) reaching PAID; see BR-RecurringDonationPolicy.
+- INV02 — Each periodic charge derives a new child Transaction (EN0009) from the schedule and its
+  originating Transaction, and due-selection for charging is governed jointly by the schedule and
+  that Transaction; see BR-RecurringDonationPolicy.
+- INV03 — A RecurringTransaction cannot exist without its originating Transaction (EN0009); see
+  BR-RecurringDonationPolicy.
+- INV04 — Gateway confirmations that establish or update the gateway authorization are authenticated
+  and mapped per BR-PaymentGatewayCallbacks.
+
+---
+
+## Relationships
+
+- EN0009 — Transaction (the originating and each subsequently charged payment; sole relation)
+
+---
 
 ## Open Questions
-1. What sets `canceled` and does it also flip `status`→0? (transition not evidenced in mined flows).
-2. `period` is a free string(50) — what discrete values occur (monthly only?)?
-3. Only Netopia (RO) sets a token; is ComGate recurring token-less (charge via linked txn only)?
+
+1. Cancellation effect — a cancellation timestamp is recorded, but whether cancellation also
+   transitions Activation state from Active to Inactive/Cancelled is not evidenced. Status:
+   Uncertain.
+2. Charging period granularity — the charging period is a canonical value from an underlying
+   free-form field; which discrete cadences occur in practice (e.g., monthly only) is not
+   evidenced. Status: Uncertain.
+3. Gateway authorization coverage — a gateway authorization value has only been evidenced for one
+   regional gateway; whether other gateways charge this schedule without any stored authorization,
+   or via a different mechanism, is not evidenced. Status: Uncertain.

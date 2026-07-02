@@ -5,50 +5,88 @@ canonical_layer: EN
 spec_type: entity
 status: draft
 references:
-  - EN0011  # Contract — the (RO) tax-redirect contract this payer signs
+  - EN0011  # Contract — the sole outbound relation; the RO redirect contract this payer signs
+  - BR-ContractAndESignature  # RO tax-redirect declaration pairing invariant
+  - BR-DonationConfirmationAndTax  # confirms TaxPayer/Contract pairing is a distinct RO mechanism, not the CZ confirmation path
+  - UC0010  # AF4 — RO tax-redirect declaration (adjacent country variant), Partial evidence
 ---
 
-# EN0015 — TaxPayer
+# EN0015 – TaxPayer
 
-## Description
-Romanian tax-redirection payer record — captures a Romanian donor who elects to redirect a percentage of their income tax (2% / 3.5%) to the organisation. Holds full RO identity and address (CNP, father's initial, county/sector, block/staircase/floor/apt) plus a multi-year consent flag, and links to the redirect Contract (EN0011). RO-specific counterpart to the CZ DonationConfirmation (EN0014).
+## Purpose
 
-## Entity Category
-Persisted · Confidence: Medium
+A Romanian tax-redirection payer record. It captures a Romanian donor who elects to redirect a
+percentage of their income tax (2% / 3.5%) to the organisation, holding the donor's identity and
+address details needed for the redirect declaration together with a multi-year consent flag. It is
+the RO-specific counterpart to the CZ DonationConfirmation (EN0014): both express a tax-related
+donor record, but TaxPayer serves the RO income-tax-redirect mechanism rather than a donation
+confirmation document.
 
-## Origin
-- DB artifacts: base_table `tax_payer` (content, not revisionable, not translatable; installed via `account_update_10001/10002` through the entity-definition manager, no `hook_schema`).
-- Code touchpoints: `TaxPayerEntity` (in the `account` module). Adjacent to the CZ confirmation flow FLW0009.
-Evidence: [account/src/Entity/TaxPayerEntity.php](../../intake/current-solution/_source/patronus/web/modules/custom/account/src/Entity/TaxPayerEntity.php); db-models.md `tax_payer`.
-
-## Core Fields
-- name (string 50; required; entity label)
-- first_name / last_name / initial (string 50; required; `initial` = "Father Initial")
-- email (eligible_email custom, 200; required)
-- numeric_code (rc custom, 20; required; Personal Numeric Code / CNP; `validate_age=0`)
-- phone (phone_number; required; country from Settings = `ro`; unique=NO) · fax (phone_number; optional; unique=NO)
-- street / number / county / town / postal_code (string 100; required; `county` = "County/Sector")
-- two_years_agreed (boolean; optional; 2-year redirect consent)
-
-## Technical Fields
-- block / staircase / floor / apt (string 100; optional; RO address detail)
-- created / changed (timestamps)
-
-## Relations
-- contract → EN0011 (Contract) — the sole outbound relation (the RO redirect contract)
-
-## Allowed Statuses
-None. No status enum and no publish field declared (unlike sibling entities, `tax_payer` has no `status` boolean in its field table).
-Evidence: db-models.md `tax_payer` field table (no `status` row).
+---
 
 ## Lifecycle
-No entity-level state machine observed — a captured payer record linked to a redirect Contract. No promote/approve/void transition evidenced in mined flows.
-Hypothesis: record is created when a RO donor submits a tax-redirect form and paired with a generated Contract (EN0011). Missing evidence — creation/pairing path not deep-mined (FLW0009 is CZ-adjacent).
 
-## Spec Alignment
-N/A — No EN spec files found in repository.
+No entity-level state machine is evidenced for TaxPayer. It is a captured payer record, created once
+and paired with a redirect Contract (EN0011); no further promote/approve/void state is observed.
+
+---
+
+## State Transitions
+
+(none) → captured
+trigger: UC0010 AF4 – RO tax-redirect declaration (adjacent country variant) — Partial evidence; the
+declaration submission creates the TaxPayer record together with its paired Contract (EN0011).
+
+No further transitions are evidenced.
+
+---
+
+## Attributes
+
+### System-managed attributes
+
+- created (timestamp; system-managed; record creation time)
+- changed (timestamp; system-managed; last modification time)
+
+### User-provided attributes
+
+- name (text; required; entity label)
+- first_name / last_name (text; required)
+- initial (text; required; father's initial, per RO identification convention)
+- email (text; required; validated as an eligible email address)
+- numeric_code (text; required; Romanian Personal Numeric Code / CNP)
+- phone (text; required; RO country context; not required to be unique)
+- fax (text; optional; not required to be unique)
+- street / number / town / postal_code (text; required)
+- county (text; required; county or sector, per RO/MD administrative division)
+- block / staircase / floor / apt (text; optional; RO address detail)
+- two_years_agreed (boolean; optional; consent to a two-year tax-redirect commitment)
+
+---
+
+## Invariants
+
+- A TaxPayer is paired with exactly one redirect Contract (EN0011) — see
+  BR-ContractAndESignature §RO tax-redirect declaration pairing.
+- The TaxPayer/Contract pairing is a distinct RO mechanism and is not a localized variant of the CZ
+  donation-confirmation path — see BR-DonationConfirmationAndTax §Non-Goals.
+
+---
+
+## Relationships
+
+- EN0011 – Contract (the redirect Contract this TaxPayer is paired with; sole outbound relation)
+
+---
 
 ## Open Questions
-1. Where is a TaxPayer created and how is the linked Contract (EN0011) generated/signed for RO redirect?
-2. `two_years_agreed` — does it drive multi-year re-submission suppression, or is it purely recorded consent?
-3. `numeric_code`/`email` use custom field types (`rc`, `eligible_email`) — do their validators enforce CNP checksum / eligibility here?
+
+1. How is the linked Contract (EN0011) generated and signed as part of TaxPayer creation? The
+   creation/pairing path is evidenced only as an adjacent, separately-tracked flow (UC0010 AF4) and
+   has not been deep-mined.
+2. Does `two_years_agreed` drive suppression of repeat multi-year re-submission, or is it recorded
+   consent only? Not evidenced.
+3. Do the CNP and email fields enforce format/eligibility validation beyond required presence (e.g.
+   CNP checksum)? Not evidenced at the canonical level.
+4. No status vocabulary or publish flag is evidenced for TaxPayer, unlike sibling entities — this
+   appears to be a genuine absence rather than a gap; flagged for confirmation during closure.

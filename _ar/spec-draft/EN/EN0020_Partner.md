@@ -10,46 +10,77 @@ references:
 
 # EN0020 — Partner
 
-## Description
-Marketing partner / "podporují nás" (they support us) logo entry displayed on the site (typically the footer). A lightweight CMS-adjacent content record: a name, an outbound link, a logo image, a sort order, and a category distinguishing "support us" from "partners". No domain behavior beyond display ordering.
+## Purpose
 
-## Entity Category
-Content · Confidence: Low
-(Schema confirmed; no usage flow mined — presentation/marketing content, not domain logic. Note: a separate taxonomy `partners` bundle exists and is unrelated to this entity.)
+The Partner represents a "podporují nás" (they support us) marketing logo entry displayed on the
+public site (typically the footer). It is lightweight marketing/display content — a name, an
+outbound link, a logo image, a sort position, and a category distinguishing "support us" entries
+from "partners" entries — with no domain behaviour beyond display and ordering. It is unrelated to
+the taxonomy-based `partners` classification used elsewhere in the system (see Open Questions).
 
-## Origin
-- DB artifacts: base_table `partner`. No `.install` / no hook_schema.
-- Code touchpoints:
-  - `partner/src/Entity/PartnerEntity.php` — entity.
-Evidence: db-models.md `partner`. (Note: `field.field.taxonomy_term.partners.*` config belongs to the taxonomy `partners` bundle, NOT this entity — db-models.md.)
-
-## Core Fields
-- `category` (list_string; required; values: `support_us` / `partners`)
-- `name` (string 50; optional; entity label)
-- `link` (string 200; optional; outbound URL)
-- `logo` (image, public; optional)
-- `order` (integer; optional; sort order)
-- `status` (boolean; publish flag)
-
-## Technical Fields
-- `user_id` (er → EN0008 User; optional; author)
-- `created` / `changed` (timestamps)
-Evidence: db-models.md `partner`.
-
-## Relations
-- `user_id` → EN0008 User (author). Evidence: db-models.md.
-- `logo` → file. Evidence: db-models.md.
-
-## Allowed Statuses
-`status` boolean only (published / unpublished); no domain status enum. `category` (`support_us`/`partners`) is a classification enum, not a lifecycle state. Evidence: db-models.md `partner`.
+---
 
 ## Lifecycle
-Hypothesis — Not evidenced in current sources. No create/transition flow dossier covers Partner; only schema is confirmed. Missing evidence: admin create/edit path and display consumer.
 
-## Spec Alignment
-N/A — No EN spec files found in repository.
+- Unpublished
+- Published
+
+Hypothesis — Not evidenced in current sources. No use case or flow evidence covers Partner
+creation, editing, or publishing; only the data model is confirmed. Missing evidence: the
+administrative create/edit path and the display consumer that renders published Partner entries.
+
+---
+
+## State Transitions
+
+Unpublished → Published
+trigger: Unknown — Not evidenced in current sources.
+
+Published → Unpublished
+trigger: Unknown — Not evidenced in current sources.
+
+---
+
+## Attributes
+
+### System-managed attributes
+
+- `owner` (reference to EN0008 – User; optional; author of the entry)
+- `created` (timestamp; system-managed; creation time)
+- `changed` (timestamp; system-managed; last modification time)
+
+### User-provided attributes
+
+- `category` (enumeration; required; values: `support_us` / `partners`; classification, not a
+  lifecycle state)
+- `name` (text, max 50 characters; optional; entry label)
+- `link` (text, max 200 characters; optional; outbound URL)
+- `logo` (image; optional; publicly served)
+- `order` (integer; optional; sort position for display ordering)
+- `published` (boolean; publish flag — see Lifecycle)
+
+---
+
+## Invariants
+
+- Entity must always have a valid lifecycle state (`published` flag).
+- No cross-entity or governance rule is known to constrain Partner; no BR document currently
+  references this entity.
+
+---
+
+## Relationships
+
+- EN0008 — User (owner/author of the Partner entry)
+
+---
 
 ## Open Questions
+
 1. How is `order` used to render the partner list, and is it globally unique or free-form?
-2. Is the `category` split (support_us vs partners) surfaced in distinct site regions?
-3. Overlap/confusion risk with the taxonomy `partners` bundle — are both in active use?
+2. Is the `category` split (`support_us` vs `partners`) surfaced in distinct site regions?
+3. A separate taxonomy-based `partners` classification exists elsewhere in the system and is
+   unrelated to this entity — is there an overlap or naming confusion risk between the two in
+   active use?
+4. No use case or business rule currently references Partner; state transition triggers are
+   unconfirmed.

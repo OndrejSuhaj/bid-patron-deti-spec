@@ -5,59 +5,129 @@ canonical_layer: EN
 spec_type: entity
 status: draft
 references:
-  - EN0001 (Application)
-  - EN0006 (Contact)
-  - EN0007 (Account)
+  - EN0001
+  - EN0006
+  - EN0007
+  - EN0018
+  - BR-AccessControlAndRoles
+  - BR-DataProtectionAndErasure
+  - BR-PartyIdentityAndDeduplication
+  - BR-CampaignRecommendationDormant
+  - UC0001
+  - UC0014
+  - UC0015
+  - UC0016
 ---
 
 # EN0008 — User (Party)
 
-## Description
-The User is the first-class Party in the domain: the Drupal core `users` entity, replaced by the custom `PatronUser` class and extended with Patronus-specific base fields (name parts, slug, public flag, worker availability, a link to Contact, and an ML `model`). Every actor — applicant (fundraiser), patron, supporter, plus back-office staff — is a User differentiated by role. It is the ownership/authorship anchor referenced by nearly every domain entity.
+## Purpose
 
-## Entity Category
-Persisted  ·  Confidence: High
+The User is the first-class Party in the domain: every actor who can authenticate or act on the
+platform — applicant (fundraiser), patron, supporter, organisation worker, and back-office staff
+(accountant, content admin, coordinator, senior coordinator, front-office, manager, marketing,
+risk manager, administrator) — is represented as a single User type, differentiated by role rather
+than by a separate account type per actor kind (see BR-AccessControlAndRoles). The User is the
+ownership/authorship anchor referenced by nearly every other domain entity; it also carries a link
+to a Contact (EN0006), the party's underlying personal-data record.
 
-## Origin
-- DB artifacts: core `users` / `users_field_data` (Drupal core), extended by config fields (`field.storage.user.*`) and code base fields (`account_entity_base_field_info`). `application_update_8013` ALTERs core `users` (`uid` → serial).
-- Code touchpoints: entity class `account/src/PatronUser.php` (extends core `User`; `postSave` enqueues to `es_upload_queue` + `mautic_queue` via `patron_base.default::addToQueue`); added base fields in `account/account.module::account_entity_base_field_info`; registration/role via `AccountService::register` / `updateUserRole`.
-Evidence: `PatronUser.php` (`postSave`); `account.module` (`account_entity_base_field_info`); `AccountService.php`
-
-## Core Fields
-- roles (core; domain roles: fundraiser / patron / supporter / organisation_worker + back-office accountant / content_admin / coordinator / senior_coordinator / front / manager / marketing / risk_manager / administrator — per `user.role.*` config)
-- mail / name (core; anonymized in place by GDPR flow — see Lifecycle)
-- first_name / last_name (string; account base fields), title_prefix / title_suffix (string), name_format (list_string; full/short/hidden)
-- slug (string; account base field), public (boolean; profile public?), worker_available (boolean)
-- contact (entity_reference → EN0006 Contact; the party's Contact record)
-- user_name (string; config field), user_bank_account (string; config field), user_image (image → file; config field)
-
-## Technical Fields
-- uuid / langcode (framework). model (string_long; serialized PHP-ML classifier — see EN0007 Account / dormant recommendation subsystem, FLW0030). training_queue / scoring_queue / activate_session (queue/session housekeeping flags). `campaign_recommendation` base field is **commented out** in `account.module` — field storage impossible today (`Conflict`/dormant).
-
-## Relations
-Soft entity_reference (no DB FK): `contact` → EN0006 Contact. Inbound (heavy): EN0001 Application (fundraiser, patron, lead_user_id, scoring_user, user_id), EN0007 Account (user_id), EN0004 Campaign, EN0002 ApplicationProfile, EN0018 Organisation (worker/manager), and most other entities reference User as owner/author/actor.
-
-## Allowed Statuses
-Core Drupal user status: active / blocked (published flag). Domain differentiation is by **role**, not a status enum. `postSave` unconditionally enqueues the user to `es_upload_queue` and `mautic_queue`.
-Evidence: `PatronUser::postSave`; `user.role.*.yml`
+---
 
 ## Lifecycle
-Confirmed transitions (code-path evidenced):
-- (anonymous) → registered (active, no password) + role fundraiser|patron|supporter + Contact — `AccountService::register`. [FLW0010, FLW0015]
-- (new, from application) → created **blocked/password-less** + role patron|fundraiser + Contact — `CreateUserController`; `AccountService`. [FLW0026]
-- blocked → active + password reset (magic-link side effect) — `AccountService::getUserMagicLink`. [FLW0014, FLW0015]
-- anonymous → authenticated (login/access ts) — `AccountLoginResource` `user_login_finalize()`. [FLW0014]
-- active → **anonymized-in-place** (`mail=''`, random `name`; NOT deleted/cancelled; related PII retained) — `gdpr/src/Form/GDPRMailForm.php`. [FLW0020]
-- (owner of duplicate contact) active → **hard-deleted** (bypasses cancel/anonymise) — `ContactRemoveDuplicatesController::User->delete()`. [FLW0023]
-- (nonexistent/plain) → `organisation_worker` (role + contact link; blocked→activation email) — `OrganisationWorkerForm`. [FLW0024]
 
-Missing evidence: **login_history writes NO row** (write hook commented out, FLW0014); GDPR anonymization is incomplete (Application/Contact PII not cascaded, FLW0020); Mautic upsert re-adds even anonymized users (anti-erasure, FLW0019/0020).
+- Unregistered (no User exists for the person)
+- Registered — active, password-less
+- Registered — blocked, password-less (provisioned on the person's behalf, not yet activated)
+- Active (authenticated / usable)
+- Anonymized (login identity cleared, account otherwise retained)
+- Removed (account no longer exists)
 
-## Spec Alignment
-N/A — No EN spec files found in repository (see EN-candidates.md §Spec Discovery).
+---
+
+## State Transitions
+
+Unregistered → Registered (active, password-less)
+trigger: UC0014 (self-registration) / UC0001 (fundraiser/patron self-registration during Application submission)
+
+Unregistered → Registered (blocked, password-less)
+trigger: UC0001 / UC0014 (User provisioned from an Application on the person's behalf, fundraiser or patron role)
+
+Unregistered → Registered (organisation-worker role)
+trigger: UC0016 (organisation worker created or linked from the worker-management flow)
+
+Registered (blocked or password-less) → Active
+trigger: UC0014 (activation / magic-link login establishes credentials and an authenticated session)
+
+Active → Anonymized
+trigger: UC0015 (GDPR anonymization request clears login email and display name; account is retained, not deleted or blocked)
+
+Active → Removed
+trigger: UC0016 (contact deduplication merge deletes the User owning a losing duplicate Contact, EN0006)
+
+---
+
+## Attributes
+
+### System-managed attributes
+
+- roles (list of values; required; the User's assigned domain role(s) — fundraiser, patron,
+  supporter, organisation worker, or a back-office role; a User may hold more than one role
+  concurrently — see BR-AccessControlAndRoles)
+- account status (value; required; active or blocked)
+- last-login / last-access timestamps (datetime; optional; recorded on successful authentication)
+- contact (reference to EN0006 — Contact; the party's linked Contact record)
+
+### User-provided attributes
+
+- login email (string; required while the account is not anonymized; also serves as the contact
+  address and login identifier)
+- display name (string; required)
+- first name / last name (string; optional)
+- name prefix / name suffix (string; optional)
+- name display preference (value; optional; full / short / hidden)
+- public profile flag (boolean; optional; whether the User's profile is visible publicly)
+- worker availability flag (boolean; optional; applicable to organisation-worker role)
+- profile image (optional)
+- bank account identifier (string; optional)
+
+---
+
+## Invariants
+
+- A User is differentiated by assigned role rather than by a distinct account type — see
+  BR-AccessControlAndRoles.
+- A User SHALL be able to hold more than one role concurrently — see BR-AccessControlAndRoles.
+- A User SHALL be granted the supporter role on the first paid donation it owns, idempotently —
+  see BR-AccessControlAndRoles.
+- A User provisioned from an Application (EN0001) on a person's behalf SHALL be created without a
+  usable password until a separate activation step is completed — see BR-PartyIdentityAndDeduplication.
+- A magic-link authentication token SHALL only be honoured within its validity window — see
+  BR-AccessControlAndRoles.
+- GDPR anonymization of a User SHALL NOT be assumed to erase all related personal data held by the
+  same party — see BR-DataProtectionAndErasure.
+- A User that owns a losing duplicate Contact (EN0006) in a deduplication merge SHALL be deleted as
+  a direct side effect of the merge, outside the anonymization/erasure path — see
+  BR-DataProtectionAndErasure and BR-PartyIdentityAndDeduplication.
+- Any coupling between a User and campaign recommendations SHALL NOT be treated as an active
+  invariant — see BR-CampaignRecommendationDormant.
+
+---
+
+## Relationships
+
+- EN0006 — Contact (the User's linked party/personal-data record)
+- EN0001 — Application (a User acts as fundraiser, patron, or other case-linked role)
+- EN0007 — Account (Account references its owning User)
+- EN0018 — Organisation (a User may be an organisation worker or manager)
+
+---
 
 ## Open Questions
-- Given GDPR anonymizes in place but Mautic re-upserts by email, how is true erasure achieved?
-- Which single field/marker distinguishes a fundraiser User from a patron User beyond role?
-- Is the `model` field on User authoritative vs. the `model` on Account (EN0007)?
-- Why is `campaign_recommendation` commented out — planned, removed, or moved?
+
+- Given GDPR anonymization clears the User's login identity in place but downstream marketing-CRM
+  synchronization re-populates the party's name, how is true erasure achieved for an anonymized
+  User? (see BR-DataProtectionAndErasure)
+- Which attribute distinguishes a fundraiser User from a patron User beyond assigned role?
+- Is a recommendation-related attribute observed on User authoritative relative to the equivalent
+  attribute on Account (EN0007)? Current-state: the coupling is dormant — see
+  BR-CampaignRecommendationDormant.

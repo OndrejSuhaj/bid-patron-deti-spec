@@ -5,55 +5,92 @@ canonical_layer: EN
 spec_type: entity
 status: draft
 references:
-  - EN0009  # Transaction (settled/reconciled)
-  - EN0008  # User (owner)
+  - EN0009  # Transaction — the money record the settlement logically reconciles
+  - EN0008  # User — owner of the settlement record
+  - BR-BankReconciliationAndMatching
+  - UC0008  # Reconcile Bank Transactions
 ---
 
 # EN0030 — ComgateBankReconciliation
 
-## Description
-Record produced by the manual accounting "ComGate → bank" settlement form, used to reconcile ComGate
-gateway payouts against the bank. The stored entity itself is minimal (owner + label + publish flag);
-the actual reconciliation writes (`bank_vs`, `is_sent_to_bank=1`) land on Transaction rows (EN0009),
-not on this entity. Modelled as the settlement's own record for accounting bookkeeping.
+## Purpose
 
-## Entity Category
-Persisted · Confidence: Medium
+Represents an accounting-side record of a gateway-to-bank settlement, created when an accountant
+manually books the transfer of payment-gateway funds into the bank account. It exists to give
+accounting bookkeeping its own record of a settlement event, distinct from the money records
+(Transaction, EN0009) that the settlement actually reconciles.
 
-## Origin
-- DB artifacts: base_table `transaction_comtobank` (content entity; not revisionable; not translatable; module has **no** `.install` → no `hook_schema`)
-- Code touchpoints:
-  - `accounting/src/Entity/TransactionComToBankEntity.php` — entity + `baseFieldDefinitions()`
-  - Produced by `accounting/src/Form/ComgateToBankForm.php` and `TransactionComToBankEntityForm.php` (manual accounting form, FL032)
-Evidence: db-models.md `transaction_comtobank`; FLW0013 "Not in scope" note (explicitly: this entity is written by `ComgateToBankForm`, **not** by `comgatesync`).
+The entity itself carries no settlement payload (amount, gateway payout identifier, date range,
+or a link to the reconciled Transactions) — see Open Questions. The reconciling effect (marking
+Transactions as bank-settled) is applied directly to Transaction (EN0009) records and is not
+mediated by this entity; see BR-BankReconciliationAndMatching for the matching/booking rule and
+UC0008 for the reconciliation use case.
 
-## Core Fields
-- `name` (string 50; default `''`) — entity label
-- `status` (boolean; default TRUE) — published flag
-Evidence: db-models.md `transaction_comtobank` field table (minimal entity — all storage Drupal-generated).
-
-## Technical Fields
-- `user_id` (entity_reference → User EN0008) — owner; default current user.
-- `created` / `changed` (created / changed).
-
-## Relations
-- `user_id` → User (EN0008) — the only declared relation.
-- Logically settles: Transaction (EN0009) — the settlement acts on `transaction` rows (`bank_vs`, `is_sent_to_bank`), but no stored reference links this entity to those Transactions.
-
-## Allowed Statuses
-`status` boolean = published flag only (default TRUE); no workflow states.
-Evidence: db-models.md — minimal entity, `status` is the publish flag.
+---
 
 ## Lifecycle
-Created via the manual accounting settlement form; created-only from a lifecycle standpoint (no state
-machine, no update/delete path evidenced). The reconciliation *effect* is on Transaction rows, whose
-lifecycle is owned by EN0009.
-Evidence: db-models.md (minimal fields, no state field); FLW0013 confirms the reconciliation UPDATE targets `transaction`, not this entity. Created-only.
 
-## Spec Alignment
-N/A — No EN spec files found in repository.
+- Created
+- Published / Unpublished (a simple visibility flag; not a workflow state)
+
+No further lifecycle states are evidenced.
+
+---
+
+## State Transitions
+
+(none) → Created
+trigger: UC0008 (manual settlement recording, sub-flow UC0008.3 boundary — see Relationships and
+Open Questions; the record's own creation is a manual accounting action, not an automated step of
+UC0008.3 itself)
+
+Created → Published / Unpublished
+trigger: not evidenced as a distinct transition; the published flag is set at creation (default:
+Published) with no confirmed update path.
+
+No further transitions (e.g. archival, deletion) are evidenced.
+
+---
+
+## Attributes
+
+### System-managed attributes
+
+- Owner (reference to EN0008 – User; required; defaults to the current user at creation time)
+- Created timestamp (datetime; required)
+- Last-changed timestamp (datetime; required)
+
+### User-provided attributes
+
+- Label (text; optional; short free-text name for the settlement record)
+- Published (boolean; required; default: Published; visibility flag with no further workflow meaning)
+
+---
+
+## Invariants
+
+- See BR-BankReconciliationAndMatching for how a gateway settlement is matched and booked against
+  Transaction (EN0009) — that rule governs the reconciliation effect, not this entity's own fields.
+- No invariant beyond entity-standard field presence is evidenced for this entity's own attributes.
+
+---
+
+## Relationships
+
+- EN0008 – User (owner of the settlement record)
+- EN0009 – Transaction (logically reconciled by the settlement this entity records; no attribute
+  on this entity links it to the specific Transactions it covers — see Open Questions)
+
+---
 
 ## Open Questions
-1. This entity has **almost no field evidence** (only owner/name/status/timestamps) — what settlement payload (amounts, ComGate payout id, date range) does `ComgateToBankForm` actually persist, and where (on this entity, or only on `transaction`)?
-2. No stored link to the reconciled Transactions — how is a settlement record traced back to the payments it covers?
-3. Is `transaction_comtobank` an audit stub while the real work is the raw-SQL `transaction` UPDATE, or does the form store richer data not reflected in `baseFieldDefinitions()`?
+
+1. Evidence for this entity's own data is limited to owner, label, and the published flag — what
+   settlement payload (amount, gateway payout identifier, date range) the recording action actually
+   captures, and whether it is stored on this entity or only applied to Transaction (EN0009), is
+   unresolved.
+2. No attribute traces this entity to the specific Transaction(s) it reconciles — how a settlement
+   record is associated with the payments it covers is unresolved.
+3. Whether this entity is an audit stub accompanying a separate reconciliation effect on Transaction,
+   or whether the recording action stores richer data not reflected in canonical evidence, is
+   unresolved — Conflict/Uncertain, not resolved by this canonicalization pass.

@@ -5,56 +5,80 @@ canonical_layer: EN
 spec_type: entity
 status: draft
 references:
-  - EN0008  # User (author)
+  - EN0008
+  - BR-ReportingAndDataAccess
+  - UC0017
 ---
 
 # EN0031 — CostsSnapshot
 
-## Description
-Per-month cost/target figures entered for reporting: published-campaign counts, costs, and various
-targets (campaigns, donations, "obědy školákům" students/amount). A reporting projection/input read by
-the reports module to render financial dashboards. Not a transactional domain record.
+## Purpose
 
-## Entity Category
-Projection · Confidence: Low
-
-## Origin
-- DB artifacts: base_table `costs_entity` (content entity; not revisionable; not translatable; reports module has no `.install` → no `hook_schema`)
-- Code touchpoints:
-  - `reports/src/Entity/CostsEntity.php` — entity + `baseFieldDefinitions()`
-  - Read by the reports module (report rendering, FL034)
-Evidence: db-models.md `costs_entity`; EN-candidates.md (Projection, reports FL034).
-
-## Core Fields
-- `year` (integer, 4-digit unsigned; **required**; default 2018)
-- `month` (list_integer 1–12; **required**; default `'1'` — string-literal default, type mismatch recorded as-is)
-- `published_campaign_count` / `published_campaign_price` (integer; default 0)
-- `cost` / `costs_target` (integer; default 0)
-- `campaigns_target` / `campaigns_target_value` / `donations_target_value` (integer; default 0)
-- `obedyskolakum_students` / `obedyskolakum_amount` (integer; default 0)
-- `status` (boolean) — publish flag
-Evidence: db-models.md `costs_entity` field table.
-
-## Technical Fields
-- `user_id` (entity_reference → User EN0008) — author.
-- `created` / `changed` (created / changed).
-
-## Relations
-- `user_id` → User (EN0008) — only declared relation.
-
-## Allowed Statuses
-`status` boolean = publish flag only; no workflow states.
-Evidence: db-models.md — form/view-display config references an undeclared `type` field (orphaned display artifact, `Hypothesis`); no state field.
+CostsSnapshot represents one month's cost and target figures entered for reporting purposes:
+published-campaign counts and cost, monetary cost and cost target, campaign and donation targets,
+and a school-lunches ("obědy školákům") student-count and amount target. It is a reporting
+projection consumed by the reporting dashboards (see `UC0017`, sub-flow UC0017.3) rather than a
+transactional case, party, or money record.
 
 ## Lifecycle
-Reporting projection — created/edited as report input; created-only from a lifecycle standpoint (no
-state machine, no observed transitions). Consumed read-only by reports.
-Evidence: EN-candidates.md classifies as Projection with "no domain lifecycle"; db-models.md (report-input entity). Created/edited-only.
 
-## Spec Alignment
-N/A — No EN spec files found in repository.
+Existing — a single, non-workflow state. CostsSnapshot has no domain lifecycle: it is only ever
+created (entered) and optionally edited; it does not progress through business states and has no
+observed terminal or rejected state.
+
+*Confidence: Low — no writer flow was mined; see Open Questions.*
+
+## State Transitions
+
+(none) — CostsSnapshot has no state machine and no observed status-driven transitions.
+
+- Creation / edit as reporting input: consumed read-only by the reporting dashboard capability,
+  trigger: UC0017 (sub-flow UC0017.3). Evidence for this consumption path is Partial — see
+  `BR-ReportingAndDataAccess`.
+
+## Attributes
+
+### System-managed attributes
+
+- Author (reference to EN0008 – User; required) — the user recorded as the entry's author.
+- Created timestamp (datetime; required)
+- Changed timestamp (datetime; required)
+
+### User-provided attributes
+
+- Year (integer, 4-digit; required)
+- Month (integer, 1–12; required) — *Conflict: the underlying default value observed for this
+  attribute is a string literal rather than an integer; whether month is treated as numeric or
+  textual in practice is unresolved. See Open Questions.*
+- Published campaign count (integer; optional)
+- Published campaign cost (integer; optional)
+- Cost (integer; optional)
+- Cost target (integer; optional)
+- Campaigns target (integer; optional)
+- Campaigns target value (integer; optional)
+- Donations target value (integer; optional)
+- School-lunches ("obědy školákům") student target (integer; optional)
+- School-lunches ("obědy školákům") amount target (integer; optional)
+- Published flag (boolean; optional) — marks whether the entry is published for reporting display;
+  no other status values exist for this attribute.
+
+## Invariants
+
+- Reporting figures held by CostsSnapshot are read-only from the perspective of case, party, money,
+  campaign, and contract records — see `BR-ReportingAndDataAccess`.
+- CostsSnapshot creation/edit is not gated by a case-style workflow; the only recorded state is the
+  published flag (no rule governs transitions between published/unpublished beyond that flag itself).
+
+## Relationships
+
+- EN0008 – User (author of the entry)
 
 ## Open Questions
-1. `month` allowed values are integers but the default is the string `'1'` — is month stored as int or string in practice? (db-models flags the mismatch.)
-2. The orphaned `type` field in form/view-display config — dead artifact or a missing dimension (e.g. cost category)?
-3. Is `costs_entity` manually keyed in by finance staff, or populated by a job? No writer flow was mined.
+
+1. Month is declared with integer allowed values (1–12) but the observed default is a string
+   literal — is month stored/compared as an integer or as a string in practice? Unresolved.
+2. An additional, undeclared dimension-like field is referenced by display configuration but has no
+   backing attribute (`Hypothesis` — possibly a dead artifact, or a missing cost-category
+   dimension). Unresolved.
+3. Whether entries are keyed in manually by finance staff or populated by an automated job is
+   unresolved — no writer flow was mined for this entity.

@@ -5,53 +5,99 @@ canonical_layer: EN
 spec_type: entity
 status: draft
 references:
-  - EN0001  # Application (Žádost) — the linked application (required)
-  - EN0006  # Contact — the party a list entry classifies (via blacklist_type)
+  - EN0001  # Application — the case a blacklist entry is linked to
+  - EN0006  # Contact — the party a list entry classifies
+  - EN0008  # User — the author of a list entry
+  - BR-ScoringAndRiskGating          # blacklist creation, gating, propagation to Contact
+  - BR-PartyIdentityAndDeduplication # e-mail-keyed propagation hazard (no party uniqueness)
+  - UC0003  # Assess Applicant Risk (Scoring) — creates and reads Blacklist entries
 ---
 
 # EN0016 — Blacklist
 
-## Description
-Risk black/white-list entry linked to an Application (EN0001). Records a classification (white-list tiers `ZD`/`Z`/`N` or full `Black List`) against a specific person role (fundraiser / patron / gift / spotter), with denormalised identity fields (name, birth number, company/IČO, mail, phone) used for matching. Written by the scoring workflow; the resulting classification is also propagated onto the matching Contact's `blacklist_type` field (EN0006).
+## Purpose
 
-## Entity Category
-Persisted · Confidence: High
+A Blacklist entry records a risk classification decision made against a specific party role
+(fundraiser, patron, gift, or spotter) named on an Application (EN0001). It captures the
+classification itself (a white-list tier or a full block) together with denormalised identity
+details for the classified party, used to match the classification back onto that party's
+Contact (EN0006) record. Blacklist entries are the durable record of scoring decisions produced
+during risk assessment (see BR-ScoringAndRiskGating).
 
-## Origin
-- DB artifacts: base_table `blacklist` (content, not revisionable, not translatable; no `hook_schema`).
-- Code touchpoints: `BlacklistEntity`; written from scoring — `ScoringForm`, `ScoringService::setBlacklistType` (also raw-UPDATEs `contact.blacklist_type`).
-Evidence: [blacklist/src/Entity/BlacklistEntity.php](../../intake/current-solution/_source/patronus/web/modules/custom/blacklist/src/Entity/BlacklistEntity.php); db-models.md `blacklist`.
-
-## Core Fields
-- type (list_string; required; values: `wl_zd`=ZD, `wl_z`=Z, `wl_n`=N, `bl`=Black List)
-- person (list_string; required; values: fundraiser / patron / gift / spotter)
-- application (reference → EN0001; required; links the entry to an Application)
-- name / last_name (string 100; Jméno / Příjmení)
-- rc (string 20; Rodné číslo) · mail (email) · phone (string 13)
-- company_name (string 100) / ico (string 20)
-- note (text_long; Poznámka)
-
-## Technical Fields
-- user_id (reference → EN0008 User; author)
-- created / changed (timestamps)
-
-## Relations
-- application → EN0001 (Application; required)
-- user_id → EN0008 (User; author)
-- Classification propagates to EN0006 (Contact) `blacklist_type` — logical, via `ScoringService::setBlacklistType` (not a stored reference)
-
-## Allowed Statuses
-`type` (the classification enum): `wl_zd` (ZD), `wl_z` (Z), `wl_n` (N), `bl` (Black List). No lifecycle status field (`status` publish API is inherited boilerplate with no backing field).
-Evidence: db-models.md `blacklist` (`type` allowed_values; `status` has no backing field).
+---
 
 ## Lifecycle
-No entity-level state machine — a list row is created (immutable classification) by scoring; the enum `type` is a classification, not a transition sequence.
-Confirmed side-effect (not a transition of this entity): `contact.blacklist_type` → `wl_n | bl | wl_zd | wl_z` via raw UPDATE keyed by email (no LIMIT) — `ScoringService::setBlacklistType` L29 (FLW0016). Scoring `scoring_ok` maps a party to `wl_z` (FLW0001, Partial).
 
-## Spec Alignment
-N/A — No EN spec files found in repository.
+- Active — the entry exists as an immutable classification record.
+
+There is no further lifecycle state machine for a Blacklist entry: it is not evidenced to be
+updated or removed after creation (Open Question — append-only status is unconfirmed).
+
+---
+
+## State Transitions
+
+(none) → Active
+trigger: UC0003 — Assess Applicant Risk (Scoring), manual scoring sub-flow (creation of a
+blacklist classification entry)
+
+No further transitions are evidenced.
+
+---
+
+## Attributes
+
+### System-managed attributes
+
+- author (reference to EN0008 – User; required; the user who recorded the classification)
+- created (timestamp; system-recorded creation time)
+- changed (timestamp; system-recorded last-modification time)
+
+### User-provided attributes
+
+- classification (enumeration; required; values: ZD, Z, N — white-list tiers — or Black List;
+  see BR-ScoringAndRiskGating for how a classification is derived and gated)
+- party role (enumeration; required; values: fundraiser, patron, gift, spotter — the role being
+  classified)
+- application (reference to EN0001 – Application; required; the case the classification decision
+  belongs to)
+- first name / last name (text; optional; identity detail of the classified party)
+- national identification number (text; optional; identity detail of the classified party)
+- e-mail (text; optional; identity detail used to match the classification onto a Contact)
+- phone (text; optional; identity detail of the classified party)
+- company name / company identification number (text; optional; identity detail when the
+  classified party is an organisation)
+- note (text; optional; free-text annotation)
+
+---
+
+## Invariants
+
+- Every Blacklist entry must be linked to an Application (EN0001) — see BR-ScoringAndRiskGating.
+- A Blacklist entry's classification is created together with the Application's status change and
+  the corresponding Contact (EN0006) classification write, as one recorded scoring outcome — see
+  BR-ScoringAndRiskGating.
+- The propagation of a Blacklist entry's classification onto a Contact (EN0006) is matched by
+  e-mail address and is not scoped to a single, uniquely identified Contact — see
+  BR-PartyIdentityAndDeduplication.
+
+---
+
+## Relationships
+
+- EN0001 — Application (required; the case the entry classifies a party against)
+- EN0006 — Contact (the party record whose classification is updated from this entry's
+  classification value)
+- EN0008 — User (the author who recorded the entry)
+
+---
 
 ## Open Questions
-1. Is a Blacklist row ever updated/removed, or is it append-only? (no delist path evidenced). Missing evidence.
-2. `ScoringService::setBlacklistType` updates Contact by email with no LIMIT — can it reclassify unrelated contacts sharing an email?
-3. Form/view-display configs reference undefined `gift_name`/`list_type` fields (stale) — any live behaviour behind them?
+
+1. Is a Blacklist entry ever updated or removed after creation, or is the record append-only? No
+   delist path is evidenced.
+2. Can the e-mail-keyed propagation onto Contact (EN0006) affect Contact records unrelated to the
+   party actually being classified? Tracked as a hazard under BR-PartyIdentityAndDeduplication;
+   scope of impact is not fully evidenced.
+3. Some configuration surfaces reference identity/classification fields not present on this
+   entity's confirmed attribute set — whether any live behaviour depends on them is unconfirmed.

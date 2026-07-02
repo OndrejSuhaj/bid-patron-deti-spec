@@ -7,54 +7,99 @@ status: draft
 references:
   - EN0001  # Application (logged aggregate)
   - EN0008  # User (author)
+  - EN0026  # ApplicationReaction (reaction driving a log entry)
+  - EN0003  # ApplicationSession (session-cancellation log entry)
+  - UC0002  # Orchestrate Application Status Change (reaction/session-cancel log entries)
+  - UC0004  # Manage Contract And Signature (contract activity log entries)
+  - BR-ApplicationStatusGovernance  # status-change side effects incl. audit logging
 ---
 
 # EN0025 — ApplicationLog
 
-## Description
-Immutable per-Application activity/audit row surfaced in the admin "Aktivity" tab. Records a discrete
-event against a Lead/Application — a logged call/email/sms, a system action (e.g. reaction-driven
-notification, session cancellation), or a field change. Rows are appended, never mutated.
+## Purpose
 
-## Entity Category
-Content · Confidence: Medium
+An immutable per-Application activity/audit record, surfaced to administrators as the Application's
+activity history. Each ApplicationLog entry captures one discrete event against an Application
+(EN0001): a logged communication (call/email/sms), a system-driven action (e.g. a reaction triggered
+by a status change, or a session cancellation), or a note. Entries accumulate over the Application's
+lifetime and together form its activity trail.
 
-## Origin
-- DB artifacts: base_table `application_log` (content entity; no revision/translation; no `hook_schema` — physical DDL Drupal-generated)
-- Code touchpoints:
-  - `application_log/src/Entity/ApplicationLogEntity.php` — entity + `baseFieldDefinitions()`
-  - Written by `ApplicationReactionService::addApplicationLog` and `application_reaction/.../ApplicationStatusUpdateSubscriber::addApplicationLog` (reaction + session-cancel audit rows)
-  - Also written by contract flow `ApplicationContractController` (activity note rows)
-Evidence: db-models.md `application_log`; FLW0001 §C (Entities Written); FLW0008 §D.
-
-## Core Fields
-- `application_id` (entity_reference → Application EN0001; card. 1) — the logged Application
-- `user_id` (entity_reference → User EN0008; card. 1) — author; default current user (crm_robot_uid for system rows)
-- `field_name` (string 50) — changed field / activity descriptor
-- `field_value` (string 255) — associated value
-- `note` (string_long) — "Poznámka" free-text note
-Evidence: db-models.md `application_log` field table.
-
-## Technical Fields
-- `start` (created accessor `getStartTime()`), `finish` (changed accessor `getFinishTime()`) — timestamps.
-
-## Relations
-- `application_id` → Application (EN0001)
-- `user_id` → User (EN0008)
-
-## Allowed Statuses
-None. No status/state field is defined on this entity.
-Evidence: db-models.md notes entity_keys `label`→`name` and `status`→`status` point at **undefined** fields (scaffolding mismatch); no backing status field exists — `Conflict — requires clarification` (recorded, not resolved).
+---
 
 ## Lifecycle
-Append-only audit log — created, never transitioned. Rows are inserted as a side effect of Application
-status fan-out and contract activity; no state machine, no update/delete path evidenced.
-Evidence: FLW0001 §B step 4 (per-reaction log row) + §B step 7 (session-cancel log row); FLW0008 activity-note rows. No transition evidence exists (created-only).
 
-## Spec Alignment
-N/A — No EN spec files found in repository.
+Recorded — the only state. An ApplicationLog entry is created once and is never subsequently changed
+or removed; there is no further lifecycle beyond its creation.
+
+---
+
+## State Transitions
+
+(none) → Recorded
+trigger: UC0002 — Orchestrate Application Status Change (a matching ApplicationReaction, EN0026,
+produces a log entry; a session-invalidating status change produces a log entry recording the
+session cancellation)
+
+(none) → Recorded
+trigger: UC0004 — Manage Contract And Signature (contract-review and contract-signing steps each
+record an activity log entry on the Application)
+
+No transition out of Recorded is evidenced — entries are append-only.
+
+---
+
+## Attributes
+
+### System-managed attributes
+
+- Application (reference to EN0001; required) — the Application this entry is recorded against.
+- Author (reference to EN0008; required) — the user attributed as author of the entry; defaults to
+  the current user, or to the system service account for system-generated entries (see BR-ApplicationStatusGovernance).
+- Recorded at (timestamp; required) — when the entry was created.
+- Last touched at (timestamp; required) — administrative/technical timestamp alongside the recorded
+  time; no update use case is evidenced for entry content.
+
+### User-provided attributes
+
+- Activity descriptor (text, up to 50 characters; required) — short label identifying the changed
+  field or the activity type.
+- Associated value (text, up to 255 characters; optional) — value associated with the activity
+  descriptor.
+- Note (long text; optional) — free-text note ("Poznámka").
+
+---
+
+## Invariants
+
+- An ApplicationLog entry, once recorded, is immutable — see BR-ApplicationStatusGovernance
+  (status-change side effects and idempotence).
+- Every status change that matches a configured ApplicationReaction (EN0026), and every status
+  change that invalidates ApplicationSession (EN0003) records, produces a corresponding
+  ApplicationLog entry — see BR-ApplicationStatusGovernance.
+- No lifecycle-state attribute is defined on this entity — Recorded is the entity's only state, not
+  a status value chosen from a vocabulary.
+
+---
+
+## Relationships
+
+- EN0001 — Application (the logged aggregate; required, one Application per entry)
+- EN0008 — User (the author of the entry)
+- EN0026 — ApplicationReaction (configuration that can cause a log entry to be produced)
+- EN0003 — ApplicationSession (session-cancellation events logged against the Application)
+
+---
 
 ## Open Questions
-1. `field_name`/`field_value` are generic; is there a controlled vocabulary of activity types (call/email/sms/system) or is it free-form per writer?
-2. The dangling `label`→`name` / `status` entity_keys — dead scaffolding or a lost field? (db-models `Conflict`.)
-3. Field descriptions are copy-pasted from "Campaign Log entity" — confirm they were not intended to carry Campaign semantics.
+
+1. Is there a controlled vocabulary of activity types (call/email/sms/system-action/field-change)
+   behind the activity descriptor and associated value, or is content free-form per writer? Not
+   evidenced in canonical artifacts.
+2. Conflict — requires clarification: prior evidence noted two scaffolding-level attribute mappings
+   without any corresponding backing field, suggesting either dead configuration or a lost/never-
+   implemented attribute. Not resolved; carried forward as an open question rather than a canonical
+   fact.
+3. Uncertain: the entity's field descriptions were found to closely mirror a comparable log entity
+   used elsewhere in the system (campaign-side activity logging); it is not confirmed whether this
+   is coincidental convergence or shared/copied definition, and whether any Campaign-specific
+   semantics were unintentionally carried over.

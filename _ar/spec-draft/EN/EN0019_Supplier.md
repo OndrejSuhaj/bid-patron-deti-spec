@@ -5,57 +5,79 @@ canonical_layer: EN
 spec_type: entity
 status: draft
 references:
-  - EN0002  # ApplicationProfile — aprofile.gift_supplier → supplier
+  - EN0002  # ApplicationProfile — gift_supplier references Supplier
 ---
 
 # EN0019 — Supplier
 
-## Description
-Gift supplier / vendor registry. Represents a company from which the gift/donation item is (or would be) purchased. Referenced from the application profile's `gift_supplier` field and joined into CSV exports; a separate `supplier_to_category` mapping (rejected as a join table) associates a supplier with help-area categories and an e-shop URL. Suppliers are back-office reference data with light lifecycle.
+## Purpose
 
-## Entity Category
-Persisted · Confidence: Medium
-(Schema confirmed; usage is read-oriented — referenced by ApplicationProfile and CSV export JOINs; no rich transition flow mined.)
+Gift supplier / vendor registry. Represents a company from which the gift/donation item requested on
+an Application is (or would be) purchased. Supplier is back-office reference data with a light
+lifecycle, read by the fundraiser profile (EN0002) and by reporting/export flows.
 
-## Origin
-- DB artifacts: base_table `supplier`. No `.install` / no hook_schema. (Sibling entity `supplier_to_category` in same module is a join-like mapping, not promoted.)
-- Code touchpoints:
-  - `supplier/src/Entity/SupplierEntity.php` — entity.
-  - `application/src/Entity/ApplicationProfileEntity.php` — `aprofile.gift_supplier` (er → supplier).
-  - `export_csv/src/Controller/ExportCSVController.php:798,928` — `LEFT JOIN supplier ON aprofile.gift_supplier = supplier.id`.
-  - `scoring/src/Form/ScoringForm.php:1362-1371` — reads supplier name/ICO for the gift sub-form.
-Evidence: db-models.md `supplier`; grep confirms `gift_supplier` join (ExportCSVController.php:798,928) and scoring read.
-
-## Core Fields
-- `name` (string 150; required; "Nazev"; entity label)
-- `ico` (string 20; optional; company ID)
-- `datova_schranka` (string 20; optional; data box ID)
-- `street` (string 100; optional)
-- `city` (er → taxonomy_term `city`, auto_create=TRUE; optional)
-- `zip` (string 10; optional)
-- `status` (boolean; publish flag; default TRUE)
-
-## Technical Fields
-- `user_id` (er → EN0008 User; optional; owner)
-- `created` / `changed` (timestamps)
-Evidence: db-models.md `supplier`.
-
-## Relations
-- `user_id` → EN0008 User (owner). Evidence: db-models.md.
-- `city` → taxonomy_term (city vocabulary; auto_create). Evidence: db-models.md.
-- Inbound: EN0002 ApplicationProfile `gift_supplier` → supplier. Evidence: db-models.md `aprofile`; ExportCSVController.php:798.
-- `supplier_to_category` (separate entity) maps supplier ↔ category (help area) + e-shop URL; no field on `supplier` links back to it. Evidence: db-models.md `supplier_to_category`.
-
-## Allowed Statuses
-`status` boolean only (published / unpublished); no domain status enum. Evidence: db-models.md `supplier`.
+---
 
 ## Lifecycle
-Hypothesis — Not evidenced in current sources. No create/transition flow dossier covers Supplier; only schema + read-side references (ApplicationProfile relation, CSV JOIN) are confirmed. Missing evidence: create/edit/delete code path.
 
-## Spec Alignment
-N/A — No EN spec files found in repository.
+Published
+Unpublished
+
+No further domain status vocabulary exists for Supplier beyond a publish/unpublish state.
+
+---
+
+## State Transitions
+
+Hypothesis — Not evidenced in current sources. No creation, edit, or publish/unpublish flow is
+mined for Supplier; only its data shape and its use as a read-side reference (from EN0002, and in
+reporting exports) are confirmed. Missing evidence: the use case that creates or maintains Supplier
+records.
+
+---
+
+## Attributes
+
+### System-managed attributes
+
+- status (boolean; required; published / unpublished; defaults to published)
+- created (timestamp; system-managed)
+- changed (timestamp; system-managed)
+- owner (reference to EN0008 – User; optional)
+
+### User-provided attributes
+
+- name (text; required; supplier's display name)
+- company identifier (text; optional; registered company ID)
+- data-box identifier (text; optional; official electronic-delivery box ID)
+- street (text; optional)
+- city (reference to a city reference-data term; optional)
+- postal code (text; optional)
+
+---
+
+## Invariants
+
+- A Supplier without an active domain status enum is governed only by the published/unpublished
+  state; no additional lifecycle rule is evidenced.
+- Conflict/Uncertain — a related mapping between Supplier and help-area category (with an e-shop URL)
+  exists as a separate structure with no confirmed uniqueness constraint per Supplier–category pair;
+  whether duplicate mappings are intended is unresolved.
+
+---
+
+## Relationships
+
+- EN0002 – ApplicationProfile (gift_supplier: the fundraiser profile optionally references the
+  Supplier expected to fulfil the requested gift)
+- EN0008 – User (owner of the Supplier record)
+
+---
 
 ## Open Questions
-1. Who creates/maintains suppliers (admin UI vs. auto-create)? No write flow mined.
-2. `supplier_to_category` has no composite uniqueness (supplier+category) — is duplicate mapping expected? (db-models.md flags this.)
-3. `city` uses auto_create on a taxonomy term — is supplier city meant to grow the city vocabulary uncontrolled?
+
+1. Who creates/maintains Supplier records (administrative use case vs. automatic creation)? No
+   creation or edit flow is evidenced.
+2. Is a duplicate Supplier–category mapping expected, or should the pairing be unique? Not evidenced.
+3. The city reference on Supplier is created ad hoc from free text — is uncontrolled growth of the
+   city reference-data vocabulary intended? Not evidenced.

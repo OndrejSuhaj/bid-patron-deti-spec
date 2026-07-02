@@ -10,54 +10,146 @@ references:
   - EN0008 (User)
   - EN0018 (Organisation)
   - EN0019 (Supplier)
+  - BR-ApplicationStatusGovernance
+  - BR-ScoringAndRiskGating
+  - BR-PartyIdentityAndDeduplication
+  - UC0001 (Submit Application)
+  - UC0003 (Assess Applicant Risk)
 ---
 
 # EN0002 — ApplicationProfile
 
-## Description
-The ApplicationProfile (`aprofile`) is the richest entity in the domain — a ~100-base-field questionnaire capturing everything about an application from one party's perspective: applicant/fundraiser identity, household income and debts, the child, the patron, the requested gift/donation, the story narrative, consents and attachments. An Application (EN0001) holds two of these via `fundraiser_profile` and `patron_profile`. It carries `profile_type` (fundraiser/patron) as the discriminator and drives the multi-step application form.
+## Purpose
 
-## Entity Category
-Persisted  ·  Confidence: High
+The ApplicationProfile is the richest entity in the domain — a large questionnaire capturing everything
+known about an Application (EN0001) from one party's perspective: applicant/fundraiser identity, household
+income and debts, the child, the patron, the requested gift/donation, the story narrative, and consents. An
+Application holds at most two ApplicationProfiles — one fundraiser profile and one patron profile — carrying
+a profile-role discriminator, and the profile is filled progressively as the applicant proceeds through the
+multi-step Application form.
 
-## Origin
-- DB artifacts: base_table `aprofile`; not revisionable, not translatable (per annotation); source = base fields only (no attached config fields, no hook_schema). `update_8006` uninstalled a leftover `vid` — entity was likely revisionable historically.
-- Code touchpoints: `application/src/Entity/ApplicationProfileEntity.php` (~2390 LOC; `preSave` auto-fills `gift_category` from `gift_subcategory` parent); referenced by `application.fundraiser_profile` / `application.patron_profile`.
-Evidence: `ApplicationProfileEntity.php`
-
-## Core Fields
-- profile_type (list_string; **required**; fundraiser / patron — discriminator)
-- source (list_string; web / zone / corona_cash / corona_rent / corona_basic_box; default web)
-- fundraiser, fundraiser_address2, fundraiser_employer (entity_reference → EN0006 Contact; optional; applicant identity)
-- fundraiser_first/last_name, fundraiser_email, fundraiser_phone (unique=NO), fundraiser_rc, fundraiser_op_id, fundraiser_address_*, fundraiser_id_series/number (RO id_number 6–7 constraint)
-- Household/income cluster: fundraiser_housing_type / fundraiser_income_type (entity_reference → taxonomy_term, unlimited), employed_status, receiving_social_benefits, fundraiser_household_income/expenses, fundraiser_household_execution/insolvency, fundraiser_debts_*
-- child (entity_reference → EN0006 Contact; optional), school (entity_reference → EN0006 Contact), child_first/last_name, child_rc (storage-required → NOT NULL), child_date_of_birth, child_unschoold (**required**), child_dont_disclose_name/photo, child_handicapped, child_address_*
-- patron (entity_reference → EN0006 Contact; optional), patron_employer_id (entity_reference → EN0018 Organisation), patron_first/last_name, patron_email, patron_phone (unique=NO), patron_occupation_list (list_integer 0–6), patron_photo, patron_approve/source, patron_reject/reason
-- Gift/donation cluster: gift_supplier (entity_reference → EN0019 Supplier), gift_category / gift_subcategory / gift_proof (entity_reference → taxonomy_term), gift_payment_type (list_integer 0–2), gift_price (string; **min_price=100** constraint), gift_price_offer/_attachment, gift_author/_ico, gift_item/note
-- Story cluster: story_background / story_problems / story_solution (string_long)
-- Consents (ReadOnly): agreement_truthfulness (storage-required → NOT NULL), agreement_personal_data, agreement_rules, finished, finished_timestamp
-
-## Technical Fields
-- uuid / langcode (framework). Attachment fields (attachement_child_photo, attachement_id_copy, attachement_documents, attachments_residence_permit, attachments_employment_registration, attachment_1..6, custom_attachment) → file (private, unlimited).
-- Tracking: traffic_source (list_string), traffic_source_other, ip_address / user_agent (ReadOnly), progress (string_long), progress_steps_completed (int).
-
-## Relations
-Soft entity_reference (no DB FK): →EN0006 Contact (fundraiser, fundraiser_address2, fundraiser_employer, child, school, patron), →EN0018 Organisation (patron_employer_id), →EN0019 Supplier (gift_supplier), →EN0008 User (user_id, owner), →taxonomy_term (housing_type, income_type, category, gift_confirmation). Held-by relation: EN0001 Application references this via fundraiser_profile / patron_profile.
-
-## Allowed Statuses
-No lifecycle status enum. `status` is a boolean publish flag (default TRUE); `profile_type` (fundraiser/patron) and `source` are the only domain enums.
-Evidence: `ApplicationProfileEntity.php` baseFieldDefinitions
+---
 
 ## Lifecycle
-No entity-owned status workflow. Domain progression is tracked by the scalar `progress` / `progress_steps_completed` / `finished` fields as the multi-step form is filled.
 
-Hypothesis: created empty → filled step-by-step → `finished`=TRUE at completion. Missing evidence: no flow dossier traces the aprofile write path end-to-end; `finished` transition trigger not code-cited (form save assumed). Owner-coupling note (batch-2): scoring reads `gift_payment_type`/`patron_occupation_list` from the *fundraiser* profile — likely unintended coupling [FLW0016].
+- Open (in progress) — created for an Application and filled step by step; no domain status vocabulary of
+  its own.
+- Finished — the applicant has completed and confirmed the profile.
 
-## Spec Alignment
-N/A — No EN spec files found in repository (see EN-candidates.md §Spec Discovery).
+Hypothesis — Not evidenced in current sources: no dossier traces the profile's write path end-to-end, so the
+exact point at which a profile is considered complete (versus still editable) is not confirmed.
+
+---
+
+## State Transitions
+
+(none) → Open  
+trigger: UC0001 (Submit Application) — a fundraiser or patron profile is created for a newly started
+Application.
+
+Open → Finished  
+trigger: Hypothesis — Not evidenced in current sources: the transition to Finished is inferred from progress
+tracking on the profile; no use case dossier confirms the save path that sets it.
+
+---
+
+## Attributes
+
+### System-managed attributes
+
+- profile_type (enum; required; fundraiser / patron — discriminates which party's perspective the profile
+  represents)
+- source (enum; optional; the intake channel through which the profile was created; default web)
+- traffic_source, traffic_source_other (enum / text; optional; marketing-attribution data captured at intake)
+- ip_address, user_agent (text; system-recorded; not user-editable)
+- progress, progress_steps_completed (text / number; optional; tracks how far the multi-step form has been
+  completed)
+- finished, finished_timestamp (boolean / timestamp; optional; marks and timestamps profile completion)
+
+### User-provided attributes
+
+- fundraiser, fundraiser_address2, fundraiser_employer (reference to EN0006 Contact; optional; the
+  applicant's identity and related address/employer parties)
+- fundraiser_first_name, fundraiser_last_name, fundraiser_email, fundraiser_phone, fundraiser_rc,
+  fundraiser_op_id, fundraiser_address (fields), fundraiser_id_series, fundraiser_id_number (text; optional;
+  applicant identity and address/ID details; fundraiser_id_number carries a country-specific length
+  constraint)
+- fundraiser_housing_type, fundraiser_income_type (reference to reference-data terms; optional, multiple;
+  household housing and income classification)
+- employed_status, receiving_social_benefits (enum / boolean; optional; applicant employment/benefit status)
+- fundraiser_household_income, fundraiser_household_expenses (number; optional; household income/expense
+  declaration)
+- fundraiser_household_execution, fundraiser_household_insolvency, fundraiser_debts (fields) (boolean / text;
+  optional; household debt/insolvency declaration)
+- child (reference to EN0006 Contact; optional; the beneficiary child)
+- school (reference to EN0006 Contact; optional; the child's school)
+- child_first_name, child_last_name, child_rc, child_date_of_birth (text / date; child_rc conditionally
+  required — see Open Questions; identity of the child)
+- child_unschoold (boolean; required; whether the child is out of school)
+- child_dont_disclose_name, child_dont_disclose_photo, child_handicapped (boolean; optional; child
+  disclosure/consent preferences and disability flag)
+- child_address (fields) (text; optional; the child's address)
+- patron (reference to EN0006 Contact; optional; the patron party)
+- patron_employer_id (reference to EN0018 Organisation; optional; the patron's employer)
+- patron_first_name, patron_last_name, patron_email, patron_phone (text; optional; patron identity)
+- patron_occupation_list (enum; optional; the patron's occupation classification)
+- patron_photo (file; optional)
+- patron_approve, patron_source, patron_reject, patron_reject_reason (boolean / enum / text; optional;
+  patron acceptance decision and rejection reason)
+- gift_supplier (reference to EN0019 Supplier; optional; the supplier fulfilling the requested gift)
+- gift_category, gift_subcategory, gift_proof (reference to reference-data terms; optional; classification
+  and required proof for the requested gift; gift_category is derived from gift_subcategory when not set
+  explicitly)
+- gift_payment_type (enum; optional; how the gift/donation is to be paid)
+- gift_price (text; optional; the requested amount, subject to a minimum-price constraint — see Invariants)
+- gift_price_offer, gift_price_attachment (file / text; optional; supporting price offer and attachment)
+- gift_author, gift_author_ico (text; optional; identity of the party issuing the gift offer)
+- gift_item, gift_note (text; optional; free-text description of the requested gift)
+- story_background, story_problems, story_solution (long text; optional; narrative describing the family's
+  situation, problem, and the requested solution)
+- agreement_truthfulness (boolean; required; declaration that the submitted information is truthful)
+- agreement_personal_data, agreement_rules (boolean; optional; consent to personal-data processing and to
+  the platform's rules)
+- attachement_child_photo, attachement_id_copy, attachement_documents, attachments_residence_permit,
+  attachments_employment_registration, attachment_1..attachment_6, custom_attachment (file; optional,
+  multiple; supporting documents and photos uploaded during the application)
+
+---
+
+## Invariants
+
+- An Application (EN0001) holds at most one fundraiser profile and at most one patron profile — see
+  BR-ApplicationStatusGovernance.
+- The requested gift amount (gift_price) is subject to a minimum-price floor — see
+  BR-ScoringAndRiskGating for how the requested gift feeds the risk gate.
+- Risk scoring reads occupation and gift-payment inputs from the fundraiser profile regardless of which
+  party the input logically belongs to — a recorded owner-coupling defect; see BR-ScoringAndRiskGating.
+- On a Contact (EN0006) deduplication merge, every dependent profile reference is reassigned to the
+  surviving Contact — see BR-PartyIdentityAndDeduplication.
+- On a Lead pairing/merge, only the duplicate's patron profile is transferred onto the surviving
+  Application; a pre-existing patron profile already held by the surviving Application is silently
+  overwritten (orphaned) rather than reconciled — see BR-PartyIdentityAndDeduplication.
+
+---
+
+## Relationships
+
+- EN0001 — Application (held by; an Application references its fundraiser and patron ApplicationProfile)
+- EN0006 — Contact (fundraiser, fundraiser_address2, fundraiser_employer, child, school, patron)
+- EN0008 — User (owning User of the profile)
+- EN0018 — Organisation (patron_employer_id)
+- EN0019 — Supplier (gift_supplier)
+
+---
 
 ## Open Questions
-- Is `child_rc` truly always storage-required given profiles created before that flag?
-- `fundraiser_income_job_department` is defined twice (later wins) — which definition is live?
-- Should patron-cluster fields live here or on the patron ApplicationProfile only?
-- Why is translatability contradictory (preSave iterates translations, yet annotation not translatable)?
+
+- Is child_rc truly always required, given profiles created before that constraint existed may lack it?
+- A duplicated field definition exists for the applicant's income/job-department attribute — which
+  definition is authoritative is unconfirmed.
+- Should patron-cluster attributes live on both the fundraiser and patron ApplicationProfile, or only on
+  the patron one? Current sources show them present regardless of profile_type.
+- Translatability of the profile is inconsistent across evidence sources — Conflict, requires
+  clarification; not resolved here.
+- The exact trigger that sets Finished (profile completion) is not confirmed by any use-case dossier —
+  Missing evidence.

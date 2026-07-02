@@ -5,51 +5,77 @@ canonical_layer: EN
 spec_type: entity
 status: draft
 references:
-  - EN0008  # User (author)
+  - EN0008
+  - BR-ReportingAndDataAccess
+  - UC0017
 ---
 
 # EN0032 — ReportSnapshot
 
-## Description
-Point-in-time reporting datum: a named metric (`field_name` / `field_value`) tagged with a `report_id`
-and captured at a `created` timestamp, so reports can query values over a date range. A generic
-key/value reporting projection, not a transactional domain record.
+## Purpose
 
-## Entity Category
-Projection · Confidence: Low
+ReportSnapshot represents a single named reporting metric — a metric name and its value, tagged
+with a report identifier and captured at a point in time — so that reporting dashboards can query
+metric values over a date range. It is a generic key/value reporting projection consumed by the
+reporting dashboards (see `UC0017`, sub-flow UC0017.3), not a transactional case, party, or money
+record.
 
-## Origin
-- DB artifacts: base_table `snapshot_entity` (content entity; not revisionable; not translatable; reports module has no `.install` → no `hook_schema`)
-- Code touchpoints:
-  - `reports/src/Entity/SnapshotEntity.php` — entity + `baseFieldDefinitions()` + `getEntityBetwCreated()` (range query filtered by `report_id`, `created` BETWEEN)
-Evidence: db-models.md `snapshot_entity`; EN-candidates.md (Projection, reports FL034).
-
-## Core Fields
-- `report_id` (string 50) — filter/grouping key used in `getEntityBetwCreated()`
-- `field_name` (string 50) — metric name (descriptions copy-pasted from Campaign Log)
-- `field_value` (string 50) — metric value
-Evidence: db-models.md `snapshot_entity` field table.
-
-## Technical Fields
-- `user_id` (entity_reference → User EN0008) — author.
-- `created` / `changed` — `created` used as the BETWEEN range key.
-
-## Relations
-- `user_id` → User (EN0008) — only declared relation.
-
-## Allowed Statuses
-None as a live field. A `status` entity_key is declared but has no publishing interface/backing field.
-Evidence: db-models.md — `status` entity_key with no publishing interface/field; per-field revisionable/translatable flags + language content-settings contradict the single-table non-revisionable/non-translatable annotation (`Conflict`, flagged not resolved).
+*Confidence: Low — see Open Questions.*
 
 ## Lifecycle
-Reporting projection — snapshot rows are written (presumably by a report/snapshot job) and read back by
-range query; created-only, no state machine, no update/delete path evidenced.
-Evidence: db-models.md (`getEntityBetwCreated` range read; snapshot semantics). No writer flow mined → `Hypothesis` that a job populates snapshots; **Missing evidence** for the writer. Created-only.
 
-## Spec Alignment
-N/A — No EN spec files found in repository.
+Existing — a single, non-workflow state. ReportSnapshot has no domain lifecycle: rows are captured
+once and read back by range query; there is no observed update, delete, or status-driven progression.
+
+*Confidence: Low — no writer flow was mined; see Open Questions.*
+
+## State Transitions
+
+(none) — ReportSnapshot has no state machine and no observed status-driven transitions.
+
+- Creation: rows are captured (presumably by a reporting/snapshot job) — `Hypothesis`, no writer
+  flow mined; see Open Questions.
+- Read: consumed read-only by the reporting dashboard capability, filtered by report identifier and
+  a date range on the capture timestamp, trigger: UC0017 (sub-flow UC0017.3). Evidence for this
+  consumption path is Partial — see `BR-ReportingAndDataAccess`.
+
+## Attributes
+
+### System-managed attributes
+
+- Author (reference to EN0008 – User; required) — the user recorded as the entry's author.
+- Captured timestamp (datetime; required) — the point-in-time the metric was captured; also used as
+  the range-query key when reports filter by date range.
+- Changed timestamp (datetime; required)
+
+### User-provided attributes
+
+- Report identifier (string, max 50; required) — filter/grouping key identifying which report a
+  metric row belongs to.
+- Metric name (string, max 50; required) — the name of the captured metric.
+- Metric value (string, max 50; required) — the captured value for the metric; *Open Question — see
+  below on numeric handling.*
+
+A status-like attribute is declared at the data-model level with no allowed values and no observed
+use in creating, editing, or filtering rows — `Conflict`, not carried forward as a canonical
+lifecycle state; see Open Questions.
+
+## Invariants
+
+- Reporting figures held by ReportSnapshot are read-only from the perspective of case, party, money,
+  campaign, and contract records — see `BR-ReportingAndDataAccess`.
+- ReportSnapshot capture is not gated by a case-style workflow; no rule governs transitions between
+  states beyond the absence of one (see Lifecycle).
+
+## Relationships
+
+- EN0008 – User (author of the entry)
 
 ## Open Questions
-1. What writes `snapshot_entity` and on what cadence (cron snapshot job vs. manual)? No flow dossier covers the writer.
-2. `field_value` is a string(50) — how are numeric metrics aggregated in reports (cast at read time)?
-3. The `status` entity_key without a backing field, plus contradictory revisionable/translatable flags — dead scaffolding to confirm.
+
+1. What captures a ReportSnapshot row and on what cadence (scheduled job vs. manual entry) is
+   unresolved — no writer flow was mined for this entity.
+2. Metric value is held as a short text value — whether/how numeric metrics are aggregated or cast
+   when reports read them back is unresolved.
+3. A status-like attribute is declared without any allowed values or observed use — whether this is
+   dead scaffolding or an unused reporting dimension is unresolved (`Conflict`).
