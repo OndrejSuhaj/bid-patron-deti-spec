@@ -202,8 +202,11 @@ enforced).
 
 - Which statuses are terminal versus re-enterable, given no transition-legality guard is enforced
   (see BR-ApplicationStatusGovernance)?
-- Conflict — requires clarification: is the Application's own status field or the parallel Drupal
-  moderation state the authoritative source of truth? They are currently kept in lock-step by
-  convention rather than by a single owning mechanism.
+- Source-of-truth (Partial — resolved with residual risk): the Application's own status field is the
+  de-facto domain source of truth — the workflow and the status derivation read it, and a status
+  change writes it. The parallel framework-supplied moderation state is kept in lock-step by the
+  status-change path rather than by a single owning mechanism, so the two can diverge if the
+  moderation state is changed outside that path. The divergence risk — not the source-of-truth
+  question — is the residual open item.
 - What is the exact source status label for `complete` versus `completed` on Campaign-driven
   completion (see State Transitions, `active → complete/completed`)?
