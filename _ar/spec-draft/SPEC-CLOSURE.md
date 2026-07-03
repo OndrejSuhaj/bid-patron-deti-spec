@@ -4,8 +4,25 @@
 > file modified, no new domain discovery). Measured against
 > [`tooling/docs/definition-of-done.md`](../../tooling/docs/definition-of-done.md) (authoritative closure
 > contract) and [`SpecClosureEvaluator.md`](../../orchestration/03-spec-driven-documentation/agents/SpecClosureEvaluator.md).
-> Read only AR artifacts under `_ar/spec-draft/**` (+ `_ar/repo-map/glossary.md`); Patronus source under
+> Read only AR artifacts under `_ar/spec-draft/**` (+ `_ar/repo-map/glossary.md` and the
+> `_ar/evidence/flow*` dossiers/index for the batch-4 re-verification); Patronus source under
 > `intake/` was NOT read.
+
+> **Re-evaluation note — 2026-07-03 (batch 4).** This is the **post-batch-4, post-blocker-resolution**
+> re-run. Since the prior verdict, three closure blockers have been **resolved** and re-verified against
+> the artifacts: **(#2) un-mined flows FL034 / FL055 / FL057 / FL059 are now mined** into dossiers
+> [FLW0031](../evidence/flow/FLW0031_admin-reports-export.md) /
+> [FLW0032](../evidence/flow/FLW0032_es-upload-queue-index.md) /
+> [FLW0033](../evidence/flow/FLW0033_patron-base-cron-scheduled-publish.md) /
+> [FLW0034](../evidence/flow/FLW0034_ops-logger-slack-telegram.md) (see
+> [`flow-index.md`](../evidence/flow-index.md)), lifting **UC0018 / UC0020 / UC0022 from `Partial` →
+> `Confirmed`** (UC0017 was already `Confirmed`); **(#1) `BR-MarketingAndAnalyticsRelay` is now authored
+> and registered** (BR layer = 20 rules); **(#4) EN0001 source-of-truth Conflict is resolved with a
+> residual divergence risk** (the Application status field is the de-facto domain source of truth; the
+> residual is the divergence risk vs. the framework moderation state kept in lock-step by the
+> status-change path only). These changes **improve dimensions 1 and 3** but do **not** fully close them:
+> **residual current-state gaps remain and are recorded, not claimed fixed** — see §5/§6/§7. Referential
+> integrity was re-verified clean (§4) and is not re-opened.
 
 ---
 
@@ -27,13 +44,24 @@ from existing artifacts; it invents no closure and hides no uncertainty.
 Integrity / audit reports read:
 
 - [`REFERENCE-INTEGRITY.md`](REFERENCE-INTEGRITY.md) + [`RefIntegrityValidator-report.md`](RefIntegrityValidator-report.md)
-  — 157 doc_ids across 7 layers; **0 collisions / 0 dangling / 0 deferred / 0 atomicity-orphans**;
-  935 resolved references; 7 ARCH domain docs (ARCH0003–ARCH0008, ARCH0010) unreferenced **by design**
-  (top-down navigation layer, informational only, not a defect).
+  — **158 doc_ids** across 7 layers (batch-4 re-verified: EN 32 / UC 22 / FN 26 / ES 16 / MSG 30 /
+  **BR 20** / ARCH 12); **0 collisions / 0 dangling / 0 deferred / 0 atomicity-orphans**; **7 info-only
+  unreferenced ARCH nav docs** by design (top-down navigation layer, informational, not a defect). The
+  newly authored `BR-MarketingAndAnalyticsRelay` closes the erasure/anti-erasure dependency it was cited
+  by. Referential integrity stays **PASS/Confirmed** and is **not re-opened**.
 - [`CROSS-LAYER-audit.md`](CROSS-LAYER-audit.md) + [`CrossLayerAuditor-report.md`](CrossLayerAuditor-report.md)
   — **13 restatements detected, 13 resolved** to `doc_id` references, **0 pending**; 2 non-blocking
   residual notes (UC-layer has no `references:` frontmatter convention; UC0006 `accepts any caller`
   public-exposure facet placement) + 1 allowed ≤50-char scope-orientation phrase (FN0006).
+
+Batch-4 flow evidence read (re-verification of blocker #2):
+[`flow-index.md`](../evidence/flow-index.md) (FL034/FL055/FL057/FL059 now marked *Mined → FLW0031/32/33/34*),
+the four dossiers [FLW0031](../evidence/flow/FLW0031_admin-reports-export.md),
+[FLW0032](../evidence/flow/FLW0032_es-upload-queue-index.md),
+[FLW0033](../evidence/flow/FLW0033_patron-base-cron-scheduled-publish.md),
+[FLW0034](../evidence/flow/FLW0034_ops-logger-slack-telegram.md), and the refreshed
+[`UC-srv-traceability.md`](UC-srv-traceability.md) (§1/§2/§4 carry the upgraded UC evidence levels + the
+residual gaps).
 
 Registries read (per-layer `_REGISTRY.md`, doc-id counts cross-checked against the on-disk file count
 in each folder):
@@ -45,12 +73,14 @@ in each folder):
 | FN | 26 / 26 | current |
 | ES | 16 / 16 | current |
 | MSG | 30 / 30 | current |
-| BR | 19 / 19 | current |
+| BR | **20 / 20** | current (batch 4: `BR-MarketingAndAnalyticsRelay` added) |
 | ARCH | 12 / 12 | current (ARCH0001/0002 overview + ARCH0003–0012 domain) |
-| **Total** | **157 / 157** | no orphan rows, no orphan docs |
+| **Total** | **158 / 158** | no orphan rows, no orphan docs |
 
-Canonical / synthesis artifacts read: `EN/` + `EN-candidates.md` + `EN/_REGISTRY.md`; `UC/` +
-`UC-candidates.md` + `UC-srv-traceability.md` + `UC/_REGISTRY.md`; `DOMAIN-kernel.md`,
+Canonical / synthesis artifacts read: `EN/` (incl. `EN0001_Application.md` §Open Questions — the
+resolved-with-residual source-of-truth note) + `EN-candidates.md` + `EN/_REGISTRY.md`; `UC/` +
+`UC-candidates.md` + `UC-srv-traceability.md` + `UC/_REGISTRY.md`; `BR/BR-MarketingAndAnalyticsRelay.md`;
+`DOMAIN-kernel.md`,
 `DOMAIN-aggregates.md`, `DOMAIN-ubiquitous-language.md`, `CONSISTENCY-boundaries.md`;
 `ARCH0001_ApplicationOverview.md`, `ARCH0002_ContextInteractionMap.md`, `ARCH/` (10 domain docs) +
 `ARCH-domain-map.md`; `FN/` + `FN-capability-map.md`; `ES/` + `ES-system-map.md`; `MSG/` +
@@ -81,18 +111,24 @@ not "failed".
 | Criterion (DoD §1) | Status | Evidence-locator |
 |---|---|---|
 | EN layer covers the observed entities; core EN docs are canonical | **PARTIAL** | 32 EN docs canonical + `EN/_REGISTRY.md`; `EN-candidates.md` §1 (32 promoted, confidence+schema+usage) / §2 (rejected rationale). **PARTIAL because** `ENTITY-coverage-matrix.md` / `EntityInventoryCloser-report.md` were not produced — coverage is inferred from candidates+registry (substitution, §2), not verified by a coverage grid. |
-| UC layer covers the observed behavior; CS scenarios (if collected) reconciled | **PARTIAL** | 22 UC docs + `UC-candidates.md` + `UC-srv-traceability.md`. 18/22 `Confirmed`; **4 not fully evidenced**: UC0013 `Partial` (FLW0029 not implemented), UC0018/UC0020/UC0022 `Partial` (FL055/FL059/FL057 un-mined), UC0021 `Hypothesis` (dormant). CS layer **not collected** this pass → no FE-evidence scenarios to reconcile. |
+| UC layer covers the observed behavior; CS scenarios (if collected) reconciled | **PARTIAL** | 22 UC docs + `UC-candidates.md` + `UC-srv-traceability.md`. **Batch 4:** UC0018/UC0020/UC0022 upgraded `Partial`→`Confirmed` (FL055/FL059/FL057 mined → FLW0032/34/33); UC0017 already `Confirmed` (FL034 → FLW0031). **20/22 now `Confirmed`; only 2 remain non-`Confirmed`:** UC0013 `Partial` (FB inbound webhook FLW0029 = confirmed **not-implemented stub**) and UC0021 `Hypothesis` (genuinely **dormant** by design). UC0018/UC0020/UC0022 are Confirmed **with recorded residual current-state gaps** (drain scheduling / transition-legality / ES-audit sub-flow — see below), which keep the criterion at PARTIAL, not PASS. CS layer **not collected** this pass → no FE-evidence scenarios to reconcile. |
 | ARCH application-overview + context-interaction map exist | **PASS** | `ARCH0001_ApplicationOverview.md` (§2/§5/§6/§7/§8), `ARCH0002_ContextInteractionMap.md`, `ARCH-domain-map.md` (C1–C11). |
-| Open questions resolved or explicitly recorded (not silently assumed) | **PARTIAL** | Open questions are explicitly recorded, not resolved: EN0001 `moderation_state`-vs-status **Conflict — requires clarification** (EN0001 §Open Questions); transition terminality undefined; `complete`/`completed` label ambiguity; un-mined FL034/FL055/FL057/FL059; UC0002 orchestrator-as-save-side-effect caveat (`UC-candidates.md` §Open composition questions). Recorded honestly ⇒ PARTIAL, not BLOCKED. |
+| Open questions resolved or explicitly recorded (not silently assumed) | **PARTIAL** | The batch-4 blocker set is cleared from "open": **un-mined FL034/FL055/FL057/FL059 are no longer open** (mined → FLW0031–34), and the **EN0001 source-of-truth question is resolved** — the Application status field is the de-facto domain source of truth (EN0001 §Open Questions), leaving only a **residual moderation-state divergence risk**, not an open Conflict. Still explicitly recorded (not resolved): transition terminality undefined; `complete`/`completed` label ambiguity; the ComGate transfer-sync **scheduling Conflict** (cron vs manual-CLI); UC0002 orchestrator-as-save-side-effect caveat (`UC-candidates.md` §Open composition questions). Recorded honestly ⇒ PARTIAL, not BLOCKED. |
 | Referential integrity (cross-cutting) | **PASS** | 0 dangling / 0 collision / 0 orphan (`REFERENCE-INTEGRITY.md`). Raises confidence. |
 | Cross-layer de-duplication (cross-cutting) | **PASS** | 13/13 restatements resolved, 0 pending (`CROSS-LAYER-audit.md`). |
 
 - **Closure state: `closed-with-limitations`.** Overview + context map are PASS; EN/UC coverage and open
-  questions are PARTIAL (coverage-matrix substitution; 4 thin/un-mined/dormant UCs; recorded but
-  unresolved conflicts). The as-is system is describable with confidence for the mined core; the
-  limitations are visible and recorded, which is exactly `closed-with-limitations`, not `closed`.
+  questions are PARTIAL. **Batch 4 improved this dimension** (four flows mined, 20/22 UCs now `Confirmed`,
+  the EN0001 source-of-truth Conflict resolved), but it does **not** reach `closed`: the residual
+  limitations are (a) the **EN-inventory matrix substitution** (no `ENTITY-coverage-matrix.md` — EN
+  coverage inferred from candidates+registry); (b) two genuinely non-`Confirmed` UCs — **UC0013**
+  (not-implemented FB inbound stub) and **UC0021** (dormant); (c) the **EN0001 residual moderation-state
+  divergence risk**; and (d) the recorded residual current-state gaps carried on the now-Confirmed UCs
+  (drain scheduling, transition-legality, ES-audit sub-flow). These are visible and recorded, which is
+  exactly `closed-with-limitations`, not `closed`.
 - **Confidence: `Partial`.** Clean referential integrity raises confidence, but the EN coverage-matrix
-  substitution + the 4 non-`Confirmed` UCs + the EN0001 Conflict prevent `Confirmed`.
+  substitution + the two remaining non-`Confirmed` UCs + the EN0001 residual divergence risk prevent
+  `Confirmed`. (Higher than before — 4 blockers reduced to residuals — but still `Partial`.)
 
 ### Dimension 2 — Architecture & planning
 
@@ -121,20 +157,26 @@ not "failed".
 
 | Criterion (DoD §3) | Status | Evidence-locator |
 |---|---|---|
-| BR canonical rules extracted | **PARTIAL** | 19 BR docs + `BR-rule-map.md` (payment/party/GDPR/reporting/tenancy/messaging/etc., with explicit "NOT enforced today" gaps). **PARTIAL because** `BR-MarketingAndAnalyticsRelay` is **referenced but not authored** (BR-rule-map §DataProtection note; ARCH0010 note; report §6) — an anticipated rule doc that does not exist, cited by the erasure/anti-erasure rules. |
-| `REWRITE-decision-pack.md` makes rewrite blockers + architectural risks visible | **PASS** | `REWRITE-decision-pack.md`: risk catalog R01–R20, debt classification (12 Rewrite Blockers / 6 Architectural Risks / 2 Legacy Debt), ADR-01–ADR-12, explicit blocker gate B1–B8; `REWRITE-sequencing.md`. Current-state facts kept separate from `[recommendation]`. |
+| BR canonical rules extracted | **PASS** | **20 BR docs** + `BR-rule-map.md` (payment/party/GDPR/reporting/tenancy/messaging/etc., with explicit "NOT enforced today" gaps). **Upgraded PARTIAL→PASS (batch 4):** `BR-MarketingAndAnalyticsRelay` is now **authored and registered** (BR `_REGISTRY.md` row; erasure/anti-erasure dependency satisfied). No anticipated-but-unauthored BR remains. |
+| `REWRITE-decision-pack.md` makes rewrite blockers + architectural risks visible | **PASS** | `REWRITE-decision-pack.md`: risk catalog R01–R20, debt classification, ADR-01–ADR-12, explicit blocker gate B1–B8. **B8 was re-scoped (batch 4):** it no longer cites un-mined flows — it now reads "Dormant / residual-gap behaviour must be classified before build" (the FLW0032/33/34 residual gaps: drain scheduling, transition-legality, ES audit; + the transfer-sync scheduling Conflict). `REWRITE-sequencing.md`. Current-state facts kept separate from `[recommendation]`. |
 | Core layers implementation-agnostic and self-consistent | **PASS** | No code-level tokens in EN/UC/DOMAIN/ARCH/BR narrative (candidates + audit reports confirm); 0 dangling refs, 13/13 restatements resolved ⇒ self-consistent across layers. |
 | Referential integrity / cross-layer (cross-cutting) | **PASS** | Clean — raises confidence. |
 
 - **Closure state: `closed-with-limitations`.** The rewrite-decision surface is complete and strong
-  (R/ADR/B gates, sequencing), and the core layers are implementation-agnostic and self-consistent — but
-  the BR layer has one **anticipated-but-unauthored** rule (`BR-MarketingAndAnalyticsRelay`) that the
-  erasure rules depend on, and rewrite blocker **B8** explicitly requires **mining FL055/FL057/FL059 and
-  resolving the transfer-sync scheduling Conflict** *before* SRV coverage can be relied on. These are
-  visible, accepted limitations recorded in the decision pack, so the dimension closes **with
-  limitations**, not `blocked`.
-- **Confidence: `Partial`.** The rewrite can be *planned* today with the decision pack; the unauthored
-  marketing/analytics BR + the un-mined-flow gate (B8) keep it below `Confirmed`.
+  (R/ADR/B gates, sequencing), the core layers are implementation-agnostic and self-consistent, and
+  **batch 4 removed two of the three limitations that previously held this dimension back**: the
+  `BR-MarketingAndAnalyticsRelay` gap is authored (BR criterion now PASS), and the un-mined-flow half of
+  gate **B8 is discharged** (FL055/FL057/FL059 mined). What remains are the **ADR-12 residual decisions**
+  the rewrite team must still take: the **drop-or-rebuild classification** of the dormant recommendation
+  subsystem (UC0021) and the not-implemented FB inbound stub (FLW0029/UC0013), and **resolving the
+  residual current-state gaps surfaced by the mined flows** (drain scheduling on FLW0032, Workflow-Engine
+  transition-legality on FLW0033, the ES-audit sub-flow UC0020.2 on FLW0034) plus the **ComGate
+  transfer-sync scheduling Conflict**. These are visible, accepted limitations recorded in the decision
+  pack (re-scoped B8), so the dimension closes **with limitations**, not `blocked`.
+- **Confidence: `Partial`.** The rewrite can be *planned* today with the decision pack — and more of it is
+  now evidenced than before — but the ADR-12 residual decisions (dormant/stub drop-or-rebuild; the
+  drain-scheduling / transition-legality / ES-audit residual gaps; the transfer-sync scheduling Conflict)
+  keep it below `Confirmed`.
 
 ### Dimension 4 — Generation-grade contract readiness
 
@@ -155,15 +197,18 @@ rather than lower it:
 |---|---|---|
 | Dangling references (`REFERENCE-INTEGRITY.md`) | **0** — every declared/inline canonical ref resolves | Raises (removes the usual blocker on `closed`) |
 | doc_id collisions | **0** — every doc_id unique | Raises |
-| Orphan registry rows (row ↔ doc atomicity) | **0** — 157 rows, 157 docs, 1:1 | Raises |
+| Orphan registry rows (row ↔ doc atomicity) | **0** — 158 rows, 158 docs, 1:1 (batch 4: +1 BR) | Raises |
 | Deferred cross-tier references | **0** (target layers not synthesized ⇒ recorded, not penalized) | Neutral (per DoD, not a factor) |
 | Unresolved cross-layer restatements (`CROSS-LAYER-audit.md`) | **0 pending** — 13/13 resolved to references | Raises |
 | Unreferenced docs (informational) | **7** ARCH domain docs — uncited **by design** (navigation layer) | Neutral (not a defect) |
 
 Because dangling/collision/orphan/pending counts are all **0**, the DoD rule "a dimension with material
 dangling references cannot be `closed` at `Confirmed`" imposes **no** ceiling here. The confidence
-ceilings that *do* apply come from **content gaps** (EN coverage-matrix substitution, 4 non-`Confirmed`
-UCs, unauthored marketing BR, un-mined flows), not from referential integrity. Two non-blocking
+ceilings that *do* apply come from **content gaps** — after batch 4 these are the EN coverage-matrix
+substitution, the **two** remaining non-`Confirmed` UCs (UC0013 not-implemented stub, UC0021 dormant),
+the EN0001 residual divergence risk, and the residual current-state gaps on the now-mined flows
+(drain scheduling, transition-legality, ES-audit sub-flow) — **not** from referential integrity, and
+**no longer** from an unauthored marketing BR or un-mined flows (both resolved in batch 4). Two non-blocking
 residual notes remain for downstream awareness: the UC layer carries **no `references:` frontmatter
 convention** (citations live in each UC's Traceability block), and the UC0006 `accepts any caller`
 public-exposure facet is placed in BR rather than restated in UC — neither is a dangling reference.
@@ -172,31 +217,50 @@ public-exposure facet is placed in BR rather than restated in UC — neither is 
 
 ## 5. Open blockers
 
-Real, recorded blockers (not downgraded):
+**Resolved since the prior verdict (batch 4) — no longer open** (verified against the artifacts, listed
+so a reader sees they were closed, not dropped):
 
-1. **`BR-MarketingAndAnalyticsRelay` anticipated-but-unauthored.** Referenced by
-   BR-DataProtectionAndErasure / the erasure + anti-erasure rules (Mautic re-upsert restoring PII), by
-   `ARCH0010`, and by `BR-extraction-report §6` / `BR-rule-map` — but **no BR file exists** (19 BR docs
-   present, this is not one of them). The rule that governs the GDPR-critical CRM re-sync is a named gap.
-   *(Rewrite-decision blocker — feeds R11/B5, ADR-08.)*
-2. **Un-mined flows FL034 / FL055 / FL057 / FL059.** UC0017 cites FL034 (reports) as un-mined; UC0018
-   (FL055 search-sync), UC0022 (FL057 scheduled publish), UC0020 (FL059 ops listener) are `Partial`
-   and un-mined (`UC-candidates.md`; `UC-srv-traceability.md §4`). Rewrite blocker **B8** states SRV
-   coverage cannot be claimed complete until these are mined. *(Core reconstruction + rewrite-decision
-   blocker.)*
-3. **Dormant recommendation subsystem (UC0021).** Inert on 5 independent grounds (`REWRITE-decision-pack`
+- ~~`BR-MarketingAndAnalyticsRelay` anticipated-but-unauthored~~ → **RESOLVED.** The BR is now authored
+  and registered (`BR/BR-MarketingAndAnalyticsRelay.md`; `BR/_REGISTRY.md` = 20 rows); the
+  erasure/anti-erasure dependency is satisfied.
+- ~~Un-mined flows FL034 / FL055 / FL057 / FL059~~ → **RESOLVED.** Mined into FLW0031/FLW0032/FLW0033/FLW0034
+  (`flow-index.md`; the four dossiers); UC0017 stays `Confirmed` and UC0018/UC0020/UC0022 upgraded
+  `Partial`→`Confirmed`. Their **residual behavioural/scheduling gaps remain** (recorded below), but the
+  flows themselves are no longer an open item.
+- ~~EN0001 `moderation_state`-vs-status **Conflict**~~ → **RESOLVED WITH RESIDUAL.** EN0001 §Open Questions
+  now records the Application's own status field as the de-facto domain source of truth; only the
+  **divergence risk** vs. the framework moderation state (kept in lock-step by the status-change path
+  only) remains — see residual #4 below, not an open Conflict.
+
+Real, recorded blockers / residuals still open (not downgraded):
+
+1. **Residual current-state gaps on the now-mined flows (FLW0032/33/34).** Recorded, **not** claimed
+   fixed: (a) **UC0018 drain scheduling** — the module cron drain is commented out, so an **external
+   scheduler must invoke the drain** command or the ES index goes stale (`UC-srv-traceability §4`;
+   FLW0032); (b) **UC0022 Workflow-Engine transition-legality is largely NOT enforced** on live change
+   forms, and scheduled publish targets CMS `page`/`page_cz` nodes bypassing the gate with strict
+   `publish_date = today` **equality** (a missed cron day never auto-publishes) (FLW0033
+   `PatronBaseScheduledPublishCron.php:64-70`; `UC-srv-traceability §4`); (c) **UC0020 ES audit sub-flow
+   (UC0020.2) remains `Partial`** — not covered by FLW0034 (`UC-srv-traceability §1/§4`). *(Core
+   reconstruction / behavioural — feeds re-scoped B8, ADR-12.)*
+2. **Dormant recommendation subsystem (UC0021).** Inert on 5 independent grounds (`REWRITE-decision-pack`
    R19; `BR-CampaignRecommendationDormant`); must not be encoded as live behaviour — needs an explicit
-   drop-or-rebuild decision. *(Rewrite-decision blocker.)*
-4. **EN0001 `moderation_state`-vs-status Conflict.** Is the Application's own status field or the parallel
-   Drupal moderation state the authoritative source of truth? Kept in lock-step by convention, no single
-   owning mechanism (EN0001 §Open Questions, marked **Conflict — requires clarification**). *(Core
-   reconstruction blocker — a source-of-truth decision.)*
-5. **UC layer has no `references:` frontmatter convention.** UC docs convey doc_id references only via a
+   drop-or-rebuild decision. *(Rewrite-decision blocker — ADR-12.)*
+3. **Not-implemented Facebook inbound Lead webhook (FLW0029 / UC0013).** Confirmed not-implemented stub
+   (returns failed at HTTP 200; anonymous; hardcoded verify token) — UC0013 stays `Partial`; must be
+   classified drop-or-rebuild before build (R19; `UC-srv-traceability §4`). *(Rewrite-decision blocker —
+   ADR-12.)*
+4. **EN0001 moderation-state divergence risk (residual).** The source-of-truth question is resolved (the
+   Application status field is authoritative); the residual is that the parallel framework moderation
+   state can **diverge** if changed outside the status-change path that keeps it in lock-step (EN0001
+   §Open Questions). *(Core reconstruction — a residual consistency risk, not an open Conflict.)*
+5. **ComGate transfer-sync scheduling Conflict.** Only manual CLI evidenced; cron scheduling is a
+   recorded **Conflict** (R20; `UC-srv-traceability §4`; FLW0013). *(Core reconstruction / operational —
+   part of re-scoped B8.)*
+6. **UC layer has no `references:` frontmatter convention.** UC docs convey doc_id references only via a
    Traceability block; whether the layer should standardize on a `references:` frontmatter is an open
    layer-wide convention decision (`CrossLayerAuditor-report §5` note 1). *(Referential-integrity factor
    — non-blocking, does not produce dangling refs.)*
-6. **ComGate transfer-sync scheduling Conflict.** Only manual CLI evidenced; cron scheduling is a
-   recorded Conflict (R20; `UC-srv-traceability §4`). *(Core reconstruction / operational — part of B8.)*
 
 Not a blocker (correctly out of scope): absence of 04 (API/JOB/ACL/QUERY) and CS/IA/WIRE/COMP/COPY —
 those layers were not expected this run.
@@ -205,41 +269,53 @@ those layers were not expected this run.
 
 ## 6. Verdict
 
+> **Batch-4 movement:** dim 1 and dim 3 both **improved** (four flows mined; marketing BR authored;
+> EN0001 Conflict resolved). Neither reaches `closed`/`Confirmed` — honest residuals remain — so both
+> stay `closed-with-limitations` / `Partial`, with a smaller, better-characterised limitation set. Dim 2
+> is unchanged (`closed` / `Confirmed`); dim 4 is unchanged (not in scope).
+
 | Dimension | Closure state | Confidence | One-line basis |
 |---|---|---|---|
-| **1 — Current-state understanding** | `closed-with-limitations` | **Partial** | Overview+context map PASS; EN/UC coverage + open-questions PARTIAL (coverage-matrix substitution; 4 thin/un-mined/dormant UCs; EN0001 Conflict recorded). |
-| **2 — Architecture & planning** | `closed` | **Confirmed** | Kernel+aggregates+consistency, ARCH domains, ES/MSG/FN, bounded contexts all PASS; referential integrity clean. |
-| **3 — Greenfield rewrite readiness** | `closed-with-limitations` | **Partial** | Decision pack (R/ADR/B) + sequencing PASS and layers implementation-agnostic/self-consistent; BR PARTIAL (unauthored marketing rule) + B8 un-mined-flow gate. |
+| **1 — Current-state understanding** | `closed-with-limitations` | **Partial** | Overview+context map PASS; batch 4 lifted UC coverage to 20/22 `Confirmed` and resolved the EN0001 Conflict, but EN/UC coverage + open-questions stay PARTIAL: EN-inventory matrix substitution; **UC0013** (not-implemented FB stub) + **UC0021** (dormant); EN0001 residual divergence risk; residual gaps on the now-Confirmed UCs. |
+| **2 — Architecture & planning** | `closed` | **Confirmed** | Unchanged. Kernel+aggregates+consistency, ARCH domains, ES/MSG/FN, bounded contexts all PASS; referential integrity clean. |
+| **3 — Greenfield rewrite readiness** | `closed-with-limitations` | **Partial** | Decision pack (R/ADR/B) + sequencing PASS, layers implementation-agnostic/self-consistent, **BR now PASS** (marketing rule authored) and **B8's un-mined-flow half discharged** (flows mined); held below `Confirmed` by the **ADR-12 residual decisions**: drop-or-rebuild dormant/stub, and resolve the drain-scheduling / transition-legality / ES-audit residual gaps + the transfer-sync scheduling Conflict. |
 | **4 — Generation-grade contract readiness** | **not in scope of this run** | — | 04 layers (API/JOB/ACL/QUERY) absent; not assessed, not failed. |
 
 **Overall.** The reconstruction is **architecturally closed** (dim 2) and **usable now** for
 current-state understanding and rewrite planning **with limitations** (dim 1 & 3). It is **not**
-generation-grade (dim 4 not attempted). The remaining gap is **small-to-medium**: no foundational
-rework is required; the open items are one unauthored BR, four un-mined flows, one dormant-feature
-decision, and two recorded source-of-truth/convention questions — all visible and enumerated, none
-producing dangling references.
+generation-grade (dim 4 not attempted). **Batch 4 shrank the remaining gap** — the marketing BR is
+authored, four flows are mined, and the EN0001 source-of-truth Conflict is resolved — but the gap is not
+gone: it is now **small**, and consists of **residual current-state gaps** (drain scheduling,
+Workflow-Engine transition-legality, ES-audit sub-flow), **two drop-or-rebuild decisions** (dormant
+recommendation UC0021; not-implemented FB inbound stub UC0013), the **EN0001 residual divergence risk**,
+the **ComGate transfer-sync scheduling Conflict**, and the **EN-inventory matrix substitution** — all
+visible and enumerated, none foundational, none producing dangling references.
 
 ---
 
 ## 7. Minimum remaining work
 
+> **Done in batch 4 — removed from this list** (see §5): mine FL034/FL055/FL057/FL059; author
+> `BR-MarketingAndAnalyticsRelay`; resolve the EN0001 source-of-truth Conflict. Replaced by the residual
+> items below.
+
 ### Core reconstruction blockers
-- Mine flows **FL055** (search-sync), **FL057** (scheduled publish), **FL059** (ops listener), and
-  **FL034** (reports) to upgrade UC0017/UC0018/UC0020/UC0022 from `Partial` toward `Confirmed`.
-- Resolve the **EN0001 `moderation_state`-vs-status** source-of-truth Conflict (record decision; do not
-  silently pick one).
+- **Decide the residual current-state gaps on the now-mined flows** (record decisions; do not silently
+  pick one): (a) **UC0018 drain scheduling** — external scheduler must invoke the ES drain (module cron
+  commented out); (b) **UC0022 Workflow-Engine transition-legality** — largely unenforced on live change
+  forms + scheduled-publish `publish_date = today` strict-equality miss on `page`/`page_cz` nodes; (c)
+  **UC0020 ES audit sub-flow (UC0020.2)** — remains `Partial`, uncovered by FLW0034.
 - Resolve the **ComGate transfer-sync scheduling** Conflict (cron vs manual-CLI).
+- **Record the EN0001 residual divergence risk** as a rewrite constraint (single owning mechanism for
+  status vs. framework moderation state) — the source-of-truth question is already resolved.
 - *(Optional, to remove the ENTITY-inventory substitution:)* run `EntityInventoryCloser` to produce
   `ENTITY-inventory.md` / `ENTITY-classification.md` / `ENTITY-coverage-matrix.md`, upgrading dim 1's
   EN-coverage criterion from PARTIAL toward PASS.
 
 ### Rewrite-decision blockers
-- **Author `BR-MarketingAndAnalyticsRelay`** (the anticipated-but-missing BR the erasure/anti-erasure
-  rules depend on) — or explicitly fold its content into BR-DataProtectionAndErasure and retarget the
-  references.
 - Take the **drop-or-rebuild decision for the dormant recommendation subsystem (UC0021)** and for the
-  not-implemented Facebook inbound Lead webhook (FLW0029) — record as decisions, keep out of the rewrite
-  core until decided (ADR-12).
+  **not-implemented Facebook inbound Lead webhook (FLW0029 / UC0013)** — record as decisions, keep out of
+  the rewrite core until decided (ADR-12).
 
 ### Optional 04 contract-layer work (not required for rewrite planning)
 - Synthesize **API / JOB / ACL / QUERY** (phase 04) if generation-grade output is wanted, then re-run

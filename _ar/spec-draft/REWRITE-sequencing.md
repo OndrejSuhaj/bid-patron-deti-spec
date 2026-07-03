@@ -24,7 +24,7 @@ Three ordering forces, applied in this priority:
 
 1. **Domain core before integration boundaries before infrastructure/ops.** Build the invariants that own money,
    party identity and case state first; wrap external vendors behind ports next; leave search/index, ops-alerting,
-   scheduled-publish and dormant subsystems last (they are thin, un-mined, or inert — R19/R20; HS16; SRV-target-list
+   scheduled-publish and dormant subsystems last (they are thin, carry residual current-state gaps after batch-4 mining, or are inert — R19/R20; HS16; SRV-target-list
    Layers D → O → A → P).
 2. **Stabilise the highest-risk, highest-blast-radius blockers first.** The decision pack's Rewrite Blockers
    (B1–B8) gate everything built on top of them: nothing that reads status is trustworthy before B1; nothing that
@@ -104,8 +104,8 @@ and infrastructure.
 - **Layer / scope:** Processor (P) + Orchestrator/Adapter (O/A) — SearchIndex-Processor + Elasticsearch-Adapter
   (C10), ScheduledPublish-Processor + Workflow-Engine (C11), Ops-Logging-Adapters (C11),
   CampaignRecommendation-Processor (C3, dormant); contexts C10/C11/C3.
-- **Why last.** These are thin, un-mined (FL055/FL057/FL059) or inert (HS14/HS16; INV27; UC-srv-traceability §4).
-  Each needs an explicit **drop-or-rebuild** decision (B8/ADR-12) and, where kept, its flow must be mined before it
+- **Why last.** These are thin, now mined but carrying residual current-state gaps (FLW0032/33/34, was FL055/FL057/FL059) or inert (HS14/HS16; INV27; UC-srv-traceability §4).
+  Each needs an explicit **drop-or-rebuild** decision (B8/ADR-12) and, where kept, its residual current-state gaps must be resolved before it
   can be relied upon. The App↔Campaign reconcile-not-alert fix (R16) completes here as a background reconciliation
   once the core aggregates are authoritative.
 
@@ -127,7 +127,7 @@ properties being replaced, not as implementation acceptance tests.
 | **P2 Money core** | Atomic PAID command + idempotent decoupled money events; recurring charge under claim/lock with confirmed-settlement PAID; retryable/idempotent reconciliation legs | P1 (state engine drives completion cascades) | Payment identity is DB-unique + idempotency-keyed (INV25/HS12 closed); no optimistic PAID (HS04 closed); no re-entrant nested save (HS03 closed); no skipped-day / row-capped / brittle-parse reconciliation (HS05 closed) |
 | **P3 Compliance** | Right-to-erasure that actually deletes/suppresses downstream; country-scoped, permission-tightened, non-persistent reporting exports; transactional/idempotent scoring writes | P0 (party+tenant), P1 (safe lifecycle) | Erasure satisfied end-to-end incl. Mautic (HS06 closed); exports are tenant-scoped and not persisted unencrypted (HS07 closed); classification write is single-Contact scoped (HS08 write facet closed) |
 | **P4 Boundaries** | Each external boundary behind a port; authenticated payment callbacks; asynchronous messaging with retry + tracked delivery | P2 (atomic money core) | Callbacks are HMAC/signature-authenticated and no-match is observable (HS12 closed); no vendor specifics in domain code (SRV §4); messaging is decoupled from the save (HS13 closed) |
-| **P5 Infra & dormant** | Search-index/scheduled-publish/ops-alert flows mined + decided; App↔Campaign background reconciliation; explicit drop-or-rebuild for the dormant recommendation + FB inbound stub | P1–P4 core stable | FL055/FL057/FL059 mined or dropped; App↔Campaign desync is reconciled not merely alerted (INV04); no inert feature built as live behaviour (HS14/INV27 resolved by decision) |
+| **P5 Infra & dormant** | Search-index/scheduled-publish/ops-alert flows mined + decided; App↔Campaign background reconciliation; explicit drop-or-rebuild for the dormant recommendation + FB inbound stub | P1–P4 core stable | FLW0032/33/34 (was FL055/FL057/FL059) mined — their residual gaps (drain scheduling, transition-legality, ES audit) decided or the feature dropped; App↔Campaign desync is reconciled not merely alerted (INV04); no inert feature built as live behaviour (HS14/INV27 resolved by decision) |
 
 **Dependency chain (blocker → phase):** B3+B6(model) → **P0**; B1+B4 → **P1**; B2+B7 → **P2**; B5+B6(export) →
 **P3**; (R14/R4/R6 adapter side) → **P4**; B8+R16/R18/R19/R20 → **P5**. P0 and P1 are hard prerequisites for P2/P3;
@@ -200,7 +200,7 @@ FRONT/BACK, RISK, DONATIONS, FINANCE, CONTENT, AFFIL):
 
 **Why boundaries and infra come last.** Vendor adapters (Phase 4) only make sense once the domain services they
 serve are stable and expose ports (SRV §3/§4); the strongest lock-ins (Netopia vendored SDK, MAIB mutual-TLS) are
-wrapped against an already-atomic money core. Infra/dormant subsystems (Phase 5) are thin, un-mined or inert
+wrapped against an already-atomic money core. Infra/dormant subsystems (Phase 5) are thin, now mined with residual gaps, or inert
 (R19/R20; HS14/HS16; INV27) — building them early would encode unknown or dead behaviour as live, which the
 evidence explicitly warns against (ARCH0001 §8 Risk 5).
 

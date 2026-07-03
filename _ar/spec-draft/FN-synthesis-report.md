@@ -59,7 +59,10 @@ artifacts — Patronus source under `intake/current-solution/_source/` was **not
 Evidence-status distribution worth flagging for readers: FN0024 is **Dormant** (would-fire contract
 only); FN0016's inbound Facebook Lead Ads intake is **Planned / Not Implemented**; FN0003, FN0022,
 FN0023, FN0025 and parts of FN0009/FN0013/FN0015/FN0020 carry **Partial / un-mined** evidence and are
-deliberately kept broad (see §4).
+deliberately kept broad (see §4). *[Batch-4 update 2026-07-03: FN0022/FN0023/FN0025 core flows now
+mined FLW0032/FLW0034/FLW0033 — Confirmed with residual current-state gaps; FN0020 dashboard now
+mined FLW0031. Remaining Partial/un-mined: FN0009 alt-path, FN0013 RO tax-redirect, FN0015 Mautic
+outbound.]*
 
 ---
 
@@ -99,8 +102,10 @@ deliberately kept broad (see §4).
   merge type, because they share the same destructive, non-transactional, reparent-then-delete shape.
 - **FN0022 Search Indexing** and **FN0023 Operational Alerting & Audit** — infrastructure capabilities
   reconstructed largely from side-effect appearances in other UCs; their dedicated flows (FL055, FL059)
-  were un-mined. Kept broad and marked Partial.
+  were un-mined. Kept broad and marked Partial. *[Batch-4 update 2026-07-03: FL055→FLW0032,
+  FL059→FLW0034 now mined — Confirmed; residuals: drain scheduling, ES audit.]*
 - **FN0025 Workflow / Transition-Legality Engine** — the scheduled-publish flow (FL057) was un-mined
+  *[Batch-4 update 2026-07-03: now mined FLW0033 — Confirmed for the scheduled-publish sub-flow]*
   **and** transition-legality is not actually enforced on the live change forms today; this capability
   is largely a target-shape reconstruction of a gate that current state does not truly apply. Kept
   broad and explicitly flagged as not-confirmed current behaviour.

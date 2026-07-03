@@ -58,8 +58,9 @@ message exists"; no message payload, field, or formatting detail is asserted her
   (`ARCH0001` §5 row 16).
 - **Alert-only, not repair:** the Application↔Campaign desync alert (`INV04`) that this channel
   carries is a notification of an inconsistency, not an automated reconciliation of it.
-- **Evidence level:** the listener/fan-out flow that feeds this channel is un-mined (`Partial`,
-  `HS16`) — behavior beyond "an error-severity alert is forwarded here" is not evidenced.
+- **Evidence level:** the listener/fan-out flow that feeds this channel is now mined (FLW0034) —
+  Confirmed for the fan-out (`Partial` residual on the ES audit sub-flow only,
+  `HS16`) — behavior beyond "an error-severity alert is forwarded here" is not further evidenced.
 - **Distinct vendor boundary:** grouped with Slack under the same ops-alerting cluster (`FN0023`)
   but is a separate external-system boundary from it — the two channels are alternative/parallel
   recipients of the same class of alert, not the same integration.

@@ -42,9 +42,9 @@ Give operations staff near-real-time visibility into error conditions and select
 ## Alternative Flows
 
 ### AF1 — Alert channel unreachable
-1. System: attempts to deliver an alert to Slack or Telegram and the delivery fails or is silently absent.
+1. System: attempts to deliver an alert to Slack or Telegram and the delivery fails or the channel is not configured.
 
-Outcome: Evidence for this path is not mined (FL059, Depth=Skip); behavior on delivery failure is unknown — recorded as a gap, not assumed.
+Outcome: delivery is best-effort (FLW0034) — a failed POST is only self-logged and the alert is lost; there is no queue, retry, backoff, or dead-letter. If the Slack/Telegram config is absent, `log()` returns without posting and without any error (alerting can be silently off). The synchronous outbound POST carries no timeout override, so a slow/unreachable channel can block the emitting request/cron path.
 
 ## Postconditions
 
@@ -67,8 +67,9 @@ Integration boundaries:
 - Elasticsearch
 
 Flow Evidence:
-- FL059 (un-mined, Depth=Skip — coverage stub only)
+- FLW0034 (mined; was flow-index FL059) — ops logger channels (`logger.slack` / `logger.telegram`): passive log-pipeline sink for ERROR/CRITICAL records plus ~48 direct forced-alert call sites; covers UC0020.1 (ops alert fan-out) and AF1 (delivery failure = best-effort, alert lost).
+- FLW0032 / ES-audit (+ES audit) — the audit-trail indexing sub-flow (UC0020.2) rides the search-index / Elasticsearch surface; FLW0034 does not itself cover ES audit indexing.
 
 ## Evidence Level
 
-Partial — anchored only to the un-mined FL059 listener flow (Depth=Skip); SRV-target-list.md and UC-srv-traceability.md confirm Ops-Logging-Adapters/Elasticsearch-Adapter exist as target SRVs with no dedicated mined dossier, and no EN entity is owned here, so behavior beyond this coverage stub must not be assumed.
+Confirmed for the ops-alert fan-out (UC0020.1) and its delivery-failure behavior (AF1), now that the ops logger flow is mined (FLW0034): Slack routes ERROR→errors-webhook / CRITICAL→checks-webhook (EMERGENCY/ALERT dropped), Telegram posts all passing levels to one bot chat; delivery is synchronous, best-effort, no retry/queue (the `slack_queue` is created but never used). Mined current-state facts carried forward: `sendMessageToZoneChannel()` is an empty no-op silently dropping ~25 activity-feed signals; PII can be interpolated into outbound alerts; direct `->log(3,…)` hard-codes ERROR for routine notices (alert fatigue). The audit-trail indexing sub-flow (UC0020.2) remains Partial — it is not covered by FLW0034 and depends on the Elasticsearch audit surface.

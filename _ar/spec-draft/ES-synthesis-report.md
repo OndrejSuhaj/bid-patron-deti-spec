@@ -90,9 +90,12 @@ external boundaries that happen to feed the same internal reconciliation capabil
   ES0007, not as a live boundary.
 - **Elasticsearch search-index sync flow (Partial).** The genuinely-async search-index path is
   confirmed only as a save-time side-effect; its core sync flow is **un-mined** (Partial, HS16).
-  Boundary confirmed; internal orchestration incomplete.
+  Boundary confirmed; internal orchestration incomplete. *[Batch-4 update 2026-07-03: core sync flow
+  now mined FLW0032 — Confirmed end-to-end; residual Partial on drain scheduling only.]*
 - **Slack/Telegram alert-listener flow (Partial).** The alert-listener flow is un-mined, so the
   precise dispatch/failure behaviour beyond "best-effort, alert loss only" is not fully evidenced.
+  *[Batch-4 update 2026-07-03: alert-listener flow now mined FLW0034 — Confirmed for the fan-out;
+  ES audit sub-flow residual Partial.]*
 
 Confirmed **absences** (no uncertainty — treated as excluded, not open):
 

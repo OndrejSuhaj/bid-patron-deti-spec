@@ -182,7 +182,7 @@ the integration role. Confidence carried from `integrations.md`.
 | 11 | **ARES** (CZ business registry) | C2 / ARES-Registry-Adapter | Outbound | Scoring AJAX lookup (UC0003) | No timeout on the call → a hanging registry can stall the request |
 | 12 | **MVČR** (CZ invalid-document check) | C2 / MVCR-DocValidity-Adapter | Outbound | Scoring identity check (UC0003) | Document-validity check unavailable → risk-gate degraded |
 | 13 | **OneDrive / Microsoft Graph** (invoice import) | C6 / OneDrive-Graph-Adapter | Inbound (pull) | CLI invoice import (UC0019) | ROPC password-grant lock-in; import failure → invoices not attached to campaign applications |
-| 14 | **Elasticsearch** (audit store + search index + Elastic Cloud `organisations`) | C10/C11 / Elasticsearch-Adapter | Outbound (write/index) | Entity-save enqueue + cron; daily org full re-push (UC0018/UC0016) | Genuinely async for search (queue); index-sync flow itself un-mined (**Partial**, HS16); org index is a full re-push each run (no cursor) |
+| 14 | **Elasticsearch** (audit store + search index + Elastic Cloud `organisations`) | C10/C11 / Elasticsearch-Adapter | Outbound (write/index) | Entity-save enqueue + cron; daily org full re-push (UC0018/UC0016) | Genuinely async for search (queue); index-sync flow now mined (FLW0032) — Confirmed; residual **Partial** on drain scheduling only (HS16); org index is a full re-push each run (no cursor) |
 | 15 | **Slack** | C11 / Ops-Logging-Adapters | Outbound | Logger channel on ERROR/CRITICAL (UC0020) | Error/health alert loss only; also used to alert (not repair) an Application↔Campaign desync (INV04) |
 | 16 | **Telegram** | C11 / Ops-Logging-Adapters | Outbound | Logger channel on error severity (UC0020) | Error-alert loss only; carries the desync alert (INV04) |
 | 17 | **Nager.Date** (public-holiday calendar) | C3 / Campaign-&-Story-Lifecycle | Outbound | RO campaign deadline validation | **Fail-open**: API down ⇒ date treated as working day, the RO working-day rule is silently bypassed (FLW0021) |
@@ -338,12 +338,16 @@ never deleted, unencrypted PII at rest); SRV-architecture-map §4 (vendor lock-i
 **Risk 5 — Dormant/planned and thin/un-mined subsystems present in the codebase but not live behaviour.**
 *Evidence:* HS14 (the campaign-recommendation subsystem — UC0021, AG7 Account — is inert on 5 independent grounds:
 event dispatch commented out, module not installed, classifier YAML commented, ML library absent, storage field
-commented out; INV27), HS16 (thin/partial-coverage SRVs whose flows were never mined: search-index sync
-(C10), scheduled publish + Workflow-Engine (C11), the ops-alert listener, and the **confirmed not-implemented**
-Facebook inbound lead webhook); UC-srv-traceability §4 (5 SRVs covered only by Partial/Hypothesis UCs).
+commented out; INV27), HS16 (thin/partial-coverage SRVs whose flows have now been mined in batch 4 — search-index
+sync (C10) → FLW0032, scheduled publish + Workflow-Engine (C11) → FLW0033, the ops-alert listener → FLW0034 —
+which **confirmed the flows but surfaced residual current-state gaps rather than closing them** (drain scheduling
+unenforced, transition-legality unenforced, ES audit sub-flow not indexed), plus the **confirmed not-implemented**
+Facebook inbound lead webhook); UC-srv-traceability §4 (post-batch-4, the only non-Confirmed coverage is the
+dormant recommendation processor UC0021 and the not-implemented FB inbound webhook UC0013).
 *Impact:* A rewrite must **not** treat dormant/stub features as live current-state behaviour; each requires an
-explicit drop-or-rebuild decision, and the un-mined flows (FL055/FL057/FL059) must be resolved before relying on
-SRV coverage as complete behaviour.
+explicit drop-or-rebuild decision. The batch-4 flows (FLW0032/FLW0033/FLW0034) are now mined, but their residual
+current-state gaps (drain scheduling, transition-legality, ES audit indexing) must be resolved before relying on
+SRV coverage as complete, correct behaviour.
 
 ---
 

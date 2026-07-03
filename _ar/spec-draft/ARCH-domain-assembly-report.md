@@ -63,7 +63,9 @@ Context mapping is 1:1 for C1..C9 (ARCH0003..ARCH0011) and 2:1 for the merged fa
   thin/adjacent-context guidance. C10 and C11 are the two thinnest contexts (HS16): neither owns a
   resident aggregate, C10 indexes other aggregates as a save-time side-effect, and C11 holds only
   reference/config entities plus the workflow/publish/ops fabric. Their core flows (FL055 search-sync,
-  FL057 scheduled publish, FL059 ops listener) are un-mined. Kept as one navigation surface with the
+  FL057 scheduled publish, FL059 ops listener) are un-mined. *[Batch-4 update 2026-07-03: now mined
+  FLW0032/FLW0033/FLW0034 — Confirmed, with residual current-state gaps (drain scheduling,
+  transition-legality, ES audit).]* Kept as one navigation surface with the
   four sub-capabilities (search / workflow+publish / reference data / ops alerting) individually
   identified, so the merge does not hide a sub-context.
 - **ARCH0009 Party / CRM kept broad on the overloaded Contact.** The universal party store is treated

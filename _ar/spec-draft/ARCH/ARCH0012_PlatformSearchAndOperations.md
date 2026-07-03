@@ -49,7 +49,7 @@ platform/operations navigation surface, with each sub-context kept identifiable 
 The platform fabric provides four capabilities that every other domain leans on:
 
 - **Search indexing (C10)** — entity → external index synchronisation, one of the few genuinely async
-  paths, plus a daily full re-push of the organisation index; the core sync flow is un-mined (Partial)
+  paths, plus a daily full re-push of the organisation index; the core sync flow is now mined (FLW0032) — Confirmed; residual Partial on drain scheduling only
   ([ARCH0001](../ARCH0001_ApplicationOverview.md) §4, §7; FN0022, HS16).
 - **Workflow engine & scheduled publish (C11)** — holds the ~66-state workflow config and the
   transition/readiness gate that publish/uncompletion pass through, plus the scheduled-publish tick.
@@ -113,6 +113,7 @@ Per [ARCH0002](../ARCH0002_ContextInteractionMap.md) §(b)/(c):
   (shared transition-legality concern, owned by C1)
 
 > **Coverage note.** This is the merged home for the two thinnest contexts; several of its flows
-> (FL055 search-sync, FL057 scheduled publish, FL059 ops listener) are un-mined (Partial, HS16). A
-> rewrite must resolve these before treating the platform fabric's behaviour as complete (ARCH0001 §8
-> Risk 5).
+> (FLW0032 search-sync, FLW0033 scheduled publish, FLW0034 ops listener; was FL055/FL057/FL059) are
+> now mined; mining confirmed them but surfaced residual current-state gaps (drain scheduling,
+> transition-legality, ES audit) (Partial residuals, HS16). A rewrite must resolve these before
+> treating the platform fabric's behaviour as complete (ARCH0001 §8 Risk 5).

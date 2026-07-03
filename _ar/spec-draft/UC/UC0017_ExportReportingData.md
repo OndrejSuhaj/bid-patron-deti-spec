@@ -60,7 +60,7 @@ Outcome: the Admin receives a CSV file for the requested reporting export, eithe
 2. System: reads previously captured reporting figures — monthly cost/target entries (CostsSnapshot, EN0031) and named point-in-time metrics (ReportSnapshot, EN0032) — filtered to the requested date range.
 3. System: renders the dashboard using the retrieved figures.
 
-Outcome: the Admin sees aggregated reporting figures independent of the CSV export files; this sub-flow is evidenced only by an un-mined flow reference and is described at capability level only.
+Outcome: the Admin sees aggregated reporting figures independent of the CSV export files; this sub-flow is now evidenced by the mined reporting read-model dossier (FLW0031) and is described at capability level only.
 
 ## Alternative Flows
 
@@ -119,8 +119,8 @@ BR rules:
 
 Flow Evidence:
 - FLW0027 (mined) — scheduled and on-demand CSV export batch, covers UC0017.1, UC0017.2, AF1, AF2, AF3.
-- FL034 (un-mined) — reporting dashboards behind Reporting-ReadModel, covers UC0017.3 only; evidence is Partial for this sub-flow.
+- FLW0031 (mined; was flow-index FL034) — reporting dashboards / read-model behind Reporting-ReadModel, covers UC0017.3; the read side (`/admin/reports/*`) is now evidenced as read-only SELECT-and-render controllers (no writes).
 
 ## Evidence Level
 
-Confirmed for UC0017.1/.2 and AF1–AF3 (CSV-Export-Processor / SRV0010 export part, FLW0027, EN0001/EN0002/EN0004/EN0006/EN0009/EN0011); Partial for UC0017.3 (Reporting-ReadModel / SRV0010 read part, EN0031/EN0032), which rests on the un-mined FL034 reference only.
+Confirmed for UC0017.1/.2 and AF1–AF3 (CSV-Export-Processor / SRV0010 export part, FLW0027, EN0001/EN0002/EN0004/EN0006/EN0009/EN0011). Confirmed for UC0017.3 (Reporting-ReadModel / SRV0010 read part, EN0031/EN0032), now that the reporting read-model flow is mined (FLW0031). Note: FLW0031 confirms the reporting figures are computed on page request (no read-model materialisation/cron) and that `snapshot_entity` is not actually read by any report controller — CostsSnapshot (EN0031) is read via `costs_entity`, ReportSnapshot (EN0032) is an independent CRUD entity with no report caller. This is a current-state modelling correction, not an evidence gap.

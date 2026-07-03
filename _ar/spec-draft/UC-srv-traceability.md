@@ -17,12 +17,12 @@
 | 5 | D | Bank-Reconciliation | UC0008 | Confirmed | — |
 | 6 | D | Document-Generation-&-Fulfilment | UC0004, UC0006, UC0009, UC0010, UC0002 | Confirmed | — |
 | 7 | D | Party-&-Contact-Management | UC0016 | Confirmed | — |
-| 8 | D | Reporting-ReadModel | UC0017 | Confirmed | reporting snapshots via un-mined FL034 |
+| 8 | D | Reporting-ReadModel | UC0017 | Confirmed | reporting read-model now mined (FLW0031, was FL034) |
 | 9 | D | Identity-&-Access | UC0001, UC0005, UC0006, UC0014, UC0015, UC0016 | Confirmed | primary in UC0014 |
 | 10 | D | Reference-Data (geo/zip) | UC0001, UC0022 | Confirmed / Partial | supporting lookup only — no standalone UC |
 | 11 | O | **Application-Status-Orchestrator** | **UC0002 (root)**, UC0004, UC0011, UC0019 | Confirmed | orchestrator → root ✔ |
 | 12 | O | **Transactional-Messaging-Orchestrator** | **UC0012 (root)**, UC0002, UC0004, UC0006, UC0010, UC0011, UC0015 | Confirmed | orchestrator → root ✔ |
-| 13 | O | **Workflow-Engine** | **UC0022 (root)** | Partial | orchestrator → root ✔; anchor FL057 un-mined |
+| 13 | O | **Workflow-Engine** | **UC0022 (root)** | Confirmed (residual gap) | orchestrator → root ✔; scheduled-publish anchor mined (FLW0033, was FL057); transition-legality unenforced = current-state gap |
 | 14 | A | ComGate-Adapter | UC0005, UC0006, UC0007 | Confirmed | — |
 | 15 | A | Netopia-Adapter | UC0005, UC0006, UC0007 | Confirmed | — |
 | 16 | A | MAIB-Adapter | UC0005, UC0006, UC0007 | Confirmed | — |
@@ -37,13 +37,13 @@
 | 25 | A | Email-Adapter | UC0012 | Confirmed | — |
 | 26 | A | WhoisXML-DomainCheck-Adapter | UC0012 | Confirmed | — |
 | 27 | A | OneDrive-Graph-Adapter | UC0019 | Confirmed | — |
-| 28 | A | Elasticsearch-Adapter | UC0018, UC0020 | Partial | both covering UCs are Partial |
-| 29 | A | Ops-Logging-Adapters (Slack+Telegram) | UC0020 | Partial | only Partial UC; anchor FL059 un-mined |
+| 28 | A | Elasticsearch-Adapter | UC0018, UC0020 | Confirmed / Partial | UC0018 now Confirmed (FLW0032); ES audit trail in UC0020.2 remains Partial (not covered by FLW0034) |
+| 29 | A | Ops-Logging-Adapters (Slack+Telegram) | UC0020 | Confirmed | ops-logger flow now mined (FLW0034, was FL059) |
 | 30 | P | RecurringPayment-Processor | UC0007 | Confirmed | — |
 | 31 | P | Reconciliation-Processor | UC0008 | Confirmed | — |
 | 32 | P | CSV-Export-Processor | UC0017 | Confirmed | — |
-| 33 | P | SearchIndex-Processor | UC0002, UC0011, UC0016, UC0018 | Confirmed / Partial | Confirmed as side-effect in UC0002/0011/0016; UC0018 Partial |
-| 34 | P | ScheduledPublish-Processor | UC0022 | Partial | only Partial UC; anchor FL057 un-mined |
+| 33 | P | SearchIndex-Processor | UC0002, UC0011, UC0016, UC0018 | Confirmed | Confirmed as side-effect in UC0002/0011/0016; UC0018 now Confirmed (FLW0032, residual Partial on drain scheduling only) |
+| 34 | P | ScheduledPublish-Processor | UC0022 | Confirmed | scheduled-publish flow now mined (FLW0033, was FL057) |
 | 35 | P | CampaignRecommendation-Processor | UC0021 | Hypothesis | **dormant** — only covered by a dormant UC |
 | 36 | P | ApplicationAction-Processor | UC0002 | Confirmed | cron path (FL009, un-mined) folded into UC0002 |
 
@@ -72,11 +72,11 @@
 | UC0015 | Confirmed | Identity-&-Access · Transactional-Messaging-Orchestrator · Mautic-CRM-Adapter |
 | UC0016 | Confirmed | Party-&-Contact-Management · Application-Lifecycle · Identity-&-Access · SearchIndex-Processor |
 | UC0017 | Confirmed | Reporting-ReadModel · CSV-Export-Processor |
-| UC0018 | Partial | SearchIndex-Processor · Elasticsearch-Adapter |
+| UC0018 | Confirmed (drain-scheduling residual Partial) | SearchIndex-Processor · Elasticsearch-Adapter |
 | UC0019 | Confirmed | OneDrive-Graph-Adapter · Application-Status-Orchestrator |
-| UC0020 | Partial | Ops-Logging-Adapters · Elasticsearch-Adapter |
+| UC0020 | Confirmed (ES audit sub-flow Partial) | Ops-Logging-Adapters · Elasticsearch-Adapter |
 | UC0021 | Hypothesis | CampaignRecommendation-Processor (Transitional) |
-| UC0022 | Partial | **Workflow-Engine** · ScheduledPublish-Processor · Reference-Data |
+| UC0022 | Confirmed (transition-legality current-state gap) | **Workflow-Engine** · ScheduledPublish-Processor · Reference-Data |
 
 Every UC maps to ≥1 Target SRV (UCComposer hard-rule 5 ✔).
 
@@ -91,12 +91,14 @@ Every UC maps to ≥1 Target SRV (UCComposer hard-rule 5 ✔).
 
 ## 4. Coverage risks (thin / non-Confirmed coverage — carry into review)
 
+> **Batch 4 update:** FL034/FL055/FL057/FL059 are now mined (FLW0031–FLW0034), so the Reporting, Search-index, ScheduledPublish and Ops-logging coverage-risk lines below are removed/downgraded — those flows are no longer un-mined. Remaining risks are the dormant recommendation processor, the not-implemented FB inbound webhook, and the residual drain-scheduling / transition-legality current-state gaps.
+
 | Target SRV | Only covering UC(s) | Risk |
 |---|---|---|
 | CampaignRecommendation-Processor | UC0021 | **Dormant-only** — feature is disabled in source (module not installed, service/lib commented). Coverage is Hypothesis by design. |
-| Workflow-Engine · ScheduledPublish-Processor | UC0022 | **Partial** — the scheduled-publish flow (FL057, `patron_base_cron`) was never mined; UC0022 is a coverage stub. |
-| Ops-Logging-Adapters | UC0020 | **Partial** — Ops-alert listener flow (FL059) was `Depth=Skip`, un-mined; infrastructure stub. |
 | FacebookCAPI-Adapter · Analytics-Adapter (GTM/Pixel) | UC0013 | **Partial** — FB inbound webhook (FLW0029) is a confirmed not-implemented stub; only the Mautic/CAPI outbound sub-flows (FL049/FL051) are index-only. |
-| Elasticsearch-Adapter · SearchIndex-Processor | UC0018 (+UC0020 for ES) | **Partial** — search-index sync flow (FL055) un-mined; SearchIndex-Processor is Confirmed only as a side-effect within UC0002/UC0011/UC0016. |
+| SearchIndex-Processor · Elasticsearch-Adapter | UC0018 | **Resolved (residual):** search-index sync flow is now mined (FLW0032, was FL055) → UC0018 Confirmed. Residual **Partial on drain scheduling only** (module cron drain commented out; external scheduler must invoke the drain command) — a current-state async/staleness risk, not a coverage gap. |
+| Workflow-Engine · ScheduledPublish-Processor | UC0022 | **Resolved (residual):** scheduled-publish flow is now mined (FLW0033, was FL057) → UC0022 Confirmed for the scheduled-publish sub-flow. Residual current-state gap: **Workflow-Engine transition-legality is largely not enforced** on live change forms — a BR/behavioural gap, not an evidence gap. |
+| Ops-Logging-Adapters | UC0020 | **Resolved:** ops-alert listener flow is now mined (FLW0034, was FL059) → UC0020 Confirmed for the ops-alert fan-out. The ES audit-trail sub-flow (UC0020.2) remains Partial (not covered by FLW0034). |
 
-> These are not coverage gaps (every SRV has a UC); they flag where the covering UC's evidence is Partial/Hypothesis because the underlying flow was not mined or the feature is dormant. Deepening any of them requires mining the cited FL flow (FL055/FL057/FL059) — deferred by FlowMiner depth policy.
+> Every SRV has a UC. After batch 4, the previously un-mined FL034/FL055/FL057/FL059 are mined (FLW0031–FLW0034); the remaining non-Confirmed coverage is the dormant recommendation processor (UC0021), the not-implemented FB inbound webhook (UC0013), and the residual current-state gaps noted above (drain scheduling, transition-legality, ES audit indexing) — which are behavioural/scheduling gaps, not un-mined-flow gaps.

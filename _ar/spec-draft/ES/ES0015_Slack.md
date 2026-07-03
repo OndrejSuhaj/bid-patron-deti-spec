@@ -63,7 +63,7 @@ This corresponds to ARCH0002's ops-alert/audit listener chain (Slack alongside T
 - Two configuration postures coexist: the ops-alert logger channel's webhook targets come from
   deployment configuration, whereas the donation / voucher-purchase ping uses a webhook target
   hardcoded in the payment code path (FLW0003 / FLW0005 / FLW0007) — a lock-in / rotation risk. The
-  ops-alert listener flow itself was un-mined (**Partial**, HS16) (ARCH0001 §5 row 15).
+  ops-alert listener flow is now mined (FLW0034) — Confirmed for the fan-out; the ES audit sub-flow remains Partial (HS16) (ARCH0001 §5 row 15).
 - The Application↔Campaign desync warning (INV04) is **not** carried by Slack: DOMAIN-kernel and
   CONSISTENCY-boundaries (the INV04 owners) record it as Telegram-only (see ES0016). ARCH0001 §5 row 15
   and ARCH0002 group Slack + Telegram together for ops alerting generally, but the desync-specific

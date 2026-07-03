@@ -64,11 +64,27 @@ for the current integrations landscape.)
 
 - Cross-cutting side effect of other use cases: this capability owns no domain entity and has no
   independent trigger of its own — it activates whenever another process raises a loggable
-  condition or event.
-- The underlying listener flow (FL059) was un-mined (Depth=Skip); behavior on alert-delivery
-  failure is unknown and is recorded as an evidence gap, not assumed.
-- Alert delivery is best-effort: failure to deliver an alert results only in the alert being lost,
-  it does not affect the outcome of the originating process.
+  condition or event. FLW0034 confirms it is both a passive logger-channel sink (ERROR/CRITICAL
+  records fan out to both channels) and an actively-invoked service (~48 direct forced-alert
+  `->log(3,…)` call sites across payments/finance/cron/queue code).
+- The underlying ops-logger flow (FLW0034, was flow-index FL059) is now mined (Confirmed). Delivery
+  behavior on failure is evidenced: a failed POST is only self-logged and the alert is lost — there
+  is no queue, retry, backoff, or dead-letter (the `slack_queue` is created but never used). If the
+  Slack/Telegram config is absent, `log()` returns silently without posting.
+- Alert delivery is best-effort AND synchronous on the hot path: the outbound POST carries no timeout
+  override, so a slow/unreachable Slack/Telegram can block the emitting request/cron path (FLW0034).
+- Level routing (FLW0034): Slack routes ERROR→errors-webhook and CRITICAL→checks-webhook and drops
+  EMERGENCY/ALERT entirely; Telegram posts every passing level to a single bot chat. Direct
+  `->log(3,…)` callers hard-code ERROR for many routine operational notices → alert-fatigue / signal
+  dilution.
+- `sendMessageToZoneChannel()` (the Slack "activity feed" path, ~25 call sites: logins, profile /
+  password changes, new-lead creation, contact-form submissions) is an **empty no-op** — those
+  signals are silently dropped and never reach Slack (FLW0034).
+- PII / sensitive data can leave the platform boundary: direct callers interpolate user identifiers
+  and business data (incl. exception bodies) into the message before POSTing to Slack/Telegram;
+  strip_tags + 1800-char truncation do not redact PII (FLW0034).
+- No tenant/country (CZ/RO/MD) partitioning of alerts — all-region errors land in the same global
+  channel(s) (FLW0034).
 - A hardcoded Slack webhook exists on a live entity-save path (evidenced in the current-state
   reconstruction) — an operational/architectural weakness of the current implementation, not a
   designed configuration mechanism.

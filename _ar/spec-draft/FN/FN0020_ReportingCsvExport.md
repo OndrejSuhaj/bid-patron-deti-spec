@@ -96,6 +96,14 @@ involved.
   dedicated sensitive-data permission.
 - At most one scheduled export batch runs per calendar day; a failed or skipped batch window is not
   retried until the next day's window.
-- The reporting-dashboard sub-flow (read-model access via CostsSnapshot EN0031 / ReportSnapshot
-  EN0032) is Partial — evidenced only by an un-mined flow reference (FL034) and described here at
-  capability level only.
+- The reporting-dashboard / read-model sub-flow (read-model access via CostsSnapshot EN0031 /
+  ReportSnapshot EN0032) is now mined (FLW0031, was flow-index FL034): the `/admin/reports/*`
+  controllers are read-only (SELECT-and-render, page cache disabled), so no reporting figure is
+  materialised — every dashboard hit re-queries on page request. FLW0031 also corrects the entity
+  footprint: `snapshot_entity` (ReportSnapshot EN0032) is an independent CRUD entity with no report
+  caller; the monthly-cost figures come from `costs_entity` (CostsSnapshot EN0031).
+- The accounting report exposes `application_attachments_audit-archive/*` (municipal/audit
+  attachments, potential PII) as anonymously-downloadable public URLs; only the listing page is
+  permission-gated (FLW0031). Money figures embed hard-coded magic constants (transparent-account
+  balance and a visible "artificially added" disclaimer), and there is no VAT/DPH computation
+  anywhere in the reports module (FLW0031).

@@ -112,7 +112,7 @@ C3 Campaign publish          --sync--> C1 Application (→ active)  (two aggrega
 Genuinely out-of-band paths (queue worker or cron drains after the triggering request).
 
 ```
-C1/C3/C4/C7 entity save      ==search-index queue==> C10 SearchIndex-Processor --sync--> ..external..> Elasticsearch   (UC0018; genuinely async; index-sync flow un-mined — Partial, HS16)
+C1/C3/C4/C7 entity save      ==search-index queue==> C10 SearchIndex-Processor --sync--> ..external..> Elasticsearch   (UC0018; genuinely async; index-sync flow mined FLW0032 — Confirmed; residual Partial: drain scheduling only, HS16)
 C7 Party/User save           ==CRM-sync queue==>   C8 Mautic-CRM-Adapter      ..external..> Mautic (contact upsert)   (UC0013/UC0015; FLW0019/FLW0020)
 C4 RecurringTransaction      ..cron..> C4 RecurringPayment-Processor --sync--> ..external..> gateway (charge)         (UC0007; ⚠ optimistic PAID — HS04)
 C5 (bank/gateway credits)    ..cron/CLI..> C5 Reconciliation-Processor: Moneta poll | IMAP import | ComGate transferSync
@@ -120,7 +120,7 @@ C5 (bank/gateway credits)    ..cron/CLI..> C5 Reconciliation-Processor: Moneta p
 C5 Reporting-ReadModel       ..cron..> C5 CSV-Export-Processor ..> filesystem /tmp   (⚠ global, no tenant filter, PII at rest — HS07)  (UC0017)
 C6 (invoice source)          ..CLI..>  C6 OneDrive-Graph-Adapter ..external..> MS Graph → attach to C1 Application     (UC0019; FLW0028)
 C7 Organisation daily        ..cron..> C7/C10 → ..external..> Elasticsearch Cloud `organisations` (⚠ full re-push, no cursor)  (UC0016/UC0018; FLW0024)
-C11 scheduled publish        ..cron..> C11 ScheduledPublish-Processor ~~event~~> C1/C3 (publish)  (UC0022; Partial — FL057 un-mined, HS16)
+C11 scheduled publish        ..cron..> C11 ScheduledPublish-Processor ~~event~~> CMS page/page_cz (publish)  (UC0022; scheduled-publish mined FLW0033 — Confirmed; ⚠ targets CMS nodes not App/Campaign, bypasses Workflow-Engine gate, strict publish_date=today equality, HS16)
 ```
 
 **Queue paths that are NOT actually async today (⚠ looks-async / is-sync):**
@@ -168,7 +168,7 @@ C7 anonymised User save                 ==CRM-sync queue==> C8 Mautic (re-upsert
 
 **Ops-alert / audit listener (C11):**
 ```
-any context error/severity ~~event~~> C11 Ops-Logging-Adapters ..external..> Slack (ERROR/CRITICAL) | Telegram   (UC0020; Partial — FL059 un-mined, HS16)
+any context error/severity ~~event~~> C11 Ops-Logging-Adapters ..external..> Slack (ERROR/CRITICAL) | Telegram   (UC0020; ops listener mined FLW0034 — Confirmed; ⚠ PII egress, sendMessageToZoneChannel() no-op, synchronous blocking; ES audit sub-flow still Partial, HS16)
 any request ~~event~~> C10/C11 ..external..> Elasticsearch (request/response audit record)                       (integrations.md §4)
 ```
 
@@ -184,8 +184,8 @@ C4 Transaction → PAID ⟂ DORMANT ~~event~~> C3 CampaignRecommendation-Process
 
 ## Reader's summary — what actually crosses a real boundary today
 
-- **Only three paths are genuinely async/decoupled:** search indexing (`==search-index queue==>`, though the flow is
-  un-mined — Partial), the Mautic contact-upsert queue, and the cron/CLI processors (recurring, reconciliation,
+- **Only three paths are genuinely async/decoupled:** search indexing (`==search-index queue==>`; the flow is now
+  mined — FLW0032, Confirmed, residual Partial on drain scheduling only), the Mautic contact-upsert queue, and the cron/CLI processors (recurring, reconciliation,
   CSV export, OneDrive import, scheduled publish, daily org index).
 - **Everything else that "looks like" an event is synchronous in-request** — the status orchestration seam
   (HS01), the Transaction money hub (HS03), the Application↔Campaign lock-step (INV04, alert-only), the

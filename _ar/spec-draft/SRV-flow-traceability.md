@@ -148,3 +148,23 @@
 - **FL008/FLW0026:** does NOT send activation/magic-link (contra hint); users stay blocked.
 
 > **FlowMiner complete: 30 flow dossiers (FLW0001–FLW0030).** Batches 1–3 cover the payment/finance core, application/status spine, identity, scoring, documents, campaign lifecycle, data-hygiene merges, exports, and integration adapters (incl. dormant paths). Sufficient behavioral evidence for **02 System reconstruction (ENExtractor → UCComposer)**.
+
+---
+
+## Batch 4 addendum (FLW0031–FLW0034)
+
+> Deep-mined the four remaining infrastructure/read-side flows that batches 1–3 left as un-mined flow-index ids (FL034/FL055/FL057/FL059). These fill the Partial coverage stubs flagged in [UC-srv-traceability.md](UC-srv-traceability.md) §4.
+
+### SRV → primary FlowID (batch 4)
+- **SRV0010 Reporting-ReadModel → FLW0031** (`/admin/reports/*` money/productivity/campaign read-model). Boundary note: the **READ** side of SRV0010; the CSV-Export write side is FLW0027. Read-only, no writes, no external integration (one local filesystem directory read of the municipal audit-archive). `Confirmed`.
+- **SRV0016 Search Indexing → FLW0032** (`es_upload_queue` enqueue-on-postSave + `EsUploadQueue` worker drain → Elastic App Search). Boundary note: enqueue is a side-effect of the 5 indexed entities' `postSave`; drain is a separate CLI/worker path. `Confirmed` on the queue-enqueue + worker path; `Partial` on drain scheduling only (module cron drain is commented out — an external scheduler must invoke `process_queue`).
+- **SRV0017 ScheduledPublish (Workflow-Engine group) → FLW0033** (`patron_base_cron` scheduled publish of `page`/`page_cz` nodes + `/homepage` alias swap). Boundary note: publishes CMS `page`/`page_cz` node bundles only (not campaign/blog); no external integration, purely internal node + path_alias mutation. `Confirmed`.
+- **SRV0018 Observability & Ops → FLW0034** (`logger.slack` / `logger.telegram` ERROR/CRITICAL fan-out + ~48 direct `->log(3,…)` forced-alert call sites). Boundary note: passive logger-channel sink AND actively-invoked service; no domain entity, no queue (synchronous outbound HTTP). `Confirmed`.
+
+### New cross-context / defect findings (batch 4 — high value)
+- **SRV0010 (Reporting):** `AccountingReportsController::getFiles()` exposes `public://application_attachments_audit-archive/*` (municipal/audit attachments, potential PII) as anonymously-downloadable URLs; only the listing page is permission-gated. Money figures embed hard-coded magic constants (transparent-account balance `campaign=3100`; a visible "2 925 984 Kč artificially added" disclaimer). No VAT/DPH computation exists in the reports module. No tenant/country predicate on most reports. `Evidence:` FLW0031.
+- **SRV0016 (Search):** application documents ship birth numbers (`rc`) of fundraiser + child, emails, phones and full names to an external SaaS index with no masking; no delete-from-index on entity delete (orphan PII documents); a cURL hard-failure path can delete a queue item as if indexed → silent index gap; dedup `LIKE '%{id}%'` guard is substring-collision-prone. `Evidence:` FLW0032.
+- **SRV0017 (ScheduledPublish):** selection uses strict `publish_date = today` equality (not `<=`), so a missed cron day / past-dated node is never auto-published (stays unpublished until manual publish); non-atomic homepage-alias swap (no transaction); any exception re-thrown aborts the whole `patron_base` cron run. `Evidence:` FLW0033.
+- **SRV0018 (Ops logging):** synchronous blocking outbound HTTP on the hot path (no timeout override, `slack_queue` created but never used); `sendMessageToZoneChannel()` is an empty no-op silently dropping ~25 activity-feed signals (logins, profile/password changes, new-lead, contact-form); best-effort delivery with no retry/dedup; PII interpolated into outbound alerts; direct `->log(3,…)` hard-codes ERROR for routine notices (alert fatigue). `Evidence:` FLW0034.
+
+> **FlowMiner batch 4 complete: 34 flow dossiers (FLW0001–FLW0034).** The four batch-4 flows resolve the previously un-mined FL034/FL055/FL057/FL059 references; residual `Partial` remains only on FLW0032 drain scheduling.

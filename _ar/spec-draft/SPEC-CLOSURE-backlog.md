@@ -6,6 +6,14 @@
 > contract-layer work · referential-integrity factors. Each item names the closure effect and the
 > evidence locator. This is a backlog, not a work order — no code was read, nothing invented.
 
+> **Re-evaluation note — 2026-07-03 (batch 4).** Post-batch-4 refresh. **RESOLVED and struck through:**
+> A1–A4 (mine FL055/FL057/FL059/FL034 → done via FLW0032/33/34/31), A5 (EN0001 source-of-truth Conflict →
+> resolved with residual divergence risk), B1 (author `BR-MarketingAndAnalyticsRelay` → authored,
+> registered). Carried forward are only the **genuine residuals**: the residual current-state gaps
+> surfaced by the mined flows (drain scheduling, transition-legality, ES audit), the drop-or-rebuild
+> decisions (dormant UC0021, FB inbound stub UC0013), the ComGate transfer-sync scheduling Conflict, the
+> EN0001 residual divergence risk, and the optional entity-matrix / 04 / convention items.
+
 ---
 
 ## Legend
@@ -20,26 +28,32 @@
 
 | # | Item | Effect | Size | Gate? | Evidence |
 |---|---|---|---|---|---|
-| A1 | Mine **FL055** (search-index sync) | UC0018 `Partial`→`Confirmed`; dim 1 UC-coverage; dim 3 B8 | M | B8 | `UC-candidates.md` UC0018; `UC-srv-traceability §4`; R20/HS16 |
-| A2 | Mine **FL057** (scheduled publish / workflow engine) | UC0022 `Partial`→`Confirmed`; dim 1; B8 | M | B8 | `UC-candidates.md` UC0022; R20 |
-| A3 | Mine **FL059** (ops-alert listener) | UC0020 `Partial`→`Confirmed`; dim 1; B8 | M | B8 | `UC-candidates.md` UC0020; R20 |
-| A4 | Mine **FL034** (reports) | UC0017 report path fully evidenced; dim 1 | M | — | `UC-candidates.md` UC0017 (FL034 un-mined) |
-| A5 | Resolve **EN0001 `moderation_state` vs status** source-of-truth Conflict | dim 1 open-questions PARTIAL→PASS | S | — | `EN/EN0001_Application.md` §Open Questions (Conflict — requires clarification) |
-| A6 | Resolve **ComGate transfer-sync scheduling** Conflict (cron vs manual-CLI) | dim 1; part of B8 | S | B8 | R20; `UC-srv-traceability §4`; FLW0013 |
+| ~~A1~~ | ~~Mine **FL055** (search-index sync)~~ **RESOLVED (batch 4)** — mined → **FLW0032**; UC0018 `Partial`→`Confirmed` (residual: drain scheduling, see A8) | done | ~~B8~~ | `flow-index.md` FL055; `UC-srv-traceability §1/§4` (FLW0032) |
+| ~~A2~~ | ~~Mine **FL057** (scheduled publish / workflow engine)~~ **RESOLVED (batch 4)** — mined → **FLW0033**; UC0022 `Partial`→`Confirmed` (residual: transition-legality, see A9) | done | ~~B8~~ | `flow-index.md` FL057; FLW0033; `UC-srv-traceability §1/§4` |
+| ~~A3~~ | ~~Mine **FL059** (ops-alert listener)~~ **RESOLVED (batch 4)** — mined → **FLW0034**; UC0020 `Partial`→`Confirmed` (residual: ES audit sub-flow, see A10) | done | ~~B8~~ | `flow-index.md` FL059; FLW0034; `UC-srv-traceability §1/§4` |
+| ~~A4~~ | ~~Mine **FL034** (reports)~~ **RESOLVED (batch 4)** — mined → **FLW0031**; UC0017 report path fully evidenced (`Confirmed`) | done | — | `flow-index.md` FL034; FLW0031; `UC-srv-traceability §1` |
+| ~~A5~~ | ~~Resolve **EN0001 `moderation_state` vs status** source-of-truth Conflict~~ **RESOLVED WITH RESIDUAL (batch 4)** — status field is de-facto source of truth; residual divergence risk carried as A11 | done | — | `EN/EN0001_Application.md` §Open Questions (resolved-with-residual) |
+| A6 | Resolve **ComGate transfer-sync scheduling** Conflict (cron vs manual-CLI) | dim 1; part of re-scoped B8 | S | B8 | R20; `UC-srv-traceability §4`; FLW0013 |
 | A7 | *(Optional)* Run `EntityInventoryCloser` → `ENTITY-inventory.md` / `-classification.md` / `-coverage-matrix.md` | Removes the coverage-matrix **substitution**; dim 1 EN-coverage PARTIAL→PASS | M | — | SPEC-CLOSURE §2 substitution note; `EN-candidates.md` |
+| A8 | **Decide UC0018 drain scheduling** residual — module cron drain commented out; an external scheduler must invoke the drain or the ES index goes stale | dim 1 UC0018 residual; part of re-scoped B8 | S | B8 | `UC-srv-traceability §4` (FLW0032 residual) |
+| A9 | **Decide UC0022 Workflow-Engine transition-legality** residual — largely unenforced on live change forms; scheduled publish targets `page`/`page_cz` with strict `publish_date = today` equality (missed cron day never auto-publishes) | dim 1 UC0022 residual; part of re-scoped B8 | S–M | B8 | `UC-srv-traceability §4`; FLW0033 (`PatronBaseScheduledPublishCron.php:64-70`) |
+| A10 | **Cover / decide UC0020 ES audit sub-flow (UC0020.2)** residual — remains `Partial`, not covered by FLW0034 | dim 1 UC0020 residual; part of re-scoped B8 | S–M | B8 | `UC-srv-traceability §1/§4` |
+| A11 | **Record EN0001 moderation-state divergence risk** (residual) — status vs. framework moderation state kept in lock-step only by the status-change path; can diverge if changed outside it | dim 1 residual consistency risk (not an open Conflict) | S | — | `EN/EN0001_Application.md` §Open Questions |
 
 ## B. Rewrite-decision blockers
 
 | # | Item | Effect | Size | Gate? | Evidence |
 |---|---|---|---|---|---|
-| B1 | **Author `BR-MarketingAndAnalyticsRelay`** (or fold into BR-DataProtectionAndErasure + retarget refs) | dim 3 BR-criterion PARTIAL→PASS; closes the erasure/anti-erasure rule gap (R11/B5) | S–M | — | `BR-rule-map` §DataProtection note; `ARCH0010` note; `BR-extraction-report §6` — **not authored** (19 BR docs, none is this) |
+| ~~B1~~ | ~~**Author `BR-MarketingAndAnalyticsRelay`**~~ **RESOLVED (batch 4)** — authored and registered; erasure/anti-erasure dependency satisfied; dim 3 BR-criterion PARTIAL→PASS | done | — | `BR/BR-MarketingAndAnalyticsRelay.md`; `BR/_REGISTRY.md` (20 rows) |
 | B2 | **Drop-or-rebuild decision: dormant recommendation (UC0021)** | Prevents encoding inert code as live behaviour; dim 3 | S | — | R19; `BR-CampaignRecommendationDormant`; UC0021 `Hypothesis`; ADR-12 |
-| B3 | **Decision: not-implemented Facebook inbound Lead webhook (FLW0029)** | Same — classify before build | S | — | R19; UC0013 `Partial` (FLW0029 not implemented) |
+| B3 | **Decision: not-implemented Facebook inbound Lead webhook (FLW0029 / UC0013)** | Same — classify before build | S | — | R19; UC0013 `Partial` (FLW0029 not implemented); `UC-srv-traceability §4`; ADR-12 |
 
-> The other 8 rewrite blockers (B1–B8 in `REWRITE-decision-pack §4`) are **design decisions for the
-> rewrite team**, already surfaced with ADRs — they are not reconstruction gaps and are not repeated
-> here. Only the un-authored BR (above) and the un-mined-flow / dormant-classification items are
-> *reconstruction*-side backlog.
+> The other rewrite blockers (B1–B8 in `REWRITE-decision-pack §4`) are **design decisions for the rewrite
+> team**, already surfaced with ADRs — they are not reconstruction gaps and are not repeated here. After
+> batch 4, **B8 is re-scoped**: it no longer cites un-mined flows (those are mined) — it now requires
+> classifying the dormant/stub features and deciding the residual current-state gaps (A8–A10) + the
+> transfer-sync scheduling Conflict (A6). Only the dormant/stub-classification items (above) and those
+> residuals are *reconstruction*-side backlog.
 
 ## C. Optional 04 contract-layer work (generation-grade only)
 
@@ -65,10 +79,15 @@
 
 ## Priority ordering (smallest useful actions first)
 
+> Batch-4 done and no longer in this ordering: A1–A4 (flows mined), A5 (EN0001 Conflict resolved), B1
+> (marketing BR authored).
+
 1. **Publish now** — run `AR:SpecFinalGenerator` (BA + UX where evidenced), carrying the SPEC-CLOSURE
-   §5 open items forward as explicit open questions. Nothing below blocks publication.
-2. **B1** (author/fold the marketing-analytics BR) — smallest item that lifts dim 3's BR criterion.
-3. **A5 / A6 / B2 / B3** — the recorded Conflicts + dormant-feature decisions (small, decision-only).
-4. **A1–A4** (mine the four flows) — lifts the four `Partial` UCs and clears rewrite gate **B8**.
-5. **A7** — regenerate the entity coverage matrix to retire the substitution.
-6. **C1–C5** — only if generation-grade (04) output is wanted.
+   §5 residuals forward as explicit open questions (do not present them as resolved). Nothing below blocks
+   publication.
+2. **A6 / A11 / B2 / B3** — the recorded ComGate transfer-sync scheduling Conflict, the EN0001 residual
+   divergence-risk note, and the two drop-or-rebuild decisions (small, decision-only).
+3. **A8 / A9 / A10** — decide the residual current-state gaps on the now-mined flows (drain scheduling,
+   Workflow-Engine transition-legality, ES-audit sub-flow) — the re-scoped **B8** items.
+4. **A7** — regenerate the entity coverage matrix to retire the substitution.
+5. **C1–C5** — only if generation-grade (04) output is wanted.

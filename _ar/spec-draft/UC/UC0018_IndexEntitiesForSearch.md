@@ -73,8 +73,8 @@ Integration boundaries:
 - Elasticsearch / App Search
 
 Flow Evidence:
-- FL055 (search-index sync — not mined; cited as un-mined flow-index id in UC-candidates.md and UC-srv-traceability.md)
+- FLW0032 (mined; was flow-index FL055) — Elasticsearch upload queue (`es_upload_queue`) entity indexing: enqueue-on-postSave from all five indexed entity types + `EsUploadQueue` worker drain → Elastic App Search `/documents`. Covers UC0018.1 (queue), UC0018.2 (drain/index), AF1 (failure → item released/retried).
 
 ## Evidence Level
 
-Partial — no mined flow dossier exists for search indexing (FL055 is listed as un-mined, Depth=Later, in UC-candidates.md); this UC is reconstructed as an infrastructure coverage stub from SRV-target-list.md (SearchIndex-Processor, Elasticsearch-Adapter, both C10) and from SearchIndex-Processor's confirmed side-effect appearances in UC0002, UC0011, and UC0016, cross-referenced against the searchable entities EN0001/EN0004/EN0009/EN0018/EN0008; no detailed step-level behavior is evidenced and none is invented here.
+Confirmed — the search-index sync flow is now mined (FLW0032). The enqueue path (`postSave` of Application, Campaign, Transaction, Organisation, User → queue) and the worker drain (claim → build document → POST to the external App Search index → delete on success / release on failure) are evidenced end-to-end. Residual Partial applies only to **drain scheduling**: the module's own cron drain is commented out and the worker carries no cron key, so draining depends on an external scheduler invoking the drain command (not evidenced in source) — recorded as a current-state async/data-staleness risk, not an invented behaviour. Additional mined defects (no delete-from-index → orphan PII documents; cURL hard-failure silently deletes the queue item; PII incl. birth numbers shipped to an external SaaS index; substring-collision dedup guard) are current-state facts carried from the dossier, not evidence gaps.

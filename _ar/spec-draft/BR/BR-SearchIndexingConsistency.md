@@ -52,8 +52,9 @@ the organisation index (UC0018).
 - Current-state: the organisation index run is a full re-push of the registry with no incremental
   cursor — it does NOT currently propagate only the changed subset (current-state gap).
 - Current-state: the core search-index synchronisation flow beyond the save-time enqueue and
-  periodic-drain behavior described in `UC0018` is un-mined; no further step-level indexing
-  behavior SHALL be assumed.
+  periodic-drain behavior described in `UC0018` is now mined (FLW0032) with a residual Partial on
+  drain scheduling only (module cron drain commented out; external scheduler must invoke the drain);
+  no further step-level indexing behavior SHALL be assumed.
 
 ---
 

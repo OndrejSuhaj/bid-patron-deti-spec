@@ -28,8 +28,10 @@ excludes server-side transition-legality enforcement from its own scope.
   transitions for the Application's (EN0001) large content-moderation workflow.
 - Evaluate the allowed-transition / readiness gate that lifecycle actions — campaign publish and
   deadline-driven campaign uncompletion (UC0011) — pass through.
-- (Expected) Run a scheduled-publish tick that evaluates date-gated content against the current
-  time and applies the publish transition through the gate when due (UC0022).
+- Run a scheduled-publish tick (`patron_base_cron`) that selects unpublished CMS `page`/`page_cz`
+  nodes whose `publish_date` equals today and promotes them to published, plus a first-flagged
+  `/homepage` alias swap (UC0022; confirmed by FLW0033). This path publishes CMS node bundles
+  directly and does not route through the transition-legality gate.
 
 ## Related Use Cases
 
@@ -49,11 +51,17 @@ None.
 
 ## Constraints
 
-- Partial — the scheduled-publish flow was never mined beyond an un-mined flow-index reference, so
-  its mechanism is a coverage stub only and must not be treated as a confirmed mechanism.
-- Transition-legality is not actually enforced on the live change forms in current state: a state
+- The scheduled-publish flow is now mined (FLW0033, was flow-index FL057) — Confirmed. Scope
+  correction: it publishes CMS `page`/`page_cz` node bundles only (not campaign/blog), using a strict
+  `publish_date = today` equality selection, plus an optional first-flagged `/homepage` alias swap.
+- Strict-equality selection is a current-state correctness risk (FLW0033): a missed cron day or a
+  past-dated node is never auto-published — the node stays unpublished until published by hand. The
+  homepage-alias swap is non-atomic (no DB transaction) and any exception is re-thrown, aborting the
+  rest of the `patron_base` cron run.
+- The scheduled-publish path does **not** route through the transition-legality gate — it publishes
+  nodes directly.
+- Transition-legality is largely **not enforced** on the live change forms in current state: a state
   change can reach any of the workflow's states with no server-side transition or role check. This
   gate is therefore largely a target-shape reconstruction rather than confirmed current behaviour.
-- Kept broad by design: the underlying scheduled-publish job is un-mined and legality enforcement is
-  largely absent in current state, so this capability is defined at the minimum abstraction the
-  evidence supports.
+  This is a current-state BR/behavioural gap, not an evidence gap — FLW0033 evidences the
+  scheduled-publish flow but does not close the unenforced-legality gap.

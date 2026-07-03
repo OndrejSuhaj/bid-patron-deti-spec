@@ -53,7 +53,7 @@
 | FL031 | CLI | `comgatesync {days}` + `comgate_cron` (transferList) | SRV0009 | transaction, transaction_comtobank | ComGate transferList | Mine | Money/VAT, External Integration | Confirmed |
 | FL032 | UI Route | `/admin/accounting/report/{from}/{till}`, `bank_form`, `comgate_to_bank_form` | SRV0009 (→SRV0010) | transaction, transaction_comtobank | — | Later | Money/VAT | Confirmed |
 | FL033 | Scheduler/UI | `ExportCsvCron` + `/admin/export_csv/*` (19 routes) | SRV0010 | payments/leads/patrons/… | filesystem `/tmp` | Later | Data Loss, Legal/Gov | Confirmed |
-| FL034 | UI Route | `/admin/reports/*` (10 routes: payments, campaigns, monthly, productivity, dashboard) | SRV0010 | costs_entity, snapshot_entity, transaction | — | Later | Money/VAT | Confirmed |
+| FL034 | UI Route | `/admin/reports/*` (10 routes: payments, campaigns, monthly, productivity, dashboard) | SRV0010 | costs_entity, snapshot_entity, transaction | Mined → FLW0031 | Money/VAT | Confirmed |
 
 ## C6 — Documents & Fulfilment
 | FlowID | Trigger | Trigger Evidence | Primary SRV | Entities | Integrations | Depth | Risk | Conf |
@@ -98,11 +98,11 @@
 ## C10/C11 — Search & Platform
 | FlowID | Trigger | Trigger Evidence | Primary SRV | Entities | Integrations | Depth | Risk | Conf |
 |---|---|---|---|---|---|---|---|---|
-| FL055 | Async Message | `es_upload_queue` — `patron_search EsUploadQueue` + `patron_search:upload_to_es` | SRV0016 | user, application, campaign, organisation, transaction | Elasticsearch/App Search | Later | Async, External Integration, Data Loss | Confirmed |
+| FL055 | Async Message | `es_upload_queue` — `patron_search EsUploadQueue` + `patron_search:upload_to_es` | SRV0016 | user, application, campaign, organisation, transaction | Elasticsearch/App Search | Mined → FLW0032 | Async, External Integration, Data Loss | Confirmed |
 | FL056 | API Endpoint | `/api/v22/rabbitmq` — `patron_base rabbitmq_rest_resource` | SRV0017 | — | RabbitMQ | Later | Async, External Integration | Hypothesis |
-| FL057 | Scheduler | `patron_base_cron` (scheduled publish) | SRV0017 | campaign, blog | — | Later | Async | Partial |
+| FL057 | Scheduler | `patron_base_cron` (scheduled publish) | SRV0017 | campaign, blog | — | Mined → FLW0033 | Async | Partial |
 | FL058 | API Endpoint | `POST /api/file` — `patron_base FileUploadController` | SRV0017 (→SRV0011) | file | — | Later | Security | Confirmed |
-| FL059 | Listener | `logger.slack` / `logger.telegram` (ERROR/CRITICAL) | SRV0018 | — | Slack, Telegram | Skip | External Integration | Confirmed |
+| FL059 | Listener | `logger.slack` / `logger.telegram` (ERROR/CRITICAL) | SRV0018 | — | Slack, Telegram | Mined → FLW0034 | External Integration | Confirmed |
 
 ---
 

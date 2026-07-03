@@ -67,7 +67,7 @@ The final column is a labelled **[recommendation]** direction (detailed in §3),
 | **R17** | Cross-aggregate transactions with no wrapping: publish activates Campaign + Application together with no transaction (partial-failure window, INV13); scoring approval writes 3 aggregates (Application `scoring_ok` + Blacklist + Contact classification) non-transactionally; contract signature drives a different aggregate's state and the per-year contract number is app-level-unique only (MAX+1, no DB key, race-prone). | Consistency | INV13/15/22; CONSISTENCY §1(AG5)/§3.7/§3.10/§3.11; BR-CampaignStoryLifecycle (publish gate); BR-ScoringAndRiskGating; BR-ContractAndESignature (numbering); AG1/AG2/AG5/AG9; FLW0008/0016/0021 | Partial-failure inconsistency on publish; multi-aggregate scoring writes can half-apply; concurrent contract numbering can collide. | Transactional multi-aggregate commands or compensating events; DB-sequence numbering (ADR-02/ADR-07 siblings). |
 | **R18** | Synchronous transactional messaging inside entity save with no retry: the mailing service runs with the queue disabled, so transactional mail is dispatched synchronously in-request (via Mautic) from within save paths; a slow/failing call blocks or aborts the save; the queue-worker path is dead code; archive rows are written but sent/error status is never updated; recipient resolution falls back to profile email (stale/unverified). | Consistency · Operations | HS13; CONSISTENCY §2/§3.12; BR-TransactionalMessaging (dispatch coupling / archiving / single-send); AG1/AG3; ES0006; FLW0001/0009/0019; UC0012 | A failing Mautic call can abort a domain save; no retry; delivery outcome untracked; possible non-idempotent re-send on re-save. | Async queued messaging with retry, decoupled from the save; track delivery (ADR-08 sibling / see §3). |
 | **R19** | Dormant / not-implemented subsystems present but inert: the campaign-recommendation subsystem (UC0021, AG7 Account) is inert on 5 independent grounds (event dispatch commented out, module not installed, classifier YAML commented, ML library absent, storage field commented out); the Facebook inbound Lead Ads webhook is a confirmed not-implemented stub (returns failed at HTTP 200, anonymous, hardcoded verify token). | Coverage / dormancy | HS14; INV27; ARCH0001 §8 Risk 5; BR-CampaignRecommendationDormant; UC0021; UC-srv-traceability §4; ES0007; SRV-target-list (Transitional); FLW0029/0030 | A rewrite could wrongly treat inert features as live current-state behaviour; if reactivated, recommendation carries an object-injection risk and no tenant scoping. | Explicit drop-or-rebuild decision; do not build into rewrite core (ADR-12 sibling / see §3). |
-| **R20** | Thin / un-mined subsystems carry unknown current behaviour: search-index sync (SearchIndex-Processor / Elasticsearch-Adapter, FL055), scheduled publish + Workflow-Engine (FL057), the ops-alert listener (FL059) are covered only by Partial UCs; the ComGate transfer-sync cron scheduling is a recorded Conflict (only manual CLI evidenced). | Coverage / dormancy · Operations | HS16; ARCH0001 §8 Risk 5; UC-srv-traceability §4; BR-SearchIndexingConsistency / BR-OperationalAlerting; UC0018/UC0020/UC0022; ES0014; FLW0013 | SRV coverage cannot be relied on as complete behaviour until these flows are mined. | Mine FL055/FL057/FL059 before relying on coverage; resolve the transfer-sync scheduling conflict (see §4). |
+| **R20** | Thin subsystems' flows are now mined (batch 4: search-index sync FLW0032, scheduled publish + Workflow-Engine FLW0033, ops-alert listener FLW0034) — mining confirmed them but the residual is current-state gaps (drain scheduling unenforced, Workflow-Engine transition-legality unenforced, ES audit sub-flow not indexed), plus the ComGate transfer-sync cron scheduling remains a recorded Conflict (only manual CLI evidenced) — NOT un-mined flows. | Coverage / dormancy · Operations | HS16; ARCH0001 §8 Risk 5; UC-srv-traceability §4; BR-SearchIndexingConsistency / BR-OperationalAlerting; UC0018/UC0020/UC0022; ES0014; FLW0013 | SRV coverage cannot be relied on as complete behaviour until these residual current-state gaps and the transfer-sync scheduling Conflict are decided. | Flows now mined (FLW0032/33/34); resolve the residual current-state gaps + the transfer-sync scheduling conflict before relying on coverage (see §4). |
 
 > Secrets referenced by R06/R11/R12/R14 (hardcoded credentials / endpoints for OneDrive, Facebook CAPI,
 > Elasticsearch, Slack/Telegram, MAIB) are **not reproduced** here; see `SRV-architecture-map §4` and
@@ -106,7 +106,7 @@ files, alert-not-repair). Some items carry a secondary class.
 | R17 | Unwrapped cross-aggregate transactions | **Architectural Risk** | Rewrite Blocker | Partial-failure windows + race-prone numbering; transactional-boundary decision needed (INV13/15/22). |
 | R18 | Synchronous messaging in save, no retry | **Architectural Risk** | Operational Risk | Can abort a domain save; delivery untracked; decouple in the rewrite (HS13). |
 | R19 | Dormant / not-implemented subsystems | **Legacy Debt** | — | Inert code needing an explicit drop/rebuild decision; must not be built as live behaviour (HS14, INV27). |
-| R20 | Thin / un-mined subsystems | **Legacy Debt** | Operational Risk | Unknown behaviour; mine before relying on coverage; resolve transfer-sync scheduling conflict (HS16). |
+| R20 | Thin subsystems (now mined, residual gaps) | **Legacy Debt** | Operational Risk | Flows now mined; residual current-state gaps + transfer-sync conflict remain (HS16). |
 
 **Class tallies.** Rewrite Blocker (primary): R01, R02, R03, R04, R05, R06, R07, R09, R10, R11, R12, R15 (12).
 Architectural Risk (primary): R08, R13, R14, R16, R17, R18 (6). Legacy Debt (primary): R19, R20 (2).
@@ -239,14 +239,14 @@ listed in §4.)
 ### ADR-12 — Harden reconciliation import legs; decide drop-or-rebuild for dormant/thin subsystems
 - **Problem.** Reconciliation legs are non-idempotent and lossy (skipped-day, row-capped match, brittle parse,
   unstable key); the recommendation subsystem is dormant and the FB inbound webhook is a not-implemented stub;
-  search-index/scheduled-publish/ops-alert flows are un-mined (R15/R19/R20; HS05/HS14/HS16;
+  search-index/scheduled-publish/ops-alert flows are now mined (FLW0032/33/34) with residual current-state gaps (R15/R19/R20; HS05/HS14/HS16;
   UC-srv-traceability §4; INV27).
 - **Affected components.** Reconciliation-Processor (P) + Moneta-AISP-/BankMail-IMAP-/ComGate-TransferSync-Adapter
   (A) in C5; CampaignRecommendation-Processor (P, dormant) in C3; SearchIndex-Processor/Elasticsearch-Adapter
   (C10), Workflow-Engine/ScheduledPublish-Processor/Ops-Logging-Adapters (C11); AG3/AG12/AG13/AG7.
 - **Trade-off.** Making each import leg retryable/idempotent (durable cursor, unique dedup, robust parse) closes
   the silent money-data-loss window; an explicit drop-or-rebuild decision per dormant/thin feature prevents
-  building inert code as live behaviour — at the cost of first **mining** FL055/FL057/FL059 and resolving the
+  building inert code as live behaviour — the batch-4 mining (FLW0032/33/34) is done; the remaining cost is resolving the residual current-state gaps and the
   transfer-sync scheduling conflict before those SRVs can be relied upon.
 
 ---
@@ -266,7 +266,7 @@ Ordered by blast radius; each names the blocking finding, the evidence, and the 
 | **B5 — GDPR erasure incomplete / anti-erasure** | Right-to-erasure is a legal obligation that is not satisfied today (and is actively undone by the Mautic re-upsert). | R11; HS06; BR-DataProtectionAndErasure | ADR-08 |
 | **B6 — Cross-tenant PII leak in exports + no tenant dimension** | Cross-tenant personal data exposure (CZ/RO/MD) at rest and in exports; no per-country isolation to scope on. | R12/R13; HS07/HS11; BR-ReportingAndDataAccess / BR-MultiTenantCountryScoping | ADR-09, ADR-10 |
 | **B7 — Fragile/lossy bank reconciliation** | Permanent silent money-data-loss days and unmarked money rows; reconciliation correctness is required for finance. | R15; HS05; BR-BankReconciliationAndMatching | ADR-12 |
-| **B8 — Dormant / un-mined behaviour must be classified before build** | A rewrite must not encode inert features as live behaviour, and cannot claim complete SRV coverage while FL055/FL057/FL059 are un-mined and the transfer-sync scheduling is a Conflict. | R19/R20; HS14/HS16; INV27; UC-srv-traceability §4 | ADR-12 (drop-or-rebuild + mine) |
+| **B8 — Dormant / residual-gap behaviour must be classified before build** | A rewrite must not encode inert features as live behaviour, and cannot claim complete SRV coverage until the residual current-state gaps in the now-mined FLW0032/33/34 (drain scheduling, transition-legality, ES audit) are decided and the transfer-sync scheduling Conflict is resolved. | R19/R20; HS14/HS16; INV27; UC-srv-traceability §4 | ADR-12 (drop-or-rebuild + mine) |
 
 > **Architectural risks that are not hard blockers but must be redesigned during the rewrite** (carry as design
 > constraints, not gates): R14 vendor-lock isolation (ADR-11), R16 App↔Campaign source-of-truth (ADR-02), R17
@@ -310,7 +310,7 @@ Every claim above is traceable by id to these sources (no code was read).
   BR-MultiTenantCountryScoping, BR-TransactionalMessaging, BR-OperationalAlerting, BR-CampaignRecommendationDormant,
   BR-ContractAndESignature, BR-ScoringAndRiskGating, BR-CampaignStoryLifecycle, BR-AccessControlAndRoles.
 - `UC/**` (22) + `UC-srv-traceability.md` — **§4 coverage risks** (dormant-only UC0021; Partial UC0018/UC0020/UC0022;
-  un-mined FL055/FL057/FL059).
+  now-mined FLW0032/FLW0033/FLW0034 with residual current-state gaps).
 - `EN/**` (32), `FN/**` (26) + `FN-capability-map.md`, `ES/**` (16) + `ES-system-map.md` (external boundaries
   ES0001–ES0016), `MSG/**`.
 
