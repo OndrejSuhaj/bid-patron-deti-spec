@@ -36,3 +36,5 @@
 | EN0030 | ComgateBankReconciliation | draft | [] | AR | 2026-07-02 |
 | EN0031 | CostsSnapshot | draft | [] | AR | 2026-07-02 |
 | EN0032 | ReportSnapshot | draft | [] | AR | 2026-07-02 |
+| EN0033 | GiftCategory | draft | [] | AR | 2026-07-02 |
+| EN0034 | DonorAccountView | draft | [] | AR | 2026-07-02 |

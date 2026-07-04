@@ -7,8 +7,8 @@
 
 | Layer | Docs registered |
 |---|---|
-| EN | 32 |
-| UC | 22 |
+| EN | 34 |
+| UC | 25 |
 | FN | 26 |
 | ES | 16 |
 | MSG | 30 |
@@ -19,8 +19,8 @@
 - **dangling references:** 0
 - **deferred references:** 0
 - **orphans (registry row ↔ doc atomicity):** 0
-- **unreferenced docs (informational):** 7
-- **resolved references (declared + inline):** 949
+- **unreferenced docs (informational):** 10
+- **resolved references (declared + inline):** 960
 
 ## Collisions
 
@@ -49,3 +49,6 @@ The following docs are referenced by no other doc. The ARCH domain docs (ARCH000
 - `ARCH0007` (ARCH) — Finance & Reconciliation Domain
 - `ARCH0008` (ARCH) — Documents & Fulfilment Domain
 - `ARCH0010` (ARCH) — Messaging & Marketing Domain
+- `EN0033` (EN) — GiftCategory
+- `UC0023` (UC) — Browse & Filter Story Catalogue
+- `UC0025` (UC) — Resume or Discard Draft Application

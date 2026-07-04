@@ -6,14 +6,14 @@
 tooling/docs/registry-format.md (draft rows: Status=draft, Owner mode=AR, Created=2026-07-02).
 
 ## 2. Layers registered + doc counts
-- EN: 32 docs → `_ar/spec-draft/EN/_REGISTRY.md`
-- UC: 22 docs → `_ar/spec-draft/UC/_REGISTRY.md`
+- EN: 34 docs → `_ar/spec-draft/EN/_REGISTRY.md`
+- UC: 25 docs → `_ar/spec-draft/UC/_REGISTRY.md`
 - FN: 26 docs → `_ar/spec-draft/FN/_REGISTRY.md`
 - ES: 16 docs → `_ar/spec-draft/ES/_REGISTRY.md`
 - MSG: 30 docs → `_ar/spec-draft/MSG/_REGISTRY.md`
 - BR: 20 docs → `_ar/spec-draft/BR/_REGISTRY.md`
 - ARCH: 12 docs → `_ar/spec-draft/ARCH/_REGISTRY.md`
-- Total registered doc_ids: 158
+- Total registered doc_ids: 163
 
 ## 3. doc_id collisions
 None.
@@ -25,7 +25,7 @@ None — all canonical references resolve.
 None.
 
 ## 6. Orphans / unreferenced
-Atomicity orphans (row ↔ doc): None. Unreferenced docs (informational): ARCH0003, ARCH0004, ARCH0005, ARCH0006, ARCH0007, ARCH0008, ARCH0010 — the ARCH domain docs are a navigation layer, expected to be uncited.
+Atomicity orphans (row ↔ doc): None. Unreferenced docs (informational): ARCH0003, ARCH0004, ARCH0005, ARCH0006, ARCH0007, ARCH0008, ARCH0010, EN0033, UC0023, UC0025 — the ARCH domain docs are a navigation layer, expected to be uncited.
 
 ## 7. Recommended next step
 SpecClosureEvaluator (spec-closure gate), then RewriteDecisionCompiler and SpecFinalGenerator (publish to _ar/spec-final/BA/**).
