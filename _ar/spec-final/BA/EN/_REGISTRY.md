@@ -36,3 +36,5 @@
 | EN0030 | ComgateBankReconciliation | canonical | [] | Mode P (import) | 2026-07-02 |
 | EN0031 | CostsSnapshot | canonical | [] | Mode P (import) | 2026-07-02 |
 | EN0032 | ReportSnapshot | canonical | [] | Mode P (import) | 2026-07-02 |
+| EN0033 | GiftCategory | canonical | [] | Mode P (import) | 2026-07-02 |
+| EN0034 | DonorAccountView | canonical | [] | Mode P (import) | 2026-07-02 |

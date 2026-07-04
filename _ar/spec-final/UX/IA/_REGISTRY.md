@@ -2,7 +2,6 @@
 
 `_ar/UX/IA/_REGISTRY.md` — see docs/governance/registry-format.md for format spec.
 
-> Reserved. Populated by UX reconstruction (later task). No AR-produced docs yet.
-
 | ID | Title | Status | Module(s) | Owner mode | Created |
 |---|---|---|---|---|---|
+| IA-patronus | Information Architecture — Patronus (Patron dětí) | canonical | [] | Mode P (import) | 2026-07-04 |

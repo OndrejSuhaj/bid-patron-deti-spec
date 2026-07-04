@@ -16,14 +16,25 @@ Publikováno **158 kanonických dokumentů** v **7 BA vrstvách** (`_ar/spec-fin
 
 | Vrstva | Počet | Tier | Poznámka |
 |---|---|---|---|
-| EN | 32 | BA | entity domény (EN0001–EN0032) |
-| UC | 22 | BA | případy užití (UC0001–UC0022) — draft nemá frontmatter, byl syntetizován z registru + H1 |
+| EN | 34 | BA | entity domény (EN0001–EN0034; +EN0033 GiftCategory, EN0034 DonorAccountView z UX gap-closure) |
+| UC | 25 | BA | případy užití (UC0001–UC0025; +UC0023/24/25 z UX gap-closure) — draft nemá frontmatter, syntetizován z registru + H1 |
 | FN | 26 | BA | funkční schopnosti (FN0001–FN0026) |
 | ES | 16 | BA | externí systémy (ES0001–ES0016) |
 | MSG | 30 | BA | transakční zprávy (MSG0001–MSG0030) |
 | BR | 20 | BA | byznys pravidla (sémantické názvy `BR-<pravidlo>`) |
 | ARCH | 12 | BA | architektura (ARCH0001–ARCH0012, vč. dvou top-level dokumentů ApplicationOverview a ContextInteractionMap) |
-| **Σ** | **158** | | odpovídá 158 doc_id ověřeným RefIntegrity validátorem |
+| **Σ BA** | **163** | | odpovídá 163 doc_id ověřeným RefIntegrity validátorem |
+
+A dále **37 UX dokumentů** ve **4 UX vrstvách** (`_ar/spec-final/UX/<LAYER>/`), rekonstruovaných z UI
+evidence (`_ar/prtsc/`, 43 screenshotů) přes větev `ui-coverage` + `ux-reconstruction`:
+
+| Vrstva | Počet | Tier | Poznámka |
+|---|---|---|---|
+| IA | 1 | UX | informační architektura (IA-patronus) + screen-map (25 screen-id S001–S022) |
+| WIRE | 22 | UX | wireframe per obrazovka (`screen_id` + `realizes_uc`); 6 Evidence-Pending; 3 UC-less obsahové stránky vynechány |
+| COMP | 9 | UX | znovupoužité komponenty (COMP0001–0009), evidence-gated (≥2 WIRE reuse) |
+| COPY | 5 | UX | i18n copy (5 scopů, 342 klíčů); **text verbatim v češtině** (nepřekládá se) |
+| **Σ UX** | **37** | | UX tier naplněn (dříve rezervovaný prázdný scaffold) |
 
 Každá vrstva má `_REGISTRY.md` s jedním řádkem na dokument; řádky převzaty z draft registrů a
 překlopeny `draft → canonical`, Owner mode `Mode P (import)`, Module(s) `[]`, `Created` zachováno

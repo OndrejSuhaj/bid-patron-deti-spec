@@ -26,3 +26,6 @@
 | UC0020 | Emit Ops Alerts & Audit | canonical | [] | Mode P (import) | 2026-07-02 |
 | UC0021 | Recommend Campaigns (DORMANT) | canonical | [] | Mode P (import) | 2026-07-02 |
 | UC0022 | Run Platform Workflow Engine & Scheduled Publish | canonical | [] | Mode P (import) | 2026-07-02 |
+| UC0023 | Browse & Filter Story Catalogue | canonical | [] | Mode P (import) | 2026-07-02 |
+| UC0024 | Manage Donor Account (Self-Service) | canonical | [] | Mode P (import) | 2026-07-02 |
+| UC0025 | Resume or Discard Draft Application | canonical | [] | Mode P (import) | 2026-07-02 |
