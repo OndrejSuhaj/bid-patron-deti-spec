@@ -81,22 +81,23 @@ question below rather than assumed.
 
 ## Components Used
 
-The COMP layer does not exist yet in this pass; every element below is flagged `inline`.
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Header | inline | site header/nav | Shared chrome, not screen-specific — Confirmed |
+| Header | COMP0002 | context=public | Shared chrome, not screen-specific — Confirmed; see `COMP0002` Global Site Header |
 | Hero | inline | icon + heading + sub-copy | Confirmed |
 | Form panel | inline | tab control (2 tabs) | "Fyzická osoba" (active/default) / "Právnická osoba" (inactive) — Confirmed |
 | Form panel | inline | text input × 2 | "Jméno", "Příjmení" — Confirmed |
 | Form panel | inline | text input | "Adresa trvalého bydliště" (placeholder "Ulice, číslo, Město, PSČ") — Confirmed |
 | Form panel | inline | text input | "Rodné číslo bez lomítka" (placeholder "YYMMDDXXXX") — Confirmed |
 | Form panel | inline | text input | "Fyzická osoba s IČ" (placeholder "Pozor na překlepy :)") — Confirmed |
-| Form panel | inline | checkbox (radio-styled circular control) | "Chci vykázat všechny dary za rok 2025" — Confirmed |
-| Form panel | inline | primary button | "Ziskat potvrzení" (typo for "Získat", observed verbatim) — Confirmed |
+| Form panel | inline | checkbox (radio-styled circular control) | "Chci vykázat všechny dary za rok 2025" — Confirmed; visually distinct from `COMP0006` Consent Checkbox (no embedded legal hyperlink) — not promoted, left inline |
+| Form panel | COMP0001 | — | "Ziskat potvrzení" (typo for "Získat", observed verbatim) — Confirmed; see `COMP0001` Primary Button |
 | Form panel | inline | info/disclaimer callout | info icon + italic legal disclaimer text — Confirmed |
-| Page | inline | cookie-consent banner | shared site component, not form-specific — Confirmed |
-| Footer | inline | site footer | shared chrome — Confirmed |
+| Page | COMP0004 | — | shared site component, not form-specific — Confirmed; see `COMP0004` Cookie Consent Banner |
+| Footer | COMP0003 | — | shared chrome — Confirmed; see `COMP0003` Global Site Footer |
 
 ---
 

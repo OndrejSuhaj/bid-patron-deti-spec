@@ -85,17 +85,18 @@ No sidebar is present on this screen (single-column form layout).
 
 ## Components Used
 
-The COMP layer does not yet exist for this reconstruction pass; every element is flagged `inline`.
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Header | inline | global site nav + auth account-menu link | Shared chrome across authenticated screens (`IA-patronus.md`); not this screen's concern beyond entry point |
+| Header | COMP0002 | context=authenticated-account | Shared chrome across authenticated screens (`IA-patronus.md`); see `COMP0002` Global Site Header |
 | Page title | inline | H1 + sub-copy | "Nastavení účtu" / "Potřebujete něco změnit? Udělejte to tady." |
 | Main — name field group | inline | two-column text-input pair, labeled | "Jméno" / "Příjmení" |
 | Main — e-mail field group | inline | single text input, labeled | "E-mail" — see Validation Surfaces re: non-functional write path |
-| Main — photo upload | inline | drag-and-drop file dropzone, 0/1 count | Same generic upload-widget pattern as observed on the application-form attachment step (`_ar/evidence/ui/ui-observed-areas.md` §11 evidence note) — reused copy, not confirmed as a shared component |
-| Main — submit | inline | primary button | "Uložit změny" |
-| Footer | inline | promo/cross-sell band | "Víte o dítěti, které potřebuje pomoci?" — shared footer chrome, not screen-specific |
+| Main — photo upload | COMP0007 | maxCount=1, currentCount=0, exampleThumbnails=no | Now confirmed as the same reusable dropzone pattern observed on the application-form attachment step; see `COMP0007` File Upload Dropzone |
+| Main — submit | COMP0001 | — | "Uložit změny"; see `COMP0001` Primary Button |
+| Footer | COMP0003 | promo=with-promo-band | "Víte o dítěti, které potřebuje pomoci?" — see `COMP0003` Global Site Footer |
 
 ---
 

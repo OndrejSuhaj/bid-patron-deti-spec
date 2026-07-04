@@ -90,12 +90,13 @@ Evidence: `_ar/prtsc/screencapture-patrondeti-cz-zadost-formular-2026-07-04-13_1
 
 ## Components Used
 
-The COMP layer does not yet exist in this reconstruction pass — every element is flagged `inline`.
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Global header | inline | site nav bar | shared across screens (candidate for future COMP; not asserted here) |
-| Stepper bar | inline | 5-step, numbered, active-state highlight (red filled circle vs grey outline) | Confirmed visual pattern; step labels "Příběh/Dar/O Vás/Patron/Přílohy" |
+| Global header | COMP0002 | context=public | see `COMP0002` Global Site Header |
+| Stepper bar | COMP0005 | activeIndex=1, completedIndices=[] | see `COMP0005` Application Wizard Stepper |
 | Back link | inline | text link with left-arrow glyph | Confirmed |
 | Narrative textarea (A) | inline | multiline textarea, placeholder text, live char counter "`n / 500`" | Confirmed |
 | Child name fields (B) | inline | two side-by-side single-line text inputs (Jméno / Příjmení) | Confirmed |
@@ -105,8 +106,8 @@ The COMP layer does not yet exist in this reconstruction pass — every element 
 | Health-problem textarea (D) | inline | multiline textarea, placeholder, char counter "`n / 500`", sub-label question in bold + helper text | Confirmed |
 | Prior-collection radio (E) | inline | 2-option radio group (ANO/NE), default NE pre-selected | Confirmed |
 | Nationality radio (F) | inline | 2-option radio group (ANO/NE), default NE pre-selected | Confirmed |
-| Primary CTA | inline | filled red button "Pokračovat" | Confirmed |
-| Global footer | inline | cookie banner + link columns + payment badges | Confirmed, out of scope for this UC |
+| Primary CTA | COMP0001 | — | label "Pokračovat"; see `COMP0001` Primary Button |
+| Global footer | inline | cookie banner + link columns + payment badges | Confirmed, out of scope for this UC; `COMP0003`/`COMP0004` not asserted here as this zone was described as one merged row, not split by original WIRE author — left as-is to avoid restructuring beyond an inline→COMP swap |
 
 ---
 

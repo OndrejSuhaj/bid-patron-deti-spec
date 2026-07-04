@@ -95,19 +95,19 @@ Actor: anonymous visitor (no authentication observed or implied).
 
 ## Components Used
 
-The COMP layer does not yet exist for this reconstruction pass; every element below is flagged
-`inline` pending COMPSynthesizer.
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Global nav | inline | — | shared header, same as observed on S001/S013/S015 |
+| Global nav | COMP0002 | context=public | shared header, same as observed on S001/S013/S015; see `COMP0002` Global Site Header |
 | How-it-works step | inline | 3-up icon+heading+text, repeated ×3 | — |
 | Trust list item | inline | icon+heading+paragraph, repeated ×8 | two items carry inline text links |
 | Stat figure block | inline | label+value, repeated ×3 | — |
 | Impact banner | inline | full-bleed photo + centered headline stat | — |
-| Story card (completed) | inline | thumbnail, badge×2 ("ZPĚTNÁ VAZBA" pill top-right, hand-icon chip top-left), status ribbon "SPLNĚNO", title, "Vybráno celkem" + amount + checkmark icon, CTA button "Detail příběhu" | same card pattern family as the catalogue card on S001 (`WIRE0001`) but with the completed-state variant (ribbon + feedback badge) not otherwise observed there — treat as a distinct visual variant, not confirmed to be the identical component |
+| Story card (completed) | COMP0008 | lifecycle=completed | same card pattern family as the catalogue card on S001 (`WIRE0001`) but with the completed-state variant (ribbon + feedback badge) not otherwise observed there — treated as a distinct, less-certain sibling variant of `COMP0008` Story Card, not confirmed identical to the active variant (see `COMP0008` Open Questions) |
 | "Další příběhy" link | inline | text link | pagination/load-more affordance; target behavior not observed (see Interactions) |
-| Footer | inline | shared global footer | same as observed on other Public-site screens |
+| Footer | COMP0003 | — | same as observed on other Public-site screens; see `COMP0003` Global Site Footer |
 
 ---
 

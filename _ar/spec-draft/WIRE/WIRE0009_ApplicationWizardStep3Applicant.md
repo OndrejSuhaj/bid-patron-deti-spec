@@ -88,12 +88,13 @@ fill-state (see States).
 
 ## Components Used
 
-The COMP layer does not exist yet in this pass — every element below is flagged `inline`.
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Header | inline | global nav | Shared chrome, out of scope for this WIRE — see IA. |
-| Stepper | inline | 5-step, step 3 active, steps 1–2 complete | Confirmed — `ui-observed-areas.md` §5 "Controls". |
+| Header | COMP0002 | context=public | see `COMP0002` Global Site Header |
+| Stepper | COMP0005 | activeIndex=3, completedIndices=[1,2] | Confirmed — `ui-observed-areas.md` §5 "Controls"; see `COMP0005` Application Wizard Stepper |
 | "Krok zpět" link | inline | text link + left-arrow icon | Confirmed. |
 | Text input — "Jméno" | inline | single-line text, placeholder "Jméno" | Confirmed. |
 | Text input — "Příjmení" | inline | single-line text, placeholder "Příjmení" | Confirmed. |
@@ -107,8 +108,8 @@ The COMP layer does not exist yet in this pass — every element below is flagge
 | Phone input — country-code + number | inline | fixed "+420" prefix segment + number field | Confirmed; no evidence of the prefix being changeable (Uncertain — could be a dropdown, appears static in both captures). |
 | Radio group — "Jste zaměstnán?" | inline | 2 options: ANO / NE, single-select | Confirmed; defaults to NE in the empty-state capture, shown as ANO in the filled-state capture (tester-toggled). |
 | Info banner | inline | red/pink banner, info icon + bold lead-in + body text | Confirmed. |
-| Primary button — "Pokračovat" | inline | filled red button | Confirmed. |
-| Footer | inline | global footer | Shared chrome, out of scope — see IA. |
+| Primary button — "Pokračovat" | COMP0001 | — | see `COMP0001` Primary Button |
+| Footer | COMP0003 | — | see `COMP0003` Global Site Footer |
 
 ---
 

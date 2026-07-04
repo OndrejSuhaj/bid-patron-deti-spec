@@ -123,29 +123,29 @@ Donation modal (overlay):
 
 ## Components Used
 
-Every visual element is flagged `inline` — the COMP layer does not exist yet in this reconstruction
-pass.
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced, or reuse Uncertain — see notes).
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Header | inline | global nav | IA-owned surface, rendered inline here for layout only |
+| Header | COMP0002 | context=public | see `COMP0002` Global Site Header |
 | Title band | inline | h1 | Story name |
 | Media zone | inline | hero image | single photo, no gallery/carousel observed |
 | Patron comment card | inline | avatar + name + role + toggle + body | binds `EN0005` |
 | Story body | inline | rich text block | long-form narrative + bullet list |
-| Progress block | inline | label + progress bar + two-line stat (Zbývá / Cílová částka) | binds derived `EN0004` fields (see Data Bindings) |
+| Progress block | inline | label + progress bar + two-line stat (Zbývá / Cílová částka) | binds derived `EN0004` fields (see Data Bindings); Uncertain whether this shares a component with `COMP0008` Story Card's internal progress figures — not confirmed identical, left inline (see `COMP0008` Open Questions) |
 | Amount input | inline | numeric field, Kč suffix, prefilled `50` | two instances stacked in evidence (Open Question) |
-| Primary donate CTA ("Přispět 🤝") | inline | primary/red button | opens donation modal |
-| Recurring CTA ("Chci podporovat... pravidelně") | inline | secondary/green button | intent flag into `UC0005` (recurring branch); no separate recurring screen observed here |
+| Primary donate CTA ("Přispět 🤝") | COMP0001 | icon=🤝 | see `COMP0001` Primary Button |
+| Recurring CTA ("Chci podporovat... pravidelně") | inline | secondary/green button | intent flag into `UC0005` (recurring branch); no separate recurring screen observed here; visual identity Uncertain vs. `COMP0001` — see `COMP0001` Open Questions (secondary-button variant not promoted) |
 | Voucher CTA ("Mám dobrošek") | inline | secondary/red button, ticket icon | entry point into `UC0009` — target screen not captured (IA `S005`, Uncertain) |
 | Share row | inline | icon button row | Facebook/X/Instagram/LinkedIn/WhatsApp/Messenger — no share behavior observed beyond icon presence |
 | Trust banner | inline | full-width text band | static copy, not entity-bound |
-| Related story card | inline | photo + countdown badge + progress ribbon + name + target amount + CTA | repeats catalogue card pattern from `S001` (COMP not yet defined) |
+| Related story card | inline | photo + countdown badge + progress ribbon + name + target amount + CTA | repeats catalogue card pattern from `S001`; visually close to `COMP0008` Story Card but rendered in a "related" sidebar layout, not confirmed identical — left inline pending clearer evidence |
 | Donation modal shell | inline | overlay/dialog, header + close/back | opened by primary CTA |
 | Modal amount field | inline | numeric field, Kč suffix, prefilled `50`, editable in modal header | binds donation amount |
 | Modal contact fields | inline | E-mail (required), phone (+420 prefix), Jméno, Příjmení | binds `EN0006`/`EN0008` (see Data Bindings) |
-| Modal consent checkboxes (×2) | inline | unchecked by default | gate `UC0005` submission (Open Question — no BR found, see Validation Surfaces) |
-| Modal primary CTA ("Přejít k platbě") | inline | primary/red button | submits `UC0005`, hands off to `S-EXT1` |
+| Modal consent checkboxes (×2) | COMP0006 | count-per-form=double | gate `UC0005` submission (Open Question — no BR found, see Validation Surfaces); see `COMP0006` Consent Checkbox |
+| Modal primary CTA ("Přejít k platbě") | COMP0001 | — | submits `UC0005`, hands off to `S-EXT1`; see `COMP0001` Primary Button |
 | Modal helper text | inline | static microcopy | describes downstream gateway choice; not app-editable content, COPY-owned |
 
 ---

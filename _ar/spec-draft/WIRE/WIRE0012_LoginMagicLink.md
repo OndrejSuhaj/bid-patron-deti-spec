@@ -74,19 +74,23 @@ directly evidenced by screenshot.
 
 ## Components Used
 
-The COMP layer does not yet exist for this reconstruction pass — every entry is flagged `inline`.
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline`. The Main + Form-card zones together compose an instance of
+`COMP0009` Single Email-Entry Form (purpose=login) — retained as individual rows below (not
+collapsed) to preserve this WIRE's original zone granularity; `COMP0009` is the owning contract for
+their combined props/states/events.
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Header | inline | global site nav | Shared chrome; navigation targets owned by IA, not restated here. *Confirmed.* |
-| Main — status icon | inline | two-person glyph (default) / checkmark-circle (confirmation) | Purely decorative state indicator; no interaction. *Confirmed* (both screenshots). |
-| Main — heading | inline | H1, "Přihlaste se do účtu" (default) / "Zkontrolujte svou e-mailovou schránku" (confirmation) | Minimal label only — full copy owned by COPY layer. *Confirmed.* |
-| Main — body copy | inline | 1–2 paragraph intro text | Minimal excerpt only — full copy owned by COPY layer. *Confirmed.* |
-| Form card — e-mail field | inline | single text input, placeholder "E-mail" | No visible label above the field; placeholder doubles as label. *Confirmed* (13_23_29 screenshot). |
-| Form card — submit button | inline | primary CTA button, "Přihlásit se" | Red/primary button style consistent with site-wide CTA styling. *Confirmed.* |
-| Form card — secondary links (default state) | inline | two text links: "Přihlaste se pomocí svého hesla." (→ password login) and "Aktivujte si ho." (→ S021 `/overit-prihlaseni`) | Secondary-action links inside the muted card, below the primary CTA. *Confirmed* (13_23_29). |
-| Form card — secondary links (confirmation state) | inline | two text links: "Přihlaste se pomocí svého hesla." (→ password login) and inline "zkontrolujte složku spam, nebo nám napište na info@patrondeti.cz" (mailto) | *Confirmed* (13_32_31). |
-| Footer | inline | global site footer | Shared chrome. *Confirmed.* |
+| Header | COMP0002 | context=public | see `COMP0002` Global Site Header |
+| Main — status icon | inline | two-person glyph (default) / checkmark-circle (confirmation) | Purely decorative state indicator; no interaction. Part of `COMP0009` (purpose=login). *Confirmed* (both screenshots). |
+| Main — heading | inline | H1, "Přihlaste se do účtu" (default) / "Zkontrolujte svou e-mailovou schránku" (confirmation) | Minimal label only — full copy owned by COPY layer. Part of `COMP0009`. *Confirmed.* |
+| Main — body copy | inline | 1–2 paragraph intro text | Minimal excerpt only — full copy owned by COPY layer. Part of `COMP0009`. *Confirmed.* |
+| Form card — e-mail field | inline | single text input, placeholder "E-mail" | No visible label above the field; placeholder doubles as label. Part of `COMP0009`. *Confirmed* (13_23_29 screenshot). |
+| Form card — submit button | COMP0001 | — | "Přihlásit se"; see `COMP0001` Primary Button (composed within `COMP0009`). |
+| Form card — secondary links (default state) | inline | two text links: "Přihlaste se pomocí svého hesla." (→ password login) and "Aktivujte si ho." (→ S021 `/overit-prihlaseni`) | Secondary-action links inside the muted card, below the primary CTA. Part of `COMP0009`. *Confirmed* (13_23_29). |
+| Form card — secondary links (confirmation state) | inline | two text links: "Přihlaste se pomocí svého hesla." (→ password login) and inline "zkontrolujte složku spam, nebo nám napište na info@patrondeti.cz" (mailto) | Part of `COMP0009`. *Confirmed* (13_32_31). |
+| Footer | COMP0003 | — | see `COMP0003` Global Site Footer |
 
 ---
 

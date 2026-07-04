@@ -84,18 +84,22 @@ rather than silently upgrading or downgrading either source.
 
 ## Components Used
 
-The COMP layer does not yet exist for this reconstruction pass — every entry is flagged `inline`.
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`), limited
+to rows whose own presence on this screen is *Confirmed* by screenshot; the form-body rows below
+remain `inline` at *Probable* certainty (prose-only evidence — see Purpose/Evidence). The overall
+Main + Form zones conceptually compose an instance of `COMP0009` Single Email-Entry Form
+(purpose=activation-request), inheriting that COMP's own Probable-certainty ceiling for this screen.
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Header | inline | global site nav | Shared chrome; navigation targets owned by IA, not restated here. *Confirmed* (screenshot). |
-| Cookie consent banner | inline | dark banner, cookie icon, "Další informace" link | Shared site-wide chrome, not screen-specific. *Confirmed* (screenshot). |
-| Main — heading | inline | heading text, "Už jsem dárcem, žadatelem nebo Patronem a chci aktivovat účet" | Minimal label only — full copy owned by COPY layer. *Probable* — `ui-observed-areas.md` §9 verbatim; not visible in the cited screenshot frame. |
-| Main — body copy | inline | explanatory paragraph, "Zde vyplňte svůj email, který jste použili při přispění na příběh nebo v žádosti o dar. Odešleme vám na něj aktivační odkaz." | Minimal excerpt only — full copy owned by COPY layer. *Probable* — same caveat as above. |
-| Form — e-mail field | inline | single text input labeled "email", observed pre-filled with an example address in the source note | No visible label styling confirmed (pattern only, per §9 prose). *Probable* — not visible in the cited screenshot frame. |
-| Form — primary CTA | inline | primary button, "Poslat aktivační odkaz" | Red/primary button style consistent with site-wide CTA styling (per sibling screens S009/S010). *Probable* — not visible in the cited screenshot frame. |
-| Form — secondary link | inline | text link, "Zpět na přihlášení" (→ S009) | *Probable* — not visible in the cited screenshot frame. |
-| Footer | inline | global site footer | Shared chrome. *Confirmed* (screenshot). |
+| Header | COMP0002 | context=public | Shared chrome; navigation targets owned by IA. *Confirmed* (screenshot). See `COMP0002` Global Site Header. |
+| Cookie consent banner | COMP0004 | — | Shared site-wide chrome, not screen-specific. *Confirmed* (screenshot). See `COMP0004` Cookie Consent Banner. |
+| Main — heading | inline | heading text, "Už jsem dárcem, žadatelem nebo Patronem a chci aktivovat účet" | Minimal label only — full copy owned by COPY layer. Part of `COMP0009` (purpose=activation-request). *Probable* — `ui-observed-areas.md` §9 verbatim; not visible in the cited screenshot frame. |
+| Main — body copy | inline | explanatory paragraph, "Zde vyplňte svůj email, který jste použili při přispění na příběh nebo v žádosti o dar. Odešleme vám na něj aktivační odkaz." | Minimal excerpt only — full copy owned by COPY layer. Part of `COMP0009`. *Probable* — same caveat as above. |
+| Form — e-mail field | inline | single text input labeled "email", observed pre-filled with an example address in the source note | No visible label styling confirmed (pattern only, per §9 prose). Part of `COMP0009`. *Probable* — not visible in the cited screenshot frame. |
+| Form — primary CTA | inline | primary button, "Poslat aktivační odkaz" | Red/primary button style consistent with site-wide CTA styling (per sibling screens S009/S010); resembles `COMP0001` Primary Button but not promoted at the row level since the row's own screen-presence is only *Probable*, not Confirmed. |
+| Form — secondary link | inline | text link, "Zpět na přihlášení" (→ S009) | Part of `COMP0009`. *Probable* — not visible in the cited screenshot frame. |
+| Footer | COMP0003 | — | Shared chrome. *Confirmed* (screenshot). See `COMP0003` Global Site Footer. |
 
 ---
 

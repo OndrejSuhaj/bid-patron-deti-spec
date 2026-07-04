@@ -84,22 +84,23 @@ the fundraiser `ApplicationProfile` (`EN0002`) and classify the `Application` (`
 
 ## Components Used
 
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
+
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Header | inline | global nav | Not yet a reusable component; shared across all screens per IA §7. |
-| Stepper | inline | 5-step, active-index=2 | Step labels: Příběh / Dar / O Vás / Patron / Přílohy. Confirmed. |
+| Header | COMP0002 | context=public | see `COMP0002` Global Site Header |
+| Stepper | COMP0005 | activeIndex=2, completedIndices=[1] | Step labels: Příběh / Dar / O Vás / Patron / Přílohy. See `COMP0005` Application Wizard Stepper. |
 | Back link | inline | text link + arrow icon | "← Krok zpět". Confirmed. |
 | Category picker row | inline | collapsed / expanded | 9 rows; expanded row shows description text + "Zobrazit méně". Confirmed. |
 | Text input | inline | single-line | Used for org name, contact person, e-mail. Confirmed. |
 | Phone input | inline | prefix "+420" + number field | Confirmed. |
 | Textarea with counter | inline | `n/500` live counter | "Jak dar dítěti konkrétně pomůže?". Confirmed. |
-| File-upload dropzone | inline | drag-and-drop + "vyberte v počítači" link, `n/3` counter | Confirmed. |
+| File-upload dropzone | COMP0007 | maxCount=3, currentCount=0 | see `COMP0007` File Upload Dropzone |
 | Currency input | inline | numeric + "Kč" suffix | "Celková částka na pořízení daru". Confirmed. |
-| Primary button | inline | "Pokračovat" | Confirmed. |
+| Primary button | COMP0001 | — | label "Pokračovat"; see `COMP0001` Primary Button |
 | FAQ accordion | inline | collapsed by default | Only one question visible; expand behaviour Assumed (not captured expanded). |
-| Footer | inline | global footer | Shared across all screens. Confirmed. |
-
-The COMP layer does not yet exist in this reconstruction — every element above is flagged `inline`.
+| Footer | COMP0003 | — | see `COMP0003` Global Site Footer |
 
 ---
 

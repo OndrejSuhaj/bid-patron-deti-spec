@@ -106,19 +106,19 @@ Modal overlay (conditional — independent trigger, UC0025):
 
 ## Components Used
 
-The COMP layer does not yet exist for this reconstruction pass; every element below is flagged
-`inline` pending a future COMPSynthesizer pass.
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Header | inline | global nav bar | Shared across screens (see IA); not screen-specific to S003 |
+| Header | COMP0002 | context=public | see `COMP0002` Global Site Header |
 | Hero | inline | success-status icon (check mark in circle, red/coral) | Confirmed, both screenshots |
 | Hero | inline | headline text (H1-style, coral/red) | Confirmed |
 | Hero | inline | body paragraph text (×2) | Confirmed |
 | Hero | inline | social-share icon row (Facebook, X, Instagram, LinkedIn, WhatsApp, Email, Messenger) | Confirmed — 7 icons, no visible labels, icon-only buttons |
-| Hero | inline | primary CTA button ("Zpět na hlavní stránku") | Confirmed |
-| Cookie banner | inline | dismissible notice bar with link | Confirmed; generic/site-wide, not S003-specific |
-| Footer | inline | global footer block | Shared across screens; not screen-specific to S003 |
+| Hero | COMP0001 | — | primary CTA button ("Zpět na hlavní stránku"); see `COMP0001` Primary Button |
+| Cookie banner | COMP0004 | — | see `COMP0004` Cookie Consent Banner |
+| Footer | COMP0003 | — | see `COMP0003` Global Site Footer |
 | Modal | inline | dialog container (icon, title, body, two side-by-side actions, divider, secondary destructive link, close "×") | Confirmed, second screenshot |
 
 ---

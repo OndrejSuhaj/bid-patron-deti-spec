@@ -80,15 +80,15 @@ Patronus screens, e.g. S021):
 
 ## Components Used
 
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`), limited
+to the chrome rows whose own presence on this screen is *Confirmed* by screenshot.
+
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Header | inline | global site nav | Confirmed present; not a screen-specific component. COMP layer not yet populated — flagged `inline` per current pipeline state. |
-| Main content | inline | — | **Uncertain** — no confirmed component for the actual confirmation body; not asserted. |
-| Cookie banner | inline | consent notice + link | Confirmed present; site-wide, not screen-specific. |
-| Footer | inline | global footer | Confirmed present; site-wide, not screen-specific. |
-
-All entries flagged `inline` — the COMP layer does not exist yet in this pipeline pass (per task
-instruction), independent of the evidence gap above.
+| Header | COMP0002 | context=public | Confirmed present; not a screen-specific component. See `COMP0002` Global Site Header. |
+| Main content | inline | — | **Uncertain** — no confirmed component for the actual confirmation body; not asserted. Both of this screen's own screenshots were found to depict `WIRE0024`'s form content instead (see `COMP0009` Open Questions) — not promoted pending resolution. |
+| Cookie banner | COMP0004 | — | Confirmed present; site-wide, not screen-specific. See `COMP0004` Cookie Consent Banner. |
+| Footer | COMP0003 | — | Confirmed present; site-wide, not screen-specific. See `COMP0003` Global Site Footer. |
 
 ---
 

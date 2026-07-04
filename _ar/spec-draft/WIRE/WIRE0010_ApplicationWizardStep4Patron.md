@@ -99,20 +99,21 @@ the current reconstruction; see Data Bindings and Open Questions.
 
 ## Components Used
 
-The COMP layer does not yet exist in this reconstruction pass — every element is flagged `inline`.
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Global header | inline | site nav bar | shared across screens (candidate for future COMP; not asserted here) |
-| Stepper bar | inline | 5-step, numbered, done/active/upcoming states (checkmark vs. filled red number vs. grey outline number) | Confirmed visual pattern; step labels "Příběh/Dar/O Vás/Patron/Přílohy" |
+| Global header | COMP0002 | context=public | see `COMP0002` Global Site Header |
+| Stepper bar | COMP0005 | activeIndex=4, completedIndices=[1,2,3] | Confirmed visual pattern; see `COMP0005` Application Wizard Stepper |
 | Back link | inline | text link with left-arrow glyph | Confirmed |
 | Patron name fields (A) | inline | two side-by-side single-line text inputs (Jméno / Příjmení) | Confirmed |
 | Relationship dropdown (B) | inline | single-select `<select>`, placeholder/no default option shown in empty state | Confirmed presence; option list contents not fully enumerated — only "Rodinný známý" is observed (filled-state capture) |
 | Patron contact helper text (C) | inline | one-line grey helper copy above the e-mail/phone inputs | Confirmed |
 | Patron e-mail field (C) | inline | single-line text input, placeholder "E-mail" | Confirmed |
 | Patron phone field (C) | inline | compound input: fixed non-editable "+420" prefix segment + single-line phone text input; validation-error variant shows red border + red helper text below | Confirmed (both variants captured) |
-| Primary CTA | inline | filled red button "Pokračovat" | Confirmed |
-| Global footer | inline | cookie banner + link columns + payment badges | Confirmed, out of scope for this UC |
+| Primary CTA | COMP0001 | — | label "Pokračovat"; see `COMP0001` Primary Button |
+| Global footer | COMP0003 | — | see `COMP0003` Global Site Footer |
 
 ---
 

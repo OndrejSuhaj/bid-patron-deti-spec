@@ -122,24 +122,25 @@ tab (`_ar/evidence/ui/ui-observed-areas.md` §1).
 
 ## Components Used
 
-All entries flagged `inline` — the COMP layer does not yet exist for this reconstruction pass.
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Header | inline | global site nav | shared chrome; see IA for navigation targets |
+| Header | COMP0002 | context=public | see `COMP0002` Global Site Header |
 | Hero | inline | headline banner + 3x circular preset CTA | preset CTAs are the recurring-donation entry point (`UC0007`-fed schedule via `EN0010`) |
 | Stat strip | inline | numeral stat + 2x category pill CTA | category pills' filter effect not confirmed as wired to the grid below (Uncertain — no visible active-state change captured) |
 | Filter tabs | inline | 4-tab segmented control | see Interactions #2–#5 |
 | Catalogue grid | inline | 3x2 Campaign card grid | one card variant renders a "SBÍRKOVÝ ÚČET" collection-account state (`EN0004` group/parent Campaign — mechanism Partial, see UC0023 Traceability) |
-| Story card | inline | photo + countdown ribbon + progress + CTA | repeated 6x per tab; countdown ribbon text varies ("ZBÝVÁ MĚSÍC" / "ZBÝVÁ DEN" / "ZBÝVÁ N DNÍ") |
+| Story card | COMP0008 | lifecycle=active | repeated 6x per tab; countdown ribbon text varies ("ZBÝVÁ MĚSÍC" / "ZBÝVÁ DEN" / "ZBÝVÁ N DNÍ"); see `COMP0008` Story Card |
 | Region map | inline | interactive CZ SVG choropleth + mobile `<select>` fallback (per `UC0023` step 8; `<select>` not visible in this desktop-width capture) | "Vyberte kraj na mapě"; zero-active-Campaign regions rendered disabled per `UC0023` AF2 — not visually distinguishable in the captured neutral/unselected state |
 | Testimonial carousel | inline | quote card + prev/next arrows | not Campaign-scoped; tab-independent |
 | Voucher denomination card | inline | 6x fixed-value card | leads to `UC0009` voucher-purchase entry (S005, uncaptured) via "Koupím dobrošek" |
 | "Jak to funguje?" explainer | inline | 3-column icon+text | static content, no UC |
 | Patron explainer band | inline | text + CTA + photo | "Chci se stát Patronem" — no realizing UC evidenced on this screen (leads into intake, `UC0001`, per IA) |
 | Sponsor/partner logo strip | inline | logo grid | static content, no UC |
-| Footer | inline | global site footer | shared chrome, owned by IA |
-| Cookie-consent banner | inline | bottom-left overlay, accept/reject/info | persistent chrome across the public site |
+| Footer | COMP0003 | promo=none | see `COMP0003` Global Site Footer |
+| Cookie-consent banner | COMP0004 | actions=dual-action | see `COMP0004` Cookie Consent Banner |
 
 ---
 

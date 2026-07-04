@@ -82,21 +82,21 @@ see Evidence table and Open Question below.
 
 ## Components Used
 
-All entries flagged `inline` — the COMP layer does not yet exist for this reconstruction pass.
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Header | inline | global site nav | Confirmed — same pattern as other public screens |
+| Header | COMP0002 | context=public | Confirmed — same pattern as other public screens; see `COMP0002` Global Site Header |
 | Main — icon | inline | two-person glyph, decorative | Confirmed (screenshot) |
 | Main — heading + intro copy | inline | page title + one-line description | Confirmed (screenshot); verbatim text is COPY-owned, quoted here only to identify the zone |
 | Main — activation card | inline | light-grey panel container | Confirmed (screenshot) |
 | Main — e-mail field | inline | text input, prefilled, read-only-styled (grey background, no red outline) | Confirmed (screenshot); value shown `o.suhaj@gmail.com` — test/evidence data, not a UI label |
 | Main — password field | inline | text input, placeholder "Vytvořte si vlastní heslo", red outline | Confirmed (screenshot) |
 | Main — inline message | inline | red helper/status text below the field pair | Confirmed text, Uncertain semantics (see States) |
-| Main — checkbox 1 | inline | checkbox + label with embedded link "pravidly poskytování pomoci" | Confirmed (screenshot) |
-| Main — checkbox 2 | inline | checkbox + label with embedded link "podmínkami používání uživatelského účtu" | Confirmed (screenshot) |
-| Main — submit button | inline | primary CTA button, "Aktivovat účet" | Confirmed (screenshot) |
-| Footer | inline | global site footer + cookie banner | Confirmed — same pattern as other public screens |
+| Main — checkbox 1 + checkbox 2 | COMP0006 | count-per-form=double | "pravidly poskytování pomoci" / "podmínkami používání uživatelského účtu"; see `COMP0006` Consent Checkbox |
+| Main — submit button | COMP0001 | — | "Aktivovat účet"; see `COMP0001` Primary Button |
+| Footer | COMP0003 | — | global site footer + cookie banner (`COMP0004`); Confirmed — same pattern as other public screens; see `COMP0003` Global Site Footer |
 
 ---
 

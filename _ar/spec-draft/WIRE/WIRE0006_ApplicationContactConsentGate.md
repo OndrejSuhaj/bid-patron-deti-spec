@@ -88,21 +88,21 @@ flagging so it is not silently merged into S007's reconstruction. **Uncertain.**
 
 ## Components Used
 
-Every visual element is flagged `inline` — the COMP layer does not yet exist for this reconstruction
-pass.
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Header | inline | global site nav | shared chrome; navigation structure owned by IA, not reconstructed here |
+| Header | COMP0002 | context=public | see `COMP0002` Global Site Header |
 | Icon / heading band | inline | icon + H1 + 2 body lines | — |
 | Back-navigation | inline | text link with leading arrow glyph | "← Zpět na výběr" |
 | Form panel — E-mail field | inline | single-line text input, placeholder "E-mail" | no visible label above the field; placeholder doubles as label |
 | Form panel — Phone field | inline | fixed "+420" prefix segment + single-line text input, placeholder "Telefon" | prefix appears non-editable (CZ-only observed); Uncertain whether RO/MD locales show a different prefix (Patronus operates CZ/RO/MD per project context) — Open Question, no evidence captured for non-CZ locale of this screen |
-| Form panel — consent checkbox | inline | checkbox + label with inline hyperlink ("zpracováním osobních údajů") + helper text line | unchecked by default |
-| Form panel — CTA | inline | primary button, label "Pokračovat" | — |
+| Form panel — consent checkbox | COMP0006 | count-per-form=single | unchecked by default; see `COMP0006` Consent Checkbox |
+| Form panel — CTA | COMP0001 | — | label "Pokračovat"; see `COMP0001` Primary Button |
 | FAQ section | inline | accordion, 2 collapsed items | items: "Proč musí mít každé dítě svou vlastní žádost o dar?", "Proč musí mít každý příběh svého Patrona?" — collapsed state only observed, expanded content not captured |
-| Cookie banner | inline | dismissible banner + "Další informace" link | shared chrome across the site, not screen-specific |
-| Footer | inline | multi-column link footer | shared chrome, not reconstructed here (see IA) |
+| Cookie banner | COMP0004 | — | see `COMP0004` Cookie Consent Banner |
+| Footer | COMP0003 | — | see `COMP0003` Global Site Footer |
 
 ---
 

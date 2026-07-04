@@ -88,20 +88,21 @@ used for this WIRE pass are a newer, fuller capture of the step content — see 
 
 ## Components Used
 
+Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
+
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
-| Header | inline | global nav | Not yet a reusable component; shared across all screens per IA §7. |
-| Stepper | inline | 5-step, active-index=5, all prior steps checkmarked | Step labels: Příběh / Dar / O Vás / Patron / Přílohy. Confirmed. |
+| Header | COMP0002 | context=public | see `COMP0002` Global Site Header |
+| Stepper | COMP0005 | activeIndex=5, completedIndices=[1,2,3,4] | see `COMP0005` Application Wizard Stepper |
 | Back link | inline | text link + arrow icon | "← Krok zpět". Confirmed. |
 | Instructional heading + body text | inline | static copy block | Explains the mandatory-image rule (3 numbered options) above the first dropzone. Confirmed. |
-| File-upload dropzone | inline | drag-and-drop + "vyberte v počítači" link, `n/N` counter, static "PŘÍKLAD" example thumbnails | Three instances with cardinalities `0/5`, `0/2`, `0/2`. Confirmed. |
+| File-upload dropzone | COMP0007 | maxCount=5/2/2, currentCount=0, exampleThumbnails=yes | Three instances with cardinalities `0/5`, `0/2`, `0/2`. See `COMP0007` File Upload Dropzone. |
 | Referral-source select | inline | native `<select>` dropdown, no default option selected | "Odkud jste se dozvěděli o projektu Patron dětí?". Confirmed. |
-| Consent checkbox (×3) | inline | checkbox + label with embedded link(s) | Links: "přesné, pravdivé a úplné údaje", "pravidly poskytování pomoci", "zpracováním osobních údajů" — link targets not evidenced on this screen (Uncertain). Confirmed (visual). |
-| Primary button | inline | "Odeslat" | Terminal submit of the wizard. Confirmed. |
+| Consent checkbox (×3) | COMP0006 | count-per-form=triple | Links: "přesné, pravdivé a úplné údaje", "pravidly poskytování pomoci", "zpracováním osobních údajů" — link targets not evidenced on this screen (Uncertain). See `COMP0006` Consent Checkbox. |
+| Primary button | COMP0001 | — | "Odeslat" — terminal submit of the wizard. See `COMP0001` Primary Button. |
 | Exit-confirmation modal | inline | overlay dialog: icon, heading "Chystáte se opustit žádost.", body text, "Zpět do žádosti" (primary) / "Opustit žádost" (text link) actions, secondary "Smazat žádost" link, close (×) control | Confirmed as an overlay state captured on this same route; the in-page trigger control for this modal is not visible in either capture (Open Question — see Interactions). |
-| Footer | inline | global footer | Shared across all screens. Confirmed. |
-
-The COMP layer does not yet exist in this reconstruction — every element above is flagged `inline`.
+| Footer | COMP0003 | — | see `COMP0003` Global Site Footer |
 
 ---
 
