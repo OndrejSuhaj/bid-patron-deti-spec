@@ -1,9 +1,9 @@
 ---
 doc_id: UC0023
 title: Browse & Filter Story Catalogue
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

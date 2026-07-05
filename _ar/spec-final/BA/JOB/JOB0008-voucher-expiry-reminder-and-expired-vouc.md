@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0008
 title: Voucher Expiry Reminder and Expired-Voucher Sweep
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: scheduler
 references:

@@ -1,9 +1,9 @@
 ---
 doc_id: QUERY0012
 title: Story / Entity Full-Text Search
-canonical_layer: QUERY
+layer: QUERY
 spec_type: query-spec
-status: canonical
+status: imported
 modules: []
 query_type: search
 references:

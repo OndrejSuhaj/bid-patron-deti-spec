@@ -1,9 +1,9 @@
 ---
 doc_id: EN0030
 title: ComgateBankReconciliation
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0009  # Transaction — the money record the settlement logically reconciles

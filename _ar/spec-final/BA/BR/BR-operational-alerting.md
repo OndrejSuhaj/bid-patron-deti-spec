@@ -1,9 +1,9 @@
 ---
 doc_id: BR-OperationalAlerting
 title: Operational Alerting & Audit Trail
-canonical_layer: BR
+layer: BR
 spec_type: business-rule
-status: canonical
+status: imported
 modules: []
 affects:
   - SYSTEM

@@ -1,10 +1,10 @@
 ---
 doc_id: API0002
 title: Application Intake & Lifecycle Api
-canonical_layer: API
+layer: API
 spec_type: api-contract
 contract_type: rest-public
-status: canonical
+status: imported
 modules: []
 references:
   - UC0001

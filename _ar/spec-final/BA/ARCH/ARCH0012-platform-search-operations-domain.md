@@ -1,9 +1,9 @@
 ---
 doc_id: ARCH0012
 title: Platform, Search & Operations Domain
-canonical_layer: ARCH
+layer: ARCH
 spec_type: architecture
-status: canonical
+status: imported
 modules: []
 references:
   - ARCH0001

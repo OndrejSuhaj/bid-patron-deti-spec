@@ -1,9 +1,9 @@
 ---
 doc_id: MSG0002
 title: Application Completion Link (Cross-Invite)
-canonical_layer: MSG
+layer: MSG
 spec_type: transactional-message
-status: canonical
+status: imported
 modules: []
 trigger:
   - UC0001

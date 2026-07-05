@@ -1,9 +1,9 @@
 ---
 doc_id: QUERY0004
 title: Story Region Counts (CZ Map)
-canonical_layer: QUERY
+layer: QUERY
 spec_type: query-spec
-status: canonical
+status: imported
 modules: []
 query_type: summary
 references:

@@ -1,9 +1,9 @@
 ---
 doc_id: API0010
 title: Partner Logos API
-canonical_layer: API
+layer: API
 spec_type: api-contract
-status: canonical
+status: imported
 modules: []
 contract_type: rest-internal
 references:

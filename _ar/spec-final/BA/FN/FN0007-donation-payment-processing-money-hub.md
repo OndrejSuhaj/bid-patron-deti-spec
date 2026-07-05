@@ -1,9 +1,9 @@
 ---
 doc_id: FN0007
 title: Donation & Payment Processing (Money Hub)
-canonical_layer: FN
+layer: FN
 spec_type: functional-capability
-status: canonical
+status: imported
 modules: []
 references:
   - UC0005

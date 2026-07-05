@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0009
 title: Application Data Housekeeping
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: repair
 references:

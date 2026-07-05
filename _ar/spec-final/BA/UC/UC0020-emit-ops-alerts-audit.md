@@ -1,9 +1,9 @@
 ---
 doc_id: UC0020
 title: Emit Ops Alerts & Audit
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

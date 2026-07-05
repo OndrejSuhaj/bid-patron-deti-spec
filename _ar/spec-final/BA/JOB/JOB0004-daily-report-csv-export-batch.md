@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0004
 title: Daily Report CSV Export Batch
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: batch
 references:

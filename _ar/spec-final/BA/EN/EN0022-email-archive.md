@@ -1,9 +1,9 @@
 ---
 doc_id: EN0022
 title: EmailArchive
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0001  # Application — required reference on every archive record

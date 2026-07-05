@@ -1,12 +1,12 @@
 ---
 doc_id: COPY-shared-global
 title: Shared Global Chrome Copy — Header, Footer, Cookie Consent
-canonical_layer: COPY
+layer: COPY
 spec_type: copy
 scope: shared-global
 modules: []
 language: cs
-status: canonical
+status: imported
 references:
   - WIRE0001
   - WIRE0002

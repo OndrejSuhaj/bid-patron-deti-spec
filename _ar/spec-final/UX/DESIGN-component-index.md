@@ -1,11 +1,11 @@
 ---
 doc_id: DESIGN-component-index
 title: Design Component Index — canonical @patron/ui library
-canonical_layer: DESIGN
+layer: DESIGN
 state: TARGET
 spec_type: index
 modules: []
-status: canonical
+status: imported
 references:
   - COMP0001
   - COMP0002

@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0009
 title: Application Wizard Step3 Applicant
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S008c
 realizes_uc: [UC0001]
-status: canonical
+status: imported
 references:
   - UC0001
   - EN0001

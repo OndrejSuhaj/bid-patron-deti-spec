@@ -1,9 +1,9 @@
 ---
 doc_id: UC0013
 title: Sync Marketing & Intake Leads
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

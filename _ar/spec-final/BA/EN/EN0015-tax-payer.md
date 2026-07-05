@@ -1,9 +1,9 @@
 ---
 doc_id: EN0015
 title: TaxPayer
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0011  # Contract — the sole outbound relation; the RO redirect contract this payer signs

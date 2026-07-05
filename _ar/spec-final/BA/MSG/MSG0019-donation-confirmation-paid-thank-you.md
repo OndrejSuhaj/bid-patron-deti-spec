@@ -1,9 +1,9 @@
 ---
 doc_id: MSG0019
 title: Donation Confirmation — Paid (Thank-You)
-canonical_layer: MSG
+layer: MSG
 spec_type: transactional-message
-status: canonical
+status: imported
 modules: []
 trigger:
   - UC0006

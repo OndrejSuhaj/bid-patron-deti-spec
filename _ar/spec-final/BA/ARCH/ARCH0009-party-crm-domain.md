@@ -1,9 +1,9 @@
 ---
 doc_id: ARCH0009
 title: Party / CRM Domain
-canonical_layer: ARCH
+layer: ARCH
 spec_type: architecture
-status: canonical
+status: imported
 modules: []
 references:
   - ARCH0001

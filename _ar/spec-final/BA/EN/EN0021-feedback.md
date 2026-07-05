@@ -1,9 +1,9 @@
 ---
 doc_id: EN0021
 title: Feedback
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0001  # Application — feedback is authored in the context of an Application's fundraiser/campaign

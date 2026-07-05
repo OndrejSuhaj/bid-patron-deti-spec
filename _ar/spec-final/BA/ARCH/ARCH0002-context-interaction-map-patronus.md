@@ -1,9 +1,9 @@
 ---
 doc_id: ARCH0002
 title: Context Interaction Map (Patronus)
-canonical_layer: ARCH
+layer: ARCH
 spec_type: architecture
-status: canonical
+status: imported
 modules: []
 ---
 

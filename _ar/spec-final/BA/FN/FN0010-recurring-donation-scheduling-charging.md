@@ -1,9 +1,9 @@
 ---
 doc_id: FN0010
 title: Recurring Donation Scheduling & Charging
-canonical_layer: FN
+layer: FN
 spec_type: functional-capability
-status: canonical
+status: imported
 modules: []
 references:
   - UC0007

@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0017
 title: OneDrive Invoice Import
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: batch
 references:

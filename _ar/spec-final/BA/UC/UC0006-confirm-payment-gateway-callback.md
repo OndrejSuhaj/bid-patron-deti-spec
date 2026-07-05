@@ -1,9 +1,9 @@
 ---
 doc_id: UC0006
 title: Confirm Payment (Gateway Callback)
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

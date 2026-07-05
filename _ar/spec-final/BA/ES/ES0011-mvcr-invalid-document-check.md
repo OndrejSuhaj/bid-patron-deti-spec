@@ -1,9 +1,9 @@
 ---
 doc_id: ES0011
 title: MVČR (invalid-document check)
-canonical_layer: ES
+layer: ES
 spec_type: external-system
-status: canonical
+status: imported
 modules: []
 references:
   - ARCH0001

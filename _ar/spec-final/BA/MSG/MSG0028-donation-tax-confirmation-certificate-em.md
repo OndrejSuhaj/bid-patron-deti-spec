@@ -1,9 +1,9 @@
 ---
 doc_id: MSG0028
 title: Donation Tax Confirmation (Certificate) Email
-canonical_layer: MSG
+layer: MSG
 spec_type: transactional-message
-status: canonical
+status: imported
 modules: []
 trigger:
   - UC0010

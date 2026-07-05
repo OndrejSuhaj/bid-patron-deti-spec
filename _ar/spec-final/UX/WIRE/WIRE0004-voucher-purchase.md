@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0004
 title: Voucher Purchase
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S005
 realizes_uc: [UC0009]
-status: canonical
+status: imported
 references:
   - UC0009
   - EN0013

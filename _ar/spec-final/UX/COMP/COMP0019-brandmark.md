@@ -1,10 +1,10 @@
 ---
 doc_id: COMP0019
 title: Brandmark
-canonical_layer: COMP
+layer: COMP
 spec_type: component
 modules: []
-status: canonical
+status: imported
 design_source: /Users/o.suhajgmail.com/Developer/Argo22/bid-patron-deti/packages/ui/src/components/Brandmark/
 references:
   - COMP0002

@@ -1,9 +1,9 @@
 ---
 doc_id: MSG0009
 title: Application Returned for Completion
-canonical_layer: MSG
+layer: MSG
 spec_type: transactional-message
-status: canonical
+status: imported
 modules: []
 trigger:
   - UC0002

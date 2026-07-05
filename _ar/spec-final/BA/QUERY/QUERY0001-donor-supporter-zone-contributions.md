@@ -1,9 +1,9 @@
 ---
 doc_id: QUERY0001
 title: Donor / Supporter Zone Contributions
-canonical_layer: QUERY
+layer: QUERY
 spec_type: query-spec
-status: canonical
+status: imported
 modules: []
 query_type: summary
 references:

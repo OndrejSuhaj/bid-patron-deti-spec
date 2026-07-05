@@ -1,9 +1,9 @@
 ---
 doc_id: UC0012
 title: Dispatch Transactional Message
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

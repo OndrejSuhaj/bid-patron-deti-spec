@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0019
 title: How It Works Results
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S016
 realizes_uc: [UC0011]
-status: canonical
+status: imported
 references:
   - UC0011
   - UC0017

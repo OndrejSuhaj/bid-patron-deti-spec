@@ -1,10 +1,10 @@
 ---
 doc_id: COMP0009
 title: Single Email-Entry Form
-canonical_layer: COMP
+layer: COMP
 spec_type: component
 modules: []
-status: canonical
+status: imported
 references:
   - WIRE0012
   - WIRE0024

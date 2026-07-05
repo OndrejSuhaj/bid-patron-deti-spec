@@ -1,9 +1,9 @@
 ---
 doc_id: UC0016
 title: Maintain Party Records (Dedup / Merge)
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

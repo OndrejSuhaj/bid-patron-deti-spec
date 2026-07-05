@@ -1,9 +1,9 @@
 ---
 doc_id: EN0029
 title: BankTransactionMail
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0009  # Transaction — produced or updated from the same inbound notification

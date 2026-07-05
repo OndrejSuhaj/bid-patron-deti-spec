@@ -1,10 +1,10 @@
 ---
 doc_id: COMP0011
 title: StoryHero
-canonical_layer: COMP
+layer: COMP
 spec_type: component
 modules: []
-status: canonical
+status: imported
 design_source: /Users/o.suhajgmail.com/Developer/Argo22/bid-patron-deti/packages/ui/src/components/StoryHero/
 references:
   - WIRE0002

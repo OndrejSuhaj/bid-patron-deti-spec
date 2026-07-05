@@ -1,9 +1,9 @@
 ---
 doc_id: EN0017
 title: ScoringRecord
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0001  # Application — scoring snapshot and low-risk score are attributes of the Application

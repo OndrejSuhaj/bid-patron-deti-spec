@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0015
 title: Tax Confirmation Request
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S012
 realizes_uc: [UC0010]
-status: canonical
+status: imported
 references:
   - UC0010
   - EN0014

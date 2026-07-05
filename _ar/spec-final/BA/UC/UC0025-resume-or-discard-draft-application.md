@@ -1,9 +1,9 @@
 ---
 doc_id: UC0025
 title: Resume or Discard Draft Application
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

@@ -1,9 +1,9 @@
 ---
 doc_id: ACL0008
 title: Party, Contact & CRM Access
-canonical_layer: ACL
+layer: ACL
 spec_type: access-control
-status: canonical
+status: imported
 modules: []
 references:
   - EN0006

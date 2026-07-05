@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0001
 title: Recurring Donation Charge
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: scheduler
 references:

@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0003
 title: Thank You Payment Success
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S003
 realizes_uc: [UC0006]
-status: canonical
+status: imported
 references:
   - UC0006
   - UC0025

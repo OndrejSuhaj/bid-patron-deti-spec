@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0011
 title: Payment Settlement Health Diagnostics
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: scheduler
 references:

@@ -1,9 +1,9 @@
 ---
 doc_id: UC0009
 title: Redeem / Validate Voucher
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

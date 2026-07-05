@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0010
 title: Application Wizard Step4 Patron
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S008d
 realizes_uc: [UC0001]
-status: canonical
+status: imported
 references:
   - UC0001
   - EN0001

@@ -42,14 +42,14 @@ evidence (`_ar/prtsc/`, 43 screenshotů) přes větev `ui-coverage` + `ux-recons
 | **Σ UX** | **52** | | UX tier naplněn + sladěn s navrženými tokeny/komponentami |
 
 Každá vrstva má `_REGISTRY.md` s jedním řádkem na dokument; řádky převzaty z draft registrů a
-překlopeny `draft → canonical`, Owner mode `Mode P (import)`, Module(s) `[]`, `Created` zachováno
+překlopeny `draft → imported`, Owner mode `Mode P (import)`, Module(s) `[]`, `Created` zachováno
 z draftu (datum prvního výskytu).
 
 ## 2. Zkopírované soubory
 
 Všech 158 dokumentů zkopírováno do konformní podoby `<doc_id>-<kebab-title>.md` pod správný tier
 (BA) a vrstvu dle mapy layer→tier v `tooling/docs/rules-spec-final.md`. Frontmatter konformován
-(`doc_id` zachováno beze změny, `status: canonical`, `modules: []`, přenesené `spec_type`/`references`
+(`doc_id` zachováno beze změny, `layer: <LAYER>` (přejmenováno z `canonical_layer`), `status: imported`, `modules: []`, přenesené `spec_type`/`references`
 a vrstvově specifická pole `affects`/`trigger`). Těla přeložena do češtiny.
 
 Podpůrné výstupy: `final-publication-map.md` (158 řádků, jeden na soubor), tento report,
@@ -114,7 +114,7 @@ překladem; kde byl bezpečný literární překlad nejistý, byl ponechán angl
 ## 10. Ověření tohoto běhu
 
 - **Deterministický scan všech 158**: přítomnost = 158/158, frontmatter konformní = 158/158
-  (doc_id + `status: canonical` + `modules: []`), český obsah (heuristika diakritiky/stopslov) =
+  (doc_id + `layer` + `status: imported` + `modules: []`), český obsah (heuristika diakritiky/stopslov) =
   158/158; 0 chybějících, 0 vadných, 0 podezřelých na nepřeložení.
 - **Referenční integrita**: 0 dangling v publikovaných registrech (každé `references:` doc_id se
   rozpouští v cílové vrstvě).

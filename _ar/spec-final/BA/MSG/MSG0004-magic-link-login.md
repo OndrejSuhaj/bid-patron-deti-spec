@@ -1,9 +1,9 @@
 ---
 doc_id: MSG0004
 title: Magic-Link Login
-canonical_layer: MSG
+layer: MSG
 spec_type: transactional-message
-status: canonical
+status: imported
 modules: []
 trigger:
   - UC0014

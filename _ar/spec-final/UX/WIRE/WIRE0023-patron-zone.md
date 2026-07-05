@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0023
 title: Patron Zone
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S020
 realizes_uc: [UC0024]
-status: canonical
+status: imported
 references:
   - UC0024
   - EN0001

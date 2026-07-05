@@ -1,9 +1,9 @@
 ---
 doc_id: UC0002
 title: Orchestrate Application Status Change
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

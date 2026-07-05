@@ -1,9 +1,9 @@
 ---
 doc_id: EN0005
 title: Patron
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0004 (Campaign)

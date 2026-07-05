@@ -1,9 +1,9 @@
 ---
 doc_id: EN0001
 title: Application
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - BR-ApplicationStatusGovernance

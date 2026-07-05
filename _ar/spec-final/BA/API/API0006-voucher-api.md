@@ -1,9 +1,9 @@
 ---
 doc_id: API0006
 title: Voucher API
-canonical_layer: API
+layer: API
 spec_type: api-contract
-status: canonical
+status: imported
 modules: []
 contract_type: rest-public
 references:

@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0021
 title: Donor Zone Moje Zona
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S018
 realizes_uc: [UC0024]
-status: canonical
+status: imported
 references:
   - UC0024
   - EN0034

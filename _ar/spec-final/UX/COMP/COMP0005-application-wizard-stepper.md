@@ -1,10 +1,10 @@
 ---
 doc_id: COMP0005
 title: Application Wizard Stepper
-canonical_layer: COMP
+layer: COMP
 spec_type: component
 modules: []
-status: canonical
+status: imported
 references:
   - WIRE0007
   - WIRE0008

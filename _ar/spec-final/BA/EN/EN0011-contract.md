@@ -1,9 +1,9 @@
 ---
 doc_id: EN0011
 title: Contract
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0001  # Application — owns the contract/delivery_note/acceptance_protocol/appendix references

@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0005
 title: Role Choice Landing
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S006
 realizes_uc: [UC0001]
-status: canonical
+status: imported
 references:
   - UC0001
   - EN0001

@@ -1,9 +1,9 @@
 ---
 doc_id: QUERY0011
 title: Reporting CSV Export Bundle
-canonical_layer: QUERY
+layer: QUERY
 spec_type: query-spec
-status: canonical
+status: imported
 modules: []
 query_type: export
 references:

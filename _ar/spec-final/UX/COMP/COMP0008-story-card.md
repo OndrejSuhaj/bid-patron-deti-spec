@@ -1,10 +1,10 @@
 ---
 doc_id: COMP0008
 title: StoryCard
-canonical_layer: COMP
+layer: COMP
 spec_type: component
 modules: []
-status: canonical
+status: imported
 references:
   - WIRE0001
   - WIRE0019

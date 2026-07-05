@@ -1,9 +1,9 @@
 ---
 doc_id: UC0001
 title: Submit Application (Žádost)
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

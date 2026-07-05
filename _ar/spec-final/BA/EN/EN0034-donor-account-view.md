@@ -1,10 +1,10 @@
 ---
 doc_id: EN0034
 title: DonorAccountView
-canonical_layer: EN
+layer: EN
 spec_type: entity
 spec_subtype: projection
-status: canonical
+status: imported
 modules: []
 references:
   - EN0008  # User — the current-user scope the projection is filtered by (Supporter role, INV21)

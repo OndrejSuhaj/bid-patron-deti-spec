@@ -1,9 +1,9 @@
 ---
 doc_id: EN0013
 title: Voucher
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0009  # Transaction — the purchasing payment; owner and money source

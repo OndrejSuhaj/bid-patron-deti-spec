@@ -1,9 +1,9 @@
 ---
 doc_id: FN0026
 title: Reference Data & Geographic Lookup
-canonical_layer: FN
+layer: FN
 spec_type: functional-capability
-status: canonical
+status: imported
 modules: []
 references:
   - UC0001

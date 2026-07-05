@@ -1,12 +1,12 @@
 ---
 doc_id: COPY-module-account
 title: Account — Settings, Tax Confirmation, Dashboard & Role Zones
-canonical_layer: COPY
+layer: COPY
 spec_type: copy
 scope: module-account
 modules: []
 language: cs
-status: canonical
+status: imported
 references:
   - WIRE0014
   - WIRE0015

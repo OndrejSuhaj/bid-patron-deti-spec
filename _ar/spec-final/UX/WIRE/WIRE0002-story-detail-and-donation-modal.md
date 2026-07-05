@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0002
 title: Story Detail And Donation Modal
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S002
 realizes_uc: [UC0005, UC0011, UC0009]
-status: canonical
+status: imported
 references:
   - UC0005
   - UC0011

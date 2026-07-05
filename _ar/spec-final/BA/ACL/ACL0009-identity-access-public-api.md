@@ -1,9 +1,9 @@
 ---
 doc_id: ACL0009
 title: Identity, Access & Public API
-canonical_layer: ACL
+layer: ACL
 spec_type: access-control
-status: canonical
+status: imported
 modules: []
 references:
   - EN0007

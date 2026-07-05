@@ -1,9 +1,9 @@
 ---
 doc_id: EN0025
 title: ApplicationLog
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0001  # Application (logged aggregate)

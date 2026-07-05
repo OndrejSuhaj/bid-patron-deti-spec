@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0022
 title: Applicant Zone
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S019
 realizes_uc: [UC0024]
-status: canonical
+status: imported
 references:
   - UC0024
   - EN0001

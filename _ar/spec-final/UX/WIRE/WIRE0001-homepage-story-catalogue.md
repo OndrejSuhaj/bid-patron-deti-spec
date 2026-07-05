@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0001
 title: Homepage Story Catalogue
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S001
 realizes_uc: [UC0023, UC0007, UC0009]
-status: canonical
+status: imported
 references:
   - UC0023
   - UC0007

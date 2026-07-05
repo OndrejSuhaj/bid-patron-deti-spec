@@ -1,9 +1,9 @@
 ---
 doc_id: MSG0010
 title: Application Rejected — Out of Scope
-canonical_layer: MSG
+layer: MSG
 spec_type: transactional-message
-status: canonical
+status: imported
 modules: []
 trigger:
   - UC0002

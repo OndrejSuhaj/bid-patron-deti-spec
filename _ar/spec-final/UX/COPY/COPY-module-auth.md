@@ -1,12 +1,12 @@
 ---
 doc_id: COPY-module-auth
 title: Auth Module Copy — Login Magic Link & Account Activation
-canonical_layer: COPY
+layer: COPY
 spec_type: copy
 scope: module-auth
 modules: []
 language: cs
-status: canonical
+status: imported
 references:
   - WIRE0012
   - WIRE0013

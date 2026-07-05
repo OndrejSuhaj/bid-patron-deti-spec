@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0015
 title: Campaign Recommendation Train and Score Consumers
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: async-consumer
 references:

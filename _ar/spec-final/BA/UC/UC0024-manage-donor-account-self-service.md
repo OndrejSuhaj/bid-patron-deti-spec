@@ -1,9 +1,9 @@
 ---
 doc_id: UC0024
 title: Manage Donor Account (Self-Service)
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

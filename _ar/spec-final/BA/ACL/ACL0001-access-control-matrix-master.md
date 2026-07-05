@@ -1,9 +1,9 @@
 ---
 doc_id: ACL0001
 title: Access Control Matrix (Master)
-canonical_layer: ACL
+layer: ACL
 spec_type: access-control
-status: canonical
+status: imported
 modules: []
 references:
   - EN0008

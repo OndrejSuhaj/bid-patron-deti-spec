@@ -1,9 +1,9 @@
 ---
 doc_id: UC0010
 title: Issue Donation Confirmation (Tax)
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

@@ -1,9 +1,9 @@
 ---
 doc_id: BR-MultiTenantCountryScoping
 title: Multi-Tenant CZ/RO/MD Scoping
-canonical_layer: BR
+layer: BR
 spec_type: business-rule
-status: canonical
+status: imported
 modules: []
 affects:
   - EN0001

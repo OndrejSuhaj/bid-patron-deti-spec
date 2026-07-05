@@ -1,9 +1,9 @@
 ---
 doc_id: EN0027
 title: ApplicationAction
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0001  # Application (transitioned by the action)

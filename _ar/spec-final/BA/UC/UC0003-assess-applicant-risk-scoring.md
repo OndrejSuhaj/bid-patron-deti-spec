@@ -1,9 +1,9 @@
 ---
 doc_id: UC0003
 title: Assess Applicant Risk (Scoring)
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

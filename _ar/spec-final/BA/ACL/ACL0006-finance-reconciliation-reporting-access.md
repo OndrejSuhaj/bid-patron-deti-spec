@@ -1,9 +1,9 @@
 ---
 doc_id: ACL0006
 title: Finance, Reconciliation & Reporting Access
-canonical_layer: ACL
+layer: ACL
 spec_type: access-control
-status: canonical
+status: imported
 modules: []
 references:
   - EN0029

@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0012
 title: Login Magic Link
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S009
 realizes_uc: [UC0014]
-status: canonical
+status: imported
 references:
   - UC0014
   - EN0008

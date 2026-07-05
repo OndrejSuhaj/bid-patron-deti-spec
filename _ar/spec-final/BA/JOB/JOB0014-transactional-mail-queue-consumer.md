@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0014
 title: Transactional Mail Queue Consumer
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: async-consumer
 references:

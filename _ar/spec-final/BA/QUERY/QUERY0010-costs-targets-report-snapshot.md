@@ -1,9 +1,9 @@
 ---
 doc_id: QUERY0010
 title: Costs / Targets & Report Snapshot
-canonical_layer: QUERY
+layer: QUERY
 spec_type: query-spec
-status: canonical
+status: imported
 modules: []
 query_type: summary
 references:

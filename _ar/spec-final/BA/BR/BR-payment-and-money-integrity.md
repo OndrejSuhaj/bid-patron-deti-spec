@@ -1,9 +1,9 @@
 ---
 doc_id: BR-PaymentAndMoneyIntegrity
 title: Payment & Money Integrity
-canonical_layer: BR
+layer: BR
 spec_type: business-rule
-status: canonical
+status: imported
 modules: []
 affects:
   - EN0009

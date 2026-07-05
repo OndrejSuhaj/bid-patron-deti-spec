@@ -1,9 +1,9 @@
 ---
 doc_id: FN0016
 title: Conversion & Analytics Relay
-canonical_layer: FN
+layer: FN
 spec_type: functional-capability
-status: canonical
+status: imported
 modules: []
 references:
   - UC0013

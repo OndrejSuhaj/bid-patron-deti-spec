@@ -1,9 +1,9 @@
 ---
 doc_id: FN0002
 title: Application Status Orchestration & Reaction Fan-out
-canonical_layer: FN
+layer: FN
 spec_type: functional-capability
-status: canonical
+status: imported
 modules: []
 references:
   - UC0002

@@ -1,9 +1,9 @@
 ---
 doc_id: MSG0020
 title: Donation Pending Notice
-canonical_layer: MSG
+layer: MSG
 spec_type: transactional-message
-status: canonical
+status: imported
 modules: []
 trigger:
   - UC0005

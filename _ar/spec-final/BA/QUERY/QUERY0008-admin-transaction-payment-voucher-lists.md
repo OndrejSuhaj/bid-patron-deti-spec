@@ -1,9 +1,9 @@
 ---
 doc_id: QUERY0008
 title: Admin Transaction / Payment & Voucher Lists
-canonical_layer: QUERY
+layer: QUERY
 spec_type: query-spec
-status: canonical
+status: imported
 modules: []
 query_type: list
 references:

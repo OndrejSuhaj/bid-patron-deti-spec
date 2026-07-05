@@ -1,9 +1,9 @@
 ---
 doc_id: QUERY0009
 title: On-Screen Reporting Dashboards & Reports
-canonical_layer: QUERY
+layer: QUERY
 spec_type: query-spec
-status: canonical
+status: imported
 modules: []
 query_type: dashboard
 references:

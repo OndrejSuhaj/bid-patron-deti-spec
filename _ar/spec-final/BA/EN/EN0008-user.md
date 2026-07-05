@@ -1,9 +1,9 @@
 ---
 doc_id: EN0008
 title: User
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0001

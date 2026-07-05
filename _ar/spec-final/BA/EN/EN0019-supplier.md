@@ -1,9 +1,9 @@
 ---
 doc_id: EN0019
 title: Supplier
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0002  # ApplicationProfile — gift_supplier references Supplier

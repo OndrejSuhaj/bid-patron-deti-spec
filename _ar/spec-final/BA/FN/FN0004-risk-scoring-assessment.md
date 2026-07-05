@@ -1,9 +1,9 @@
 ---
 doc_id: FN0004
 title: Risk Scoring & Assessment
-canonical_layer: FN
+layer: FN
 spec_type: functional-capability
-status: canonical
+status: imported
 modules: []
 references:
   - UC0003

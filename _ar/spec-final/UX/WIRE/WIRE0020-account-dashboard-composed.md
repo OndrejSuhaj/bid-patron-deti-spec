@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0020
 title: Account Dashboard Composed
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S017
 realizes_uc: [UC0024]
-status: canonical
+status: imported
 references:
   - UC0024
   - EN0034

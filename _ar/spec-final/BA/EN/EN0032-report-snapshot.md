@@ -1,9 +1,9 @@
 ---
 doc_id: EN0032
 title: ReportSnapshot
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0008

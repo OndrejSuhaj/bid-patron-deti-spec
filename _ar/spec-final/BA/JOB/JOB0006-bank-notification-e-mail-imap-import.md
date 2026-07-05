@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0006
 title: Bank Notification E-mail IMAP Import
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: poller
 references:

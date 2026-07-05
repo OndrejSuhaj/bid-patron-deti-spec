@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0011
 title: Application Wizard Step5 Attachments
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S008e
 realizes_uc: [UC0001]
-status: canonical
+status: imported
 references:
   - UC0001
   - EN0001

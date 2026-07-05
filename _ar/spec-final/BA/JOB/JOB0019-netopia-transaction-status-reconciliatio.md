@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0019
 title: Netopia Transaction Status Reconciliation
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: batch
 references:

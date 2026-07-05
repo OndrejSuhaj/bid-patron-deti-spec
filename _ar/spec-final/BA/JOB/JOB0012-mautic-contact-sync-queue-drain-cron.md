@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0012
 title: Mautic Contact Sync Queue Drain (Cron)
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: scheduler
 references:

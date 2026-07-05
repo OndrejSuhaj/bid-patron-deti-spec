@@ -1,11 +1,11 @@
 ---
 doc_id: IA-patronus
 title: Information Architecture — Patronus (Patron dětí)
-canonical_layer: IA
+layer: IA
 spec_type: information-architecture
 scope: program
 modules: []
-status: canonical
+status: imported
 owners: [ux-lead, architect]
 language: cs
 references:

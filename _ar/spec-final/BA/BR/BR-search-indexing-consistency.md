@@ -1,9 +1,9 @@
 ---
 doc_id: BR-SearchIndexingConsistency
 title: Search Indexing Consistency
-canonical_layer: BR
+layer: BR
 spec_type: business-rule
-status: canonical
+status: imported
 modules: []
 affects:
   - EN0001

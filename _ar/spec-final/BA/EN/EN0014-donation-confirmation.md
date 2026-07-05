@@ -1,9 +1,9 @@
 ---
 doc_id: EN0014
 title: DonationConfirmation
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - BR-DonationConfirmationAndTax

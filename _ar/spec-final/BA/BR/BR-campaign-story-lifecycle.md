@@ -1,9 +1,9 @@
 ---
 doc_id: BR-CampaignStoryLifecycle
 title: Campaign / Story Lifecycle & Funding
-canonical_layer: BR
+layer: BR
 spec_type: business-rule
-status: canonical
+status: imported
 modules: []
 affects:
   - EN0004

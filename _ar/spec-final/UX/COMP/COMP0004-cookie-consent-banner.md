@@ -1,10 +1,10 @@
 ---
 doc_id: COMP0004
 title: Cookie Consent Banner
-canonical_layer: COMP
+layer: COMP
 spec_type: component
 modules: []
-status: canonical
+status: imported
 references:
   - WIRE0001
   - WIRE0003

@@ -1,9 +1,9 @@
 ---
 doc_id: EN0012
 title: ContractTemplate
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0011  # Contract — instances generated from this template

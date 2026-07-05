@@ -1,9 +1,9 @@
 ---
 doc_id: EN0020
 title: Partner
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0008  # User — owner

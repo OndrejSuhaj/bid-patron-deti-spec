@@ -4,4 +4,4 @@
 
 | ID | Title | Status | Module(s) | Owner mode | Created |
 |---|---|---|---|---|---|
-| IA-patronus | Information Architecture — Patronus (Patron dětí) | canonical | [] | Mode P (import) | 2026-07-04 |
+| IA-patronus | Information Architecture — Patronus (Patron dětí) | imported | [] | Mode P (import) | 2026-07-04 |

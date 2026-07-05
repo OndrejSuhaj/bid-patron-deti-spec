@@ -1,9 +1,9 @@
 ---
 doc_id: QUERY0005
 title: Gift Categories Reference List
-canonical_layer: QUERY
+layer: QUERY
 spec_type: query-spec
-status: canonical
+status: imported
 modules: []
 query_type: list
 references:

@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0014
 title: Account Settings Profile
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S011
 realizes_uc: [UC0024]
-status: canonical
+status: imported
 references:
   - UC0024
   - EN0006

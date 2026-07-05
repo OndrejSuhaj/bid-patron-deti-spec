@@ -47,7 +47,7 @@ pojmenovány `<doc_id>-<kebab-title>.md`; `doc_id` je stabilní a nikdy se nepř
   kódové/polní/stavové tokeny v backticích, bloky kódu, cesty, URL, názvy externích systémů a AR
   evidenční slovník (`Confirmed` / `Partial` / `Hypothesis` / `Uncertain` / `Blocked`).
 - **Terminologie**: řízena glosářem `_ar/repo-map/glossary.md` (kanonické CZ ekvivalenty).
-- **Frontmatter**: `doc_id` zachováno, `status: canonical`, `modules: []` (program-wide; cílový
+- **Frontmatter**: `doc_id` zachováno, `layer: <LAYER>`, `status: imported` (import-shape pro rebuild), `modules: []` (program-wide; cílový
   systém přerozděluje na moduly svým Mode M po hand-offu).
 - **Vrstvová disciplína** (single-source) je vynucena upstream v draftu; finální vrstva publikuje
   obsah beze změny (nereinterpretuje, neslučuje, nededuplikuje).

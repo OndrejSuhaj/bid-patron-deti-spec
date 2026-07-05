@@ -1,9 +1,9 @@
 ---
 doc_id: ES0010
 title: ARES
-canonical_layer: ES
+layer: ES
 spec_type: external-system
-status: canonical
+status: imported
 modules: []
 references:
   - ARCH0001

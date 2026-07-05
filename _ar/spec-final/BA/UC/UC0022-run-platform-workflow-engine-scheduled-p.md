@@ -1,9 +1,9 @@
 ---
 doc_id: UC0022
 title: Run Platform Workflow Engine & Scheduled Publish
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

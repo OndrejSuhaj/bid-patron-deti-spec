@@ -1,9 +1,9 @@
 ---
 doc_id: MSG0026
 title: Contract Manager-Check Notice
-canonical_layer: MSG
+layer: MSG
 spec_type: transactional-message
-status: canonical
+status: imported
 modules: []
 trigger:
   - UC0004

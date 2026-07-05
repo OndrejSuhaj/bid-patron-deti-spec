@@ -1,9 +1,9 @@
 ---
 doc_id: BR-ScoringAndRiskGating
 title: Scoring & Risk Gating
-canonical_layer: BR
+layer: BR
 spec_type: business-rule
-status: canonical
+status: imported
 modules: []
 affects:
   - EN0017

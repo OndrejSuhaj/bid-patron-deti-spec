@@ -1,9 +1,9 @@
 ---
 doc_id: MSG0030
 title: Donor Feedback / Post-Campaign Thank-You
-canonical_layer: MSG
+layer: MSG
 spec_type: transactional-message
-status: canonical
+status: imported
 modules: []
 trigger:
   - FN0006

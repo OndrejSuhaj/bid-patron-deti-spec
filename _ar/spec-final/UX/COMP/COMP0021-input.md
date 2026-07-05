@@ -1,10 +1,10 @@
 ---
 doc_id: COMP0021
 title: Input
-canonical_layer: COMP
+layer: COMP
 spec_type: component
 modules: []
-status: canonical
+status: imported
 references:
   - WIRE0002
   - WIRE0006

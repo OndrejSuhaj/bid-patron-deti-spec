@@ -1,9 +1,9 @@
 ---
 doc_id: EN0024
 title: Blog
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0004  # Campaign — Blog CTA may link to a Campaign

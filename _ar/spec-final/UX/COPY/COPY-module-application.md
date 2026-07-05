@@ -1,12 +1,12 @@
 ---
 doc_id: COPY-module-application
 title: Application Intake — Role Choice, Contact/Consent Gate & 5-Step Wizard
-canonical_layer: COPY
+layer: COPY
 spec_type: copy
 scope: module-application
 modules: []
 language: cs
-status: canonical
+status: imported
 references:
   - WIRE0005
   - WIRE0006

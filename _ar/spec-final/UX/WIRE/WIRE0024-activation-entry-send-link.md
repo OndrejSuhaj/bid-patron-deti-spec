@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0024
 title: Activation Entry Send Link
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S021
 realizes_uc: [UC0014]
-status: canonical
+status: imported
 references:
   - UC0014
   - EN0008

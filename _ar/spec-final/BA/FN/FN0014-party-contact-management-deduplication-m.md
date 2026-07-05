@@ -1,9 +1,9 @@
 ---
 doc_id: FN0014
 title: Party & Contact Management + Deduplication / Merge
-canonical_layer: FN
+layer: FN
 spec_type: functional-capability
-status: canonical
+status: imported
 modules: []
 references:
   - UC0016

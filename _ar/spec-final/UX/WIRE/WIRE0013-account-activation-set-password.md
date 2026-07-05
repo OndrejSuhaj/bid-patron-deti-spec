@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0013
 title: Account Activation Set Password
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S010
 realizes_uc: [UC0014]
-status: canonical
+status: imported
 references:
   - UC0014
   - EN0008

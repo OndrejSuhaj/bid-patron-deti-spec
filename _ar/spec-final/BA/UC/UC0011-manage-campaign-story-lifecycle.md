@@ -1,9 +1,9 @@
 ---
 doc_id: UC0011
 title: Manage Campaign / Story Lifecycle
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

@@ -1,9 +1,9 @@
 ---
 doc_id: UC0017
 title: Export Reporting Data (CSV)
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

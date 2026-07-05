@@ -1,9 +1,9 @@
 ---
 doc_id: QUERY0002
 title: Fundraiser & Patron Account Zones
-canonical_layer: QUERY
+layer: QUERY
 spec_type: query-spec
-status: canonical
+status: imported
 modules: []
 query_type: list
 references:

@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0007
 title: Organisation Elastic Cloud Daily Re-push
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: scheduler
 references:

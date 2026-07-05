@@ -1,9 +1,9 @@
 ---
 doc_id: FN0006
 title: Campaign / Story Lifecycle Management
-canonical_layer: FN
+layer: FN
 spec_type: functional-capability
-status: canonical
+status: imported
 modules: []
 references:
   - UC0011

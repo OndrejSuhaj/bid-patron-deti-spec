@@ -1,9 +1,9 @@
 ---
 doc_id: FN0012
 title: Bank & Gateway Reconciliation / Matching
-canonical_layer: FN
+layer: FN
 spec_type: functional-capability
-status: canonical
+status: imported
 modules: []
 references:
   - UC0008

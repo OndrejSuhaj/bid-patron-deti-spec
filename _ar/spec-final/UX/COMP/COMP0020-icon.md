@@ -1,10 +1,10 @@
 ---
 doc_id: COMP0020
 title: Icon
-canonical_layer: COMP
+layer: COMP
 spec_type: component
 modules: []
-status: canonical
+status: imported
 design_source: /Users/o.suhajgmail.com/Developer/Argo22/bid-patron-deti/packages/ui/src/components/Icon/
 references:
   - WIRE0001

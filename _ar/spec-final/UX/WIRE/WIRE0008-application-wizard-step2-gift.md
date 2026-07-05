@@ -1,12 +1,12 @@
 ---
 doc_id: WIRE0008
 title: Application Wizard Step2 Gift
-canonical_layer: WIRE
+layer: WIRE
 spec_type: wireframe
 modules: []
 screen_id: S008b
 realizes_uc: [UC0001]
-status: canonical
+status: imported
 references:
   - UC0001
   - EN0001

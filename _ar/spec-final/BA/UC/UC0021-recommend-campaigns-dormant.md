@@ -1,9 +1,9 @@
 ---
 doc_id: UC0021
 title: Recommend Campaigns (DORMANT)
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

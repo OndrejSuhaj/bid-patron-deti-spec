@@ -1,9 +1,9 @@
 ---
 doc_id: FN0008
 title: Payment Gateway Integration
-canonical_layer: FN
+layer: FN
 spec_type: functional-capability
-status: canonical
+status: imported
 modules: []
 references:
   - UC0005

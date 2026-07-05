@@ -1,9 +1,9 @@
 ---
 doc_id: ES0014
 title: Elasticsearch
-canonical_layer: ES
+layer: ES
 spec_type: external-system
-status: canonical
+status: imported
 modules: []
 references:
   - ARCH0001

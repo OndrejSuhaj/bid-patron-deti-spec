@@ -1,9 +1,9 @@
 ---
 doc_id: MSG0014
 title: Collection Successful Notification
-canonical_layer: MSG
+layer: MSG
 spec_type: transactional-message
-status: canonical
+status: imported
 modules: []
 trigger:
   - UC0011

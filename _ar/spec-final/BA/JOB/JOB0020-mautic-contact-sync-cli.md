@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0020
 title: Mautic Contact Sync (CLI)
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: batch
 references:

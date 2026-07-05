@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0021
 title: Sitemap Generation
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: batch
 references:

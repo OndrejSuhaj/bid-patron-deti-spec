@@ -1,12 +1,12 @@
 ---
 doc_id: COPY-module-story-donation
 title: Story Catalogue, Story Detail & Donation Copy
-canonical_layer: COPY
+layer: COPY
 spec_type: copy
 scope: module-story-donation
 modules: []
 language: cs
-status: canonical
+status: imported
 references:
   - WIRE0001
   - WIRE0002

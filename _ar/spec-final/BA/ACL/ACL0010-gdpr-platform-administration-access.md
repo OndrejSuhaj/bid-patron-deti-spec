@@ -1,9 +1,9 @@
 ---
 doc_id: ACL0010
 title: GDPR & Platform Administration Access
-canonical_layer: ACL
+layer: ACL
 spec_type: access-control
-status: canonical
+status: imported
 modules: []
 references:
   - EN0008

@@ -1,9 +1,9 @@
 ---
 doc_id: BR-MarketingAndAnalyticsRelay
 title: Marketing / CRM Sync & Analytics Relay
-canonical_layer: BR
+layer: BR
 spec_type: business-rule
-status: canonical
+status: imported
 modules: []
 affects:
   - EN0006

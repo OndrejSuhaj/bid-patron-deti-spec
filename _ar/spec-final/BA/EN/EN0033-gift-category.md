@@ -1,9 +1,9 @@
 ---
 doc_id: EN0033
 title: GiftCategory
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0001  # Application — category (Application-level "Area of assistance", synced to Campaign)

@@ -1,9 +1,9 @@
 ---
 doc_id: UC0014
 title: Authenticate & Manage Access
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

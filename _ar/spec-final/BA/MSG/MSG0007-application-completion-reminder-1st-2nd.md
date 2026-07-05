@@ -1,9 +1,9 @@
 ---
 doc_id: MSG0007
 title: Application Completion Reminder (1st / 2nd)
-canonical_layer: MSG
+layer: MSG
 spec_type: transactional-message
-status: canonical
+status: imported
 modules: []
 trigger:
   - UC0002

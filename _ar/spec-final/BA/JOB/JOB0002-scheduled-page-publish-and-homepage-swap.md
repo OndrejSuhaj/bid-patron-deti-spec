@@ -1,9 +1,9 @@
 ---
 doc_id: JOB0002
 title: Scheduled Page Publish and Homepage Swap
-canonical_layer: JOB
+layer: JOB
 spec_type: job-contract
-status: canonical
+status: imported
 modules: []
 job_type: scheduler
 references:

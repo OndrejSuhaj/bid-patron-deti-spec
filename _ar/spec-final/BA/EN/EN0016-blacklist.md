@@ -1,9 +1,9 @@
 ---
 doc_id: EN0016
 title: Blacklist
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0001  # Application — the case a blacklist entry is linked to

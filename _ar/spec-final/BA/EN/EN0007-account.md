@@ -1,9 +1,9 @@
 ---
 doc_id: EN0007
 title: Account
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0004 (Campaign)

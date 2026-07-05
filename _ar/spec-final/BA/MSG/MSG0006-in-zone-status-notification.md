@@ -1,9 +1,9 @@
 ---
 doc_id: MSG0006
 title: In-Zone Status Notification
-canonical_layer: MSG
+layer: MSG
 spec_type: transactional-message
-status: canonical
+status: imported
 modules: []
 trigger:
   - UC0002

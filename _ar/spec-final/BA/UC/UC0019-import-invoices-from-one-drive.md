@@ -1,9 +1,9 @@
 ---
 doc_id: UC0019
 title: Import Invoices from OneDrive
-canonical_layer: UC
+layer: UC
 spec_type: use-case
-status: canonical
+status: imported
 modules: []
 ---
 

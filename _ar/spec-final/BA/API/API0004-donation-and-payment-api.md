@@ -1,9 +1,9 @@
 ---
 doc_id: API0004
 title: Donation And Payment Api
-canonical_layer: API
+layer: API
 spec_type: api-contract
-status: canonical
+status: imported
 modules: []
 contract_type: rest-public
 references:

@@ -1,9 +1,9 @@
 ---
 doc_id: FN0015
 title: Marketing / CRM Synchronisation
-canonical_layer: FN
+layer: FN
 spec_type: functional-capability
-status: canonical
+status: imported
 modules: []
 references:
   - UC0012

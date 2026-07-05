@@ -1,9 +1,9 @@
 ---
 doc_id: FN0009
 title: Contract Generation & E-Signature
-canonical_layer: FN
+layer: FN
 spec_type: functional-capability
-status: canonical
+status: imported
 modules: []
 references:
   - UC0004

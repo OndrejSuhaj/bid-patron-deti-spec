@@ -1,9 +1,9 @@
 ---
 doc_id: ARCH0006
 title: Donations & Payments Domain
-canonical_layer: ARCH
+layer: ARCH
 spec_type: architecture
-status: canonical
+status: imported
 modules: []
 references:
   - ARCH0001

@@ -1,9 +1,9 @@
 ---
 doc_id: EN0031
 title: CostsSnapshot
-canonical_layer: EN
+layer: EN
 spec_type: entity
-status: canonical
+status: imported
 modules: []
 references:
   - EN0008

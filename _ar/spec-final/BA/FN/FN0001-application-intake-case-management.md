@@ -1,9 +1,9 @@
 ---
 doc_id: FN0001
 title: Application Intake & Case Management
-canonical_layer: FN
+layer: FN
 spec_type: functional-capability
-status: canonical
+status: imported
 modules: []
 references:
   - UC0001
