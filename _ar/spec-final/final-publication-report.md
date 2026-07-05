@@ -17,7 +17,7 @@ Publikováno **158 kanonických dokumentů** v **7 BA vrstvách** (`_ar/spec-fin
 | Vrstva | Počet | Tier | Poznámka |
 |---|---|---|---|
 | EN | 34 | BA | entity domény (EN0001–EN0034; +EN0033 GiftCategory, EN0034 DonorAccountView z UX gap-closure) |
-| UC | 25 | BA | případy užití (UC0001–UC0025; +UC0023/24/25 z UX gap-closure) — draft nemá frontmatter, syntetizován z registru + H1 |
+| UC | 27 | BA | případy užití (UC0001–UC0027; +UC0023/24/25 z UX gap-closure, +UC0026 blog / UC0027 o nás) — draft nemá frontmatter, syntetizován z registru + H1 |
 | FN | 26 | BA | funkční schopnosti (FN0001–FN0026) |
 | ES | 16 | BA | externí systémy (ES0001–ES0016) |
 | MSG | 30 | BA | transakční zprávy (MSG0001–MSG0030) |
@@ -27,7 +27,7 @@ Publikováno **158 kanonických dokumentů** v **7 BA vrstvách** (`_ar/spec-fin
 | JOB | 22 | BA | kontrakty background úloh (JOB0001–0022; cron/queue/CLI) — fáze 04 |
 | ACL | 10 | BA | access-control matice (ACL0001–0010; 15 rolí) — fáze 04 |
 | QUERY | 14 | BA | read-model / report specifikace (QUERY0001–0014; Views) — fáze 04 |
-| **Σ BA** | **227** | | odpovídá 227 doc_id ověřeným RefIntegrity validátorem (11 vrstev) |
+| **Σ BA** | **229** | | odpovídá 229 doc_id ověřeným RefIntegrity validátorem (11 vrstev) |
 
 A dále **37 UX dokumentů** ve **4 UX vrstvách** (`_ar/spec-final/UX/<LAYER>/`), rekonstruovaných z UI
 evidence (`_ar/prtsc/`, 43 screenshotů) přes větev `ui-coverage` + `ux-reconstruction`:
@@ -35,11 +35,11 @@ evidence (`_ar/prtsc/`, 43 screenshotů) přes větev `ui-coverage` + `ux-recons
 | Vrstva | Počet | Tier | Poznámka |
 |---|---|---|---|
 | IA | 1 | UX | informační architektura (IA-patronus) + screen-map (25 screen-id S001–S022) |
-| WIRE | 22 | UX | wireframe per obrazovka (`screen_id` + `realizes_uc`); 6 Evidence-Pending; 3 UC-less obsahové stránky vynechány |
+| WIRE | 25 | UX | wireframe per obrazovka (`screen_id` + `realizes_uc`); WIRE0016–18 = blog listing / blog článek / o nás (S013–S015, kotveno UC0026/UC0027) |
 | COMP | 21 | UX | komponenty (COMP0001–0021) **sladěné s design systémem rebuildu** (@patron/ui): 9 rekonstruovaných (3 přejmenované na Button/SiteHeader/SiteFooter) + 12 povýšených z inline; token sloty + a11y + tenant |
 | COPY | 5 | UX | i18n copy (5 scopů, 342 klíčů); **text verbatim v češtině** (nepřekládá se) |
 | DESIGN (ref) | 3 | UX | kanonická reference (target): DESIGN-tokens.md (@patron/tokens), DESIGN-component-index.md (16 komponent → COMP), DESIGN-reconciliation-report.md |
-| **Σ UX** | **52** | | UX tier naplněn + sladěn s navrženými tokeny/komponentami |
+| **Σ UX** | **55** | | UX tier naplněn + sladěn s navrženými tokeny/komponentami |
 
 Každá vrstva má `_REGISTRY.md` s jedním řádkem na dokument; řádky převzaty z draft registrů a
 překlopeny `draft → imported`, Owner mode `Mode P (import)`, Module(s) `[]`, `Created` zachováno

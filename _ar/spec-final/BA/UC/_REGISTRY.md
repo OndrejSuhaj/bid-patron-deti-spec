@@ -29,3 +29,5 @@
 | UC0023 | Browse & Filter Story Catalogue | imported | [] | Mode P (import) | 2026-07-02 |
 | UC0024 | Manage Donor Account (Self-Service) | imported | [] | Mode P (import) | 2026-07-02 |
 | UC0025 | Resume or Discard Draft Application | imported | [] | Mode P (import) | 2026-07-02 |
+| UC0026 | Browse & Read Editorial Content (Blog) | imported | [] | Mode P (import) | 2026-07-02 |
+| UC0027 | View Institutional & Trust Content | imported | [] | Mode P (import) | 2026-07-02 |
