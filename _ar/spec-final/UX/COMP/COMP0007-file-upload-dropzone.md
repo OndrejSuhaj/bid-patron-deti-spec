@@ -12,102 +12,100 @@ references:
   - EN0001
 ---
 
-# COMP0007 – Dropzone pro nahrávání souborů
+# COMP0007 – File Upload Dropzone
 
 ## Účel
 
-Plocha pro nahrávání souborů metodou drag-and-drop s náhradním odkazem "vyberte v počítači" (choose
-on your computer) a živým čítačem počtu souborů `n/max`. Používá se všude, kde průvodce žádostí
-(Application) nebo modul Account potřebuje, aby uživatel přiložil podpůrné dokumenty/obrázky. Shodný
-textový vzor ("Sem přetáhněte soubory, které chcete do žádosti nahrát nebo je vyberte v počítači.")
-a tvar dropzone/čítače se opakuje na nejméně 3 zdokumentovaných WIRE obrazovkách.
+Plocha pro nahrávání souborů přetažením (drag-and-drop) s náhradním odkazem "vyberte v počítači"
+a živým počítadlem souborů ve tvaru `n/max`. Používá se všude, kde formulářový průvodce žádostí
+(Application wizard) nebo modul Account potřebuje, aby uživatel přiložil podpůrné dokumenty/obrázky.
+Identický vzor textu ("Sem přetáhněte soubory, které chcete do žádosti nahrát nebo je vyberte v
+počítači.") a tvar dropzone/počítadla se opakuje na nejméně 3 zpracovaných WIRE obrazovkách.
 
-## Vlastnosti / vstupy
+## Props / Vstupy
 
 | Název | Typ | Povinné | Výchozí | Popis |
 |---|---|---|---|---|
-| `label` | `string` | ano | — | Nadpis/instrukce nad dropzone; vlastněno vrstvou COPY per obrazovka (např. "Zde přiložte přihlášku na školní akci nebo informační leták"). |
-| `maxCount` | `number` | ano | — | Maximální počet souborů; pozorované hodnoty: `3` (`WIRE0008` krok daru – příloha), `5`/`2`/`2` (tři dropzony na `WIRE0011`), `1` (`WIRE0014` profilová fotka). |
-| `currentCount` | `number` | ne | `0` | Aktuální počet nahraných souborů, který určuje zobrazení `n/max`; všechny zachycené snímky ukazují `0/max` (pouze prázdný stav – vyplněná dropzone nebyla nikdy pozorována). |
-| `exampleThumbnails` | `node[]` | ne | `none` | Statické ukázkové obrázky "PŘÍKLAD" zobrazené uvnitř dropzone, pozorováno pouze u tří dropzon na `WIRE0011`; na `WIRE0008`/`WIRE0014` nepřítomné. |
+| `label` | `string` | ano | — | Nadpis/instrukce nad dropzone; COPY-owned pro každou obrazovku (např. "Zde přiložte přihlášku na školní akci nebo informační leták"). |
+| `maxCount` | `number` | ano | — | Maximální počet souborů; pozorované hodnoty: `3` (`WIRE0008` příloha v kroku daru), `5`/`2`/`2` (tři dropzony na `WIRE0011`), `1` (profilová fotka na `WIRE0014`). |
+| `currentCount` | `number` | ne | `0` | Aktuální počet přiložených souborů určující zobrazení `n/max`; všechny zachycené snímky ukazují `0/max` (pouze prázdný stav — vyplněná dropzone nebyla nikdy pozorována). |
+| `exampleThumbnails` | `node[]` | ne | `none` | Statické ukázkové obrázky "PŘÍKLAD" zobrazené uvnitř dropzone, pozorováno pouze u tří dropzon pro přílohy na `WIRE0011`; na `WIRE0008`/`WIRE0014` chybí. |
 
 ## Varianty
 
-- **kardinalita:** jedna dropzone (`WIRE0008` — jedna dropzone, 0/3) | více dropzon
-  (`WIRE0011` — tři samostatné instance dropzone poskládané pod sebou, kardinality 0/5, 0/2, 0/2)
-- **ukázkové náhledy:** s ukázkovými náhledy (`WIRE0011`) | bez ukázkových náhledů (`WIRE0008`, `WIRE0014`)
+- **kardinalita:** jednotlivá dropzone (`WIRE0008` — jedna dropzone, 0/3) | vícenásobné dropzony
+  (`WIRE0011` — tři samostatné instance dropzone pod sebou, kardinality 0/5, 0/2, 0/2)
+- **ukázkové náhledy (example-thumbnails):** s (`WIRE0011`) | bez (`WIRE0008`, `WIRE0014`)
 
 ## Stavy
 
 ### idle / prázdný
-Obdélník s čárkovaným okrajem, vystředěná ikona (šipka nahoru směřující do symbolu přihrádky),
-instrukční text + podtržený odkaz "vyberte v počítači", čítač `0/max` v pravém dolním rohu.
-Confirmed — `_ar/prtsc/screencapture-patrondeti-cz-zadost-formular-2026-07-04-13_20_39.png` (0/3, bez
-ukázkových náhledů) a dle `ui-observed-areas.md` §4/§11.
+Obdélník s čárkovaným okrajem, centrovaná ikona (šipka nahoru do symbolu tácu), instrukční text +
+podtržený odkaz "vyberte v počítači", počítadlo `0/max` v pravém dolním rohu. Confirmed —
+`_ar/prtsc/screencapture-patrondeti-cz-zadost-formular-2026-07-04-13_20_39.png` (0/3, bez ukázkových
+náhledů) a dle `ui-observed-areas.md` §4/§11.
 
 ### hover (přetažení nad plochou)
-`Uncertain — nelze ověřit ze statických podkladů; stav se zvýrazněním při aktivním přetahování je
-standardní konvence dropzone, ale žádným snímkem nepotvrzen.`
+`Uncertain — nelze ověřit ze statických podkladů; zvýrazněný stav při aktivním přetažení je běžná
+konvence dropzone, není však potvrzen žádným snímkem.`
 
-### focused (zaměřeno)
+### focused
 `Uncertain — nelze ověřit ze statických podkladů.`
 
-### disabled (zakázáno)
-N/A — nebylo pozorováno žádné vykreslení v zakázaném stavu; předpokládá se, že komponenta je při
-vykreslení vždy interaktivní.
+### disabled
+N/A — nebylo pozorováno vykreslení v neaktivním stavu; komponenta je předpokládána jako vždy
+interaktivní, pokud je vykreslena.
 
-### loading (nahrávání)
-`Uncertain — žádný snímek nezobrazuje soubor uprostřed nahrávání (např. progress bar pro jednotlivý
-soubor); Evidence Pending.`
+### loading
+`Uncertain — žádný snímek nezobrazuje soubor uprostřed nahrávání (např. progress bar u souboru); Evidence Pending.`
 
-### error (chyba)
-`Uncertain — žádný snímek nezobrazuje stav odmítnutého souboru (nesprávný typ, příliš velký, překročen
-počet); Evidence Pending. Toto je odlišné od samotné kardinality počtu, která je Confirmed jako
-statické maximum, nikoli jako pozorovaná cesta vynucení/chyby.`
+### error
+`Uncertain — žádný snímek nezobrazuje stav odmítnutého souboru (nesprávný typ, příliš velký,
+překročený počet); Evidence Pending. Toto je odlišné od samotné kardinality počtu, která je Confirmed
+jako statické maximum, nikoli pozorovaná cesta vynucení/chyby.`
 
-### filled (vyplněno) (další stav nad rámec šablony šesti stavů, relevantní pro životní cyklus této komponenty)
+### filled (doplňkový stav nad rámec šestistavové šablony, relevantní pro životní cyklus této komponenty)
 `Uncertain — žádný snímek nezobrazuje dropzone s již přiloženým souborem; všechny pozorované instance
-jsou v počtu 0. Zda se přiložené soubory vykreslují jako seznam náhledů, seznam názvů souborů nebo
+jsou na počtu 0. Zda se přiložené soubory vykreslují jako seznam náhledů, seznam názvů souborů nebo
 jinak, není potvrzeno.`
 
 ## Události
 
 | Událost | Payload | Spouštěč | Poznámky |
 |---|---|---|---|
-| `onFilesAdded` | `File[]` | přetažení do plochy (drag-and-drop), nebo výběr souboru/souborů přes výběr "vyberte v počítači" | Vynucení `maxCount` (blokování vs. zkrácení vs. nahrazení) není podloženo. |
-| `onFileRemoved` | reference na `File` | (Assumed — nepozorováno) | V žádném snímku při počtu 0 není viditelný prvek pro odstranění; nepotvrzeno, zda existuje po přiložení souborů. |
+| `onFilesAdded` | `File[]` | přetažení do plochy nebo výběr souboru(ů) přes dialog "vyberte v počítači" | Vynucení `maxCount` (blokování vs. zkrácení vs. nahrazení) není podloženo důkazy. |
+| `onFileRemoved` | reference na `File` | (Assumed — nepozorováno) | Žádná možnost odstranění nebyla viditelná v žádném snímku při počtu 0; není potvrzeno, zda existuje po přiložení souborů. |
 
 ## Přístupnost
 
-- **ARIA role:** `Uncertain` — Assumed nativní `<input type="file">` obalený stylovaným cílem pro
-  přetažení; nepotvrzeno.
-- **Navigace klávesnicí:** `Uncertain` — Assumed, že odkaz/tlačítko "vyberte v počítači" je dosažitelné
-  klávesnicí a otevírá nativní výběr souborů; nepotvrzeno.
+- **ARIA role:** `Uncertain` — Předpokládá se nativní `<input type="file">` obalený stylovaným drop targetem; nepotvrzeno.
+- **Klávesová navigace:** `Uncertain` — Předpokládá se, že odkaz/tlačítko "vyberte v počítači" je dosažitelné klávesnicí a otevírá nativní výběr souborů; nepotvrzeno.
 - **Správa fokusu:** `Uncertain`.
-- **Čtečka obrazovky:** `Uncertain` — oznámení aktuálního počtu `n/max` nelze ze screenshotů potvrdit.
+- **Čtečka obrazovky:** `Uncertain` — oznámení aktuálního počtu `n/max` nelze ověřit ze screenshotů.
 
 ## Omezení použití
 
-- Použít když: krok průvodce žádostí nebo formulář účtu vyžaduje přiložení dokumentu/obrázku.
-- Nepoužívat když: postačuje jednoduchý textový odkaz na soubor bez drag-and-drop afordance
-  (taková jednodušší varianta nebyla pozorována, jde tedy o výhledové omezení, nikoli o podložené).
+- Použít když: krok formulářového průvodce žádostí nebo formulář v účtu vyžaduje přiložení dokumentu/obrázku.
+- Nepoužívat když: postačuje jednoduchý textový/souborový odkaz bez drag-and-drop afordance
+  (žádná taková jednodušší varianta nebyla pozorována, jde tedy o do budoucna orientované omezení,
+  nikoli podložené důkazy).
 - Kardinalita: jedna až tři na obrazovku (pozorovaný rozsah: `WIRE0008`=1, `WIRE0011`=3, `WIRE0014`=1).
-- Umístění: uvnitř formuláře, typicky za polem/poli, ke kterým se obsahově vztahuje (např. za textovým
-  polem s popisem daru na `WIRE0008`).
+- Umístění: uvnitř formuláře, typicky následuje po poli/polích, ke kterým se obsahově vztahuje
+  (např. po textovém poli s popisem daru na `WIRE0008`).
 
 ## Závislosti
 
 - Ostatní COMP: žádné jako subkomponenty.
-- Datové entity: počet a účel příloh se koncepčně vztahují k entitě `EN0001` Application (Žádost)
-  (jejím přílohám podpůrných dokumentů), ale na žádné citující obrazovce WIRE není potvrzena vazba na
-  úrovni atributu — každá obrazovka WIRE označuje přesné mapování na název pole jako Uncertain
-  (např. mapování pole pro přílohu rodného listu na `WIRE0011`).
-- ACL: nic podloženo.
-- Externí knihovny: nic podloženo (nepozorováno žádné brandování dodavatelského uploadovacího widgetu).
+- Datové entity: počet a účel přílohy koncepčně souvisí s `EN0001` Žádost (její podpůrné dokumentové
+  přílohy), avšak žádná vazba na úrovni atributu není potvrzena na žádném citujícím WIRE —
+  každý WIRE označuje přesné mapování na název pole jako Uncertain (např. mapování pole pro
+  přílohu rodného listu na `WIRE0011`).
+- ACL: nic podloženo důkazy.
+- Externí knihovny: nic podloženo důkazy (nebylo pozorováno žádné brandování vendorského upload widgetu).
 
 ## Kompozice
 
-Listová komponenta; bez kompozice subkomponent COMP. Opakuje se identicky (s odlišným `maxCount`/
+Listová komponenta; žádná subkompozice COMP. Opakuje se v identické podobě (s různým `maxCount`/
 ukázkovými náhledy) až třikrát na jedné obrazovce (`WIRE0011`).
 
 ## Příklady
@@ -115,30 +113,40 @@ ukázkovými náhledy) až třikrát na jedné obrazovce (`WIRE0011`).
 ```
 FileUploadDropzone label="Zde přiložte přihlášku na školní akci nebo informační leták"
                    maxCount={3} currentCount={0} />
-  // WIRE0008 — gift step, single dropzone, no example thumbnails
+  // WIRE0008 — krok daru, jednotlivá dropzone, bez ukázkových náhledů
 
 FileUploadDropzone label="Fotografie dítěte" maxCount={5} currentCount={0} exampleThumbnails={[...]} />
 FileUploadDropzone label="Fotografie OP žadatele" maxCount={2} currentCount={0} exampleThumbnails={[...]} />
 FileUploadDropzone label="Rodný list dítěte" maxCount={2} currentCount={0} exampleThumbnails={[...]} />
-  // WIRE0011 — three stacked mandatory dropzones
+  // WIRE0011 — tři povinné dropzony pod sebou
 
 FileUploadDropzone label="Změnit profilovou fotku" maxCount={1} currentCount={0} />
-  // WIRE0014 — account profile photo
+  // WIRE0014 — profilová fotka v účtu
 ```
 
 ## Otevřené otázky
 
-- Nebyl nikdy zaznamenán vyplněný/chybový/nahrávající stav — všechny pozorované instance jsou v počtu 0.
-- Přesné mapování na atributy přílohy `EN0001` je Uncertain pro každou obrazovku samostatně (každá
-  spotřebovávající obrazovka WIRE to zaznamenává nezávisle; zde neřešeno).
-- Zda existují omezení typu/velikosti souboru a jak jsou komunikována, je zcela nepodloženo.
+- Nikdy nebyl zachycen vyplněný/chybový/nahrávající stav — všechny pozorované instance jsou na počtu 0.
+- Přesné mapování na názvy polí u atributů přílohy `EN0001` je Uncertain pro každou obrazovku (každý
+  odkazující WIRE to zaznamenává samostatně; zde není vyřešeno).
+- Zda existují omezení typu/velikosti souboru a jak jsou komunikována, není vůbec podloženo důkazy.
 
-## Podklady
+## Evidence
 
-| Oblast tvrzení | Jistota | Podklad |
+| Oblast tvrzení | Jistota | Evidence |
 |---|---|---|
-| Opakované použití na ≥2 obrazovkách | Confirmed | `WIRE0008`, `WIRE0011`, `WIRE0014` všechny zobrazují tento tvar dropzone; `WIRE-synthesis-report.md` §6 "File/image upload dropzone with count cardinality" |
+| Znovupoužití na ≥2 obrazovkách | Confirmed | `WIRE0008`, `WIRE0011`, `WIRE0014` všechny ukazují tento tvar dropzone; `WIRE-synthesis-report.md` §6 "File/image upload dropzone with count cardinality" |
 | Prázdný/idle vizuální stav | Confirmed | `_ar/prtsc/screencapture-patrondeti-cz-zadost-formular-2026-07-04-13_20_39.png`; `ui-observed-areas.md` §4, §11 |
-| Varianta s ukázkovými náhledy | Confirmed (pouze WIRE0011) | `_ar/spec-draft/WIRE/WIRE0011_ApplicationWizardStep5Attachments.md`, tabulka Components Used |
-| Vyplněné/nahrávající/chybové stavy | Uncertain | žádný snímek nezobrazuje žádný z těchto stavů |
-| Přístupnost | Uncertain | nejsou dostupné žádné podklady z DOM/nahrávek |
+| Varianta ukázkových náhledů | Confirmed (pouze WIRE0011) | `_ar/spec-draft/WIRE/WIRE0011_ApplicationWizardStep5Attachments.md` tabulka Components Used |
+| Vyplněný/nahrávající/chybový stav | Uncertain | žádný snímek nezobrazuje nic z toho |
+| Přístupnost | Uncertain | nejsou k dispozici žádné DOM/nahrávkové podklady |
+
+## Design-system alignment (target)
+
+Zatím žádný kanonický protějšek v `@patron/ui` / `@patron/tokens`. Plocha pro přílohy žádosti/nahrávání
+souborů nebyla v cílovém design systému v rámci tohoto průchodu navržena — `_ar/evidence/design-system/components.md`
+a `_ar/spec-draft/DESIGN-component-index.md` neobsahují žádný primitiv typu dropzone, file-upload ani
+attachment-list. Tento COMP proto nemá žádné cílové mapování k zaznamenání; výše uvedená rekonstrukce
+současného stavu zůstává v platnosti, dokud nebude zaveden kanonický komponent design systému. Vlajka
+pro tým design systému jako gap: rebuild bude potřebovat primitiv file-upload/dropzone s podporou
+kardinality počtu a ukázkových náhledů pro pokrytí pozorovaných použití na `WIRE0008`/`WIRE0011`/`WIRE0014`.

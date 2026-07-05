@@ -27,12 +27,13 @@ _ar/spec-final/
     JOB/   (22)  kontrakty background úloh (cron/queue/CLI)
     ACL/   (10)  access-control matice (15 rolí × zdroje × akce)
     QUERY/ (14)  read-model / report specifikace (Views)
-  UX/                      # UX tier — rekonstruováno z UI evidence (_ar/prtsc/)
+  UX/                      # UX tier — rekonstruováno z UI evidence + sladěno s design systémem rebuildu
     IA/    (1)   informační architektura (IA-patronus + screen-map)
-    WIRE/  (22)  wireframe specifikace per obrazovka (screen_id + realizes_uc)
-    COMP/  (9)   znovupoužité komponenty (evidence-gated)
+    WIRE/  (22)  wireframe specifikace per obrazovka (screen_id + realizes_uc); WIRE0002 = kánon S002
+    COMP/  (21)  komponenty sladěné s @patron/ui (COMP0001–0021; token sloty + a11y + tenant)
     COPY/  (5)   i18n copy specifikace (verbatim české UI stringy)
-  final-publication-map.md     # 227 BA + 37 UX řádků: finální soubor, tier, vrstva, doc_id
+    DESIGN-tokens.md, DESIGN-component-index.md, DESIGN-reconciliation-report.md  # kanonická reference (target)
+  final-publication-map.md     # 227 BA + 52 UX řádků: finální soubor, tier, vrstva, doc_id
   final-publication-report.md  # co bylo publikováno, ověření, další kroky
   README.md                    # tento soubor
 ```

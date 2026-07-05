@@ -36,9 +36,10 @@ evidence (`_ar/prtsc/`, 43 screenshotů) přes větev `ui-coverage` + `ux-recons
 |---|---|---|---|
 | IA | 1 | UX | informační architektura (IA-patronus) + screen-map (25 screen-id S001–S022) |
 | WIRE | 22 | UX | wireframe per obrazovka (`screen_id` + `realizes_uc`); 6 Evidence-Pending; 3 UC-less obsahové stránky vynechány |
-| COMP | 9 | UX | znovupoužité komponenty (COMP0001–0009), evidence-gated (≥2 WIRE reuse) |
+| COMP | 21 | UX | komponenty (COMP0001–0021) **sladěné s design systémem rebuildu** (@patron/ui): 9 rekonstruovaných (3 přejmenované na Button/SiteHeader/SiteFooter) + 12 povýšených z inline; token sloty + a11y + tenant |
 | COPY | 5 | UX | i18n copy (5 scopů, 342 klíčů); **text verbatim v češtině** (nepřekládá se) |
-| **Σ UX** | **37** | | UX tier naplněn (dříve rezervovaný prázdný scaffold) |
+| DESIGN (ref) | 3 | UX | kanonická reference (target): DESIGN-tokens.md (@patron/tokens), DESIGN-component-index.md (16 komponent → COMP), DESIGN-reconciliation-report.md |
+| **Σ UX** | **52** | | UX tier naplněn + sladěn s navrženými tokeny/komponentami |
 
 Každá vrstva má `_REGISTRY.md` s jedním řádkem na dokument; řádky převzaty z draft registrů a
 překlopeny `draft → canonical`, Owner mode `Mode P (import)`, Module(s) `[]`, `Created` zachováno
