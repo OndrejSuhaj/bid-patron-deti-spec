@@ -123,7 +123,12 @@ tab (`_ar/evidence/ui/ui-observed-areas.md` §1).
 ## Components Used
 
 Recurring elements promoted to COMP by **AR:COMPSynthesizer** (see `COMP-inventory-map.md`); all
-other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
+other entries remain flagged `inline` (no ≥2-screen reuse evidenced). Where a canonical `@patron/ui`
+counterpart now exists (`DESIGN-component-index.md`), it is noted per row as **Design-system
+alignment (target)** — this is TARGET reference only, not a restatement of current-state behavior;
+see the discipline note below the table.
+
+### Current-state (observed)
 
 | Zone | COMP-id | Variant/Props | Notes |
 |---|---|---|---|
@@ -141,6 +146,30 @@ other entries remain flagged `inline` (no ≥2-screen reuse evidenced).
 | Sponsor/partner logo strip | inline | logo grid | static content, no UC |
 | Footer | COMP0003 | promo=none | see `COMP0003` Global Site Footer |
 | Cookie-consent banner | COMP0004 | actions=dual-action | see `COMP0004` Cookie Consent Banner |
+
+### Design-system alignment (target — @patron/ui + @patron/tokens)
+
+Canonical `@patron/ui` counterparts, per `DESIGN-component-index.md` (TARGET, reconciled against the
+current-state COMP docs above via `COMP-inventory-map.md`). Recurring elements on this screen that
+already have a promoted COMP now also resolve to a canonical Atom/Block; composed sub-parts are
+listed where the canonical contract decomposes the current-state unit further than the reconstructed
+COMP does.
+
+| Zone (current-state row) | Canonical doc_id | Canonical name / layer | Composition notes |
+|---|---|---|---|
+| Header | COMP0002 | SiteHeader (Block) | Composes `Brandmark` (COMP0019) + `Button` (COMP0001, ghost, desktop CTA) + `Icon` (COMP0020, user) |
+| Story card | COMP0008 | StoryCard (Block) | Composes `CategoryChip` (COMP0018) + `ProgressBar` (COMP0016); the countdown-ribbon element observed on this screen maps to `TimeLeftPill` (COMP0017) — canonical StoryCard's props (`progressPct`, `missingLabel`, `goalLabel`) do not separately expose a time-left pill in its own prop list per `DESIGN-component-index.md` row 8, so this composition edge is Probable, not Confirmed, pending the canonical contract's own file |
+| Footer | COMP0003 | SiteFooter (Block) | Composes `Brandmark` (COMP0019, small) + hardcoded social glyphs; canonical contract has no "promo band" slot (divergence vs. this screen's footer — see IA ownership note above) |
+| (any Button-shaped CTA, e.g. hero preset CTAs, "Koupím dobrošek", "Chci se stát Patronem") | COMP0001 | Button (Atom) | Canonical `Button` is the base action element these inline CTAs would align to; not asserted as already-reconciled per-CTA (those rows remain `inline` above — no ≥2-screen reuse promotion exists for them individually) |
+
+**Note — no canonical redesign of this page yet:** only the design system (Atoms/Blocks, epic
+**E0001**, `Done`) and the story-detail page **S002** (epic **E0002**, `Active`) have a canonical
+target composition. The homepage/catalogue page (**S001**, this WIRE) itself has **no canonical
+redesign** — it belongs to epic **E0003+** (`Draft`/`Plánováno` per `design-canon.md` §0), so the
+zone-level layout (Hero, Stat strip, Filter tabs, Catalogue grid, Region map, Testimonial carousel,
+Voucher band, explainer bands, Sponsor strip) has no target counterpart to align to; only the
+individual recurring Atoms/Blocks reused within it (Header, Footer, StoryCard, and their composed
+parts) are canon today.
 
 ---
 

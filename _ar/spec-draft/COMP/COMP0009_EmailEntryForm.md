@@ -141,3 +141,46 @@ EmailEntryForm
 | Login variant, confirmation state | Confirmed | `_ar/prtsc/screencapture-patrondeti-cz-prihlaseni-2026-07-04-13_32_31.png` |
 | Activation-request variant, idle state | Probable | `ui-observed-areas.md` §9 prose only; not independently visible in `_ar/prtsc/screencapture-patrondeti-cz-overit-prihlaseni-2026-07-04-13_33_25.png` per WIRE0024's own evidence note |
 | Accessibility | Uncertain | no DOM/recording evidence available |
+
+## Design-system alignment (target — @patron/ui + @patron/tokens)
+
+> This section is **TARGET**, not current-state. It records this component's position against the
+> rebuild's canonical `@patron/ui` library and does **not** alter any current-state (observed) content
+> above.
+
+- **No direct canonical composite exists.** The canonical library (`_ar/evidence/design-system/components.md`;
+  indexed in `_ar/spec-draft/DESIGN-component-index.md` §3, "Reconstructed COMPs with no canonical
+  counterpart") does **not** define an `EmailEntryForm` block. Auth-adjacent surfaces (passwordless
+  login, activation-link request) are not yet in the canonical library's scope.
+- **Constituent atoms are canonical**, but only as generic primitives, not as an assembled composite:
+  - the bare `<input>` field maps to the **Input** atom — `COMP0021` in
+    `DESIGN-component-index.md` §1 row 2 (native `InputHTMLAttributes`; no built-in `<label>`; states
+    default/focus/disabled/error via consumer-signalled `aria-invalid`; tokens `--font-body`,
+    `--radius-control`, `--color-border`, `--color-surface`, `--color-text`, `--color-muted`,
+    `--color-accent`).
+  - the primary submit CTA maps to the **Button** atom — `COMP0001` (already the current-state
+    dependency noted above as "Probable — visual match"); canonical contract: `variant="primary"`,
+    tokens `--radius-pill`, `--color-action`, `--color-on-brand`, `--space-sm/md/lg/xl`, focus-visible
+    ring on `--color-accent`.
+  - the secondary text links and the decorative status icon (two-person / checkmark-circle) have no
+    canonical atom/block mapping evidenced; the two-person/checkmark glyphs are not among the
+    canonical `Icon` atom's (`COMP0020`) enumerated `IconName` set (`development|health|subsistence|
+    clock|check|arrow|heart|give|user`) per `DESIGN-component-index.md` §1 row 3 — only `check` overlaps,
+    and only for the confirmation-state icon, not the idle-state two-person glyph.
+- **Gap classification:** per `DESIGN-component-index.md` §3, this is one of 5 reconstructed COMPs
+  with no canonical counterpart — attributed there to the auth email-entry composite simply "not
+  built," belonging to a not-yet-scoped epic rather than to E0004's already-specified storefront
+  surfaces. No canonical doc_id is reserved for it (unlike `COMP0010`–`COMP0021`, which are reserved
+  target doc_ids for already-cataloged components).
+- **Implication for rebuild:** if/when an `EmailEntryForm`-equivalent block is added to `@patron/ui`,
+  it would compose `Input` (`COMP0021`) + `Button` (`COMP0001`, primary/block variant) plus
+  consumer-supplied heading/body copy and secondary links, following the same "bare atom + consumer
+  wrapper" pattern already used by `DonationBox` (`COMP0010`) for its custom-amount field. This is a
+  forward-looking implication only — no such block exists in the canonical library today, and this
+  observation does not modify any current-state (observed) claim in this document.
+- **Tenant (CZ/RO) and a11y note:** the canonical `Input`/`Button` atoms are theme-neutral
+  (`data-theme`-driven token remap only, no CZ/RO-specific props), and the canonical contract requires
+  consumers to supply their own `<label>`/`aria-label` for `Input` since it renders none itself. This
+  is directly relevant to this COMP's current-state Open Question about the placeholder-as-label
+  pattern (no visible `<label>` observed in either screenshot) — under the canonical contract, that
+  gap would need to be closed by the consuming composite, not by the atom.

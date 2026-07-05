@@ -138,3 +138,13 @@ FileUploadDropzone label="Změnit profilovou fotku" maxCount={1} currentCount={0
 | Example-thumbnails variant | Confirmed (WIRE0011 only) | `_ar/spec-draft/WIRE/WIRE0011_ApplicationWizardStep5Attachments.md` Components Used table |
 | Filled/loading/error states | Uncertain | no capture shows any of these |
 | Accessibility | Uncertain | no DOM/recording evidence available |
+
+## Design-system alignment (target)
+
+No canonical counterpart yet in `@patron/ui` / `@patron/tokens`. The application-attachments/file-upload
+surface has not been designed in the target design system as of this pass — `_ar/evidence/design-system/components.md`
+and `_ar/spec-draft/DESIGN-component-index.md` contain no dropzone, file-upload, or attachment-list
+primitive. This COMP therefore has no target mapping to record; the current-state reconstruction above
+stands as-is until a canonical design-system component is introduced. Flag for the design-system team as
+a gap: the rebuild will need a file-upload/dropzone primitive with count-cardinality and example-thumbnail
+support to cover the observed `WIRE0008`/`WIRE0011`/`WIRE0014` usages.

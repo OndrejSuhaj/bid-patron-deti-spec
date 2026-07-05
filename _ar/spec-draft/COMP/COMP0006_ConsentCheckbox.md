@@ -129,6 +129,14 @@ ConsentCheckbox checked={false} label="Souhlasím se zpracováním osobních úd
 - Error-state rendering (unchecked-but-required) is entirely unevidenced.
 - Whether entity binding exists at all (vs. pure UI-side consent flag) is unconfirmed.
 
+## Design-system alignment (target)
+
+No canonical `@patron/ui` counterpart exists yet for this component. Donation-modal and consent-flow
+components are deferred in the design-system catalog (`_ar/evidence/design-system/components.md`,
+`_ar/spec-draft/DESIGN-component-index.md`) — neither lists a consent/checkbox primitive scoped to
+legal-document acknowledgement. This entry remains current-state-only (observed) until the design
+system defines a target contract; no token/variant mapping is asserted here.
+
 ## Evidence
 
 | Claim area | Certainty | Evidence |

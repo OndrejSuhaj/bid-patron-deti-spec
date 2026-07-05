@@ -125,3 +125,19 @@ WizardStepper activeIndex={5} completedIndices={[1,2,3,4]} /> // WIRE0011 (S008e
 | Visual sub-states (upcoming/active/completed) | Confirmed | `_ar/prtsc/screencapture-patrondeti-cz-zadost-formular-2026-07-04-13_18_33.png`, `_ar/prtsc/screencapture-patrondeti-cz-zadost-formular-2026-07-04-13_20_39.png`, `_ar/prtsc/screencapture-patrondeti-cz-zadost-formular-2026-07-04-13_20_57.png` |
 | Non-interactivity (no events) | Probable | no click-affordance styling observed in any capture; not confirmed via DOM/interaction recording |
 | Accessibility | Uncertain | no DOM/recording evidence available |
+
+## Design-system alignment (target)
+
+**No canonical counterpart yet.** The canonical `@patron/ui` component library
+(`_ar/spec-draft/DESIGN-component-index.md` §3 "Reconstructed COMPs with no canonical counterpart")
+currently covers only the storefront and story-detail surfaces built under epic **E0002**. The
+Application intake wizard — the surface this stepper belongs to — has not been designed in the
+target design system: it falls under epics **E0003 (Obsah/CMS)**, **E0004 (Storefront web — donor
+journey)**, and **E0005 (Mobilní aplikace)**, all of which are `Draft`/`Plánováno` (not `Done`) per
+`_ar/evidence/design-system/design-canon.md` §0 epic table. No `@patron/ui` atom or block exists for
+a step-progress indicator, and no token/component mapping can be asserted at this time.
+
+This current-state reconstruction therefore stands alone (governed solely by this file) until the
+Application wizard surface is designed and built in `@patron/ui`; at that point a canonical
+`WizardStepper`/`Stepper` counterpart would be assigned its own doc_id and this section updated with
+the `var(--color-*)`/`var(--space-*)` token mapping and component contract reference.

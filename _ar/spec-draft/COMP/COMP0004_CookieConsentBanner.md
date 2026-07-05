@@ -117,6 +117,12 @@ CookieConsentBanner (dual-action variant)
   an open question rather than silently merged or split.
 - Persistence mechanism (cookie vs. localStorage vs. session) is not evidenced from screenshots.
 
+## Design-system alignment (target)
+
+No canonical counterpart in `@patron/ui` — the cookie/consent legal surface is not covered by any
+built epic (E0003–E0005) in the target design system. No token or component mapping is proposed
+here; this component remains current-state-only pending a target epic that scopes consent/legal UI.
+
 ## Evidence
 
 | Claim area | Certainty | Evidence |
