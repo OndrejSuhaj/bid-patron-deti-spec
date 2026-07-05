@@ -29,3 +29,5 @@
 | UC0023 | Browse & Filter Story Catalogue | draft | [] | AR | 2026-07-02 |
 | UC0024 | Manage Donor Account (Self-Service) | draft | [] | AR | 2026-07-02 |
 | UC0025 | Resume or Discard Draft Application | draft | [] | AR | 2026-07-02 |
+| UC0026 | Browse & Read Editorial Content (Blog) | draft | [] | AR | 2026-07-02 |
+| UC0027 | View Institutional & Trust Content | draft | [] | AR | 2026-07-02 |

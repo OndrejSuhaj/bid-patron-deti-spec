@@ -8,7 +8,7 @@
 | Layer | Docs registered |
 |---|---|
 | EN | 34 |
-| UC | 25 |
+| UC | 27 |
 | FN | 26 |
 | ES | 16 |
 | MSG | 30 |
@@ -23,7 +23,7 @@
 - **dangling references:** 0
 - **deferred references:** 0
 - **orphans (registry row ↔ doc atomicity):** 0
-- **unreferenced docs (informational):** 33
+- **unreferenced docs (informational):** 35
 - **resolved references (declared + inline):** 1379
 
 ## Collisions
@@ -79,3 +79,5 @@ The following docs are referenced by no other doc. The ARCH domain docs (ARCH000
 - `QUERY0012` (QUERY) — Story / Entity Full-Text Search
 - `QUERY0013` (QUERY) — Admin Party / CRM & User Lists
 - `QUERY0014` (QUERY) — Communication, Activity & Audit Lists
+- `UC0026` (UC) — Browse & Read Editorial Content (Blog)
+- `UC0027` (UC) — View Institutional & Trust Content
