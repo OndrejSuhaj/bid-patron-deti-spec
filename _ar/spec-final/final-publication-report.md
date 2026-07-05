@@ -23,7 +23,11 @@ Publikováno **158 kanonických dokumentů** v **7 BA vrstvách** (`_ar/spec-fin
 | MSG | 30 | BA | transakční zprávy (MSG0001–MSG0030) |
 | BR | 20 | BA | byznys pravidla (sémantické názvy `BR-<pravidlo>`) |
 | ARCH | 12 | BA | architektura (ARCH0001–ARCH0012, vč. dvou top-level dokumentů ApplicationOverview a ContextInteractionMap) |
-| **Σ BA** | **163** | | odpovídá 163 doc_id ověřeným RefIntegrity validátorem |
+| API | 18 | BA | API kontrakty (API0001–0018; REST v3.1–3.3, z kódu) — fáze 04 generation-grade |
+| JOB | 22 | BA | kontrakty background úloh (JOB0001–0022; cron/queue/CLI) — fáze 04 |
+| ACL | 10 | BA | access-control matice (ACL0001–0010; 15 rolí) — fáze 04 |
+| QUERY | 14 | BA | read-model / report specifikace (QUERY0001–0014; Views) — fáze 04 |
+| **Σ BA** | **227** | | odpovídá 227 doc_id ověřeným RefIntegrity validátorem (11 vrstev) |
 
 A dále **37 UX dokumentů** ve **4 UX vrstvách** (`_ar/spec-final/UX/<LAYER>/`), rekonstruovaných z UI
 evidence (`_ar/prtsc/`, 43 screenshotů) přes větev `ui-coverage` + `ux-reconstruction`:

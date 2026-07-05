@@ -15,7 +15,7 @@ a `_ar/UX` bez restrukturalizace.
 
 ```
 _ar/spec-final/
-  BA/                      # Business Analysis tier (163 dokumentů)
+  BA/                      # Business Analysis tier (227 dokumentů)
     EN/    (34)  entity domény (vč. EN0033 GiftCategory, EN0034 DonorAccountView)
     UC/    (25)  případy užití (vč. UC0023 katalog příběhů, UC0024 správa účtu, UC0025 draft žádosti)
     FN/    (26)  funkční schopnosti
@@ -23,12 +23,16 @@ _ar/spec-final/
     MSG/   (30)  transakční zprávy
     BR/    (20)  byznys pravidla
     ARCH/  (12)  architektura (vč. ARCH0001 Application Overview, ARCH0002 Context Interaction Map)
+    API/   (18)  API kontrakty (REST v3.1–3.3, z kódu) — generation-grade
+    JOB/   (22)  kontrakty background úloh (cron/queue/CLI)
+    ACL/   (10)  access-control matice (15 rolí × zdroje × akce)
+    QUERY/ (14)  read-model / report specifikace (Views)
   UX/                      # UX tier — rekonstruováno z UI evidence (_ar/prtsc/)
     IA/    (1)   informační architektura (IA-patronus + screen-map)
     WIRE/  (22)  wireframe specifikace per obrazovka (screen_id + realizes_uc)
     COMP/  (9)   znovupoužité komponenty (evidence-gated)
     COPY/  (5)   i18n copy specifikace (verbatim české UI stringy)
-  final-publication-map.md     # 163 BA + 37 UX řádků: finální soubor, tier, vrstva, doc_id
+  final-publication-map.md     # 227 BA + 37 UX řádků: finální soubor, tier, vrstva, doc_id
   final-publication-report.md  # co bylo publikováno, ověření, další kroky
   README.md                    # tento soubor
 ```
