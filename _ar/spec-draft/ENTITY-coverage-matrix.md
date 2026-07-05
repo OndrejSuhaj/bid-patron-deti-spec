@@ -17,14 +17,14 @@
 |---|---|
 | Custom entity types (persisted) | **37** (36 content + 1 config) |
 | Non-entity persisted tables | 4 (`application_states`, `login_history`, `email_domain`, `maib_example`) |
-| Custom types with a full EN doc | **32 / 37 = 86.5 %** |
+| Custom types with a full EN doc | **31 / 37 = 83.8 %** |
 | Custom types inventory-only (deferred, no EN) | **5 concerns / 6 tables** (`supplier_to_category`, `application_statuses`, `kraj`, `obec`, `okres`, `psc`) |
 | EN docs total | **34** (EN0001–EN0034) |
-| — of which map to a custom entity type | 30 |
+| — of which map to a custom entity type | 31 |
 | — core entity (`user`) | 1 (EN0008) |
 | — core `taxonomy_term` vocabulary | 1 (EN0033 GiftCategory) |
 | — synthetic projection (no table) | 1 (EN0034 DonorAccountView) |
-| Entities placed in an aggregate ([DOMAIN-aggregates §4](DOMAIN-aggregates.md)) | 32 / 32 EN (AG1–AG13) |
+| Entities placed in an aggregate ([DOMAIN-aggregates §4](DOMAIN-aggregates.md)) | 32 EN at aggregate-modeling time (AG1–AG13); EN0033/EN0034 added later via gap-closure — GiftCategory = reference data, DonorAccountView = projection, neither owns a new aggregate |
 
 **As-is EN coverage of the domain-meaningful landscape is effectively complete.** Every entity that owns
 domain state has an EN. The uncovered residue is exclusively reference/join/preset data intentionally left
@@ -60,7 +60,7 @@ its data is documented via EN0001's status history), `login_history` (login audi
 Legend: **●** = documented/anchored in this layer · **◐** = partial / referenced · **○** = not present · **—** = N/A.
 Layers: **EN** (entity page) · **UC** (behaviour) · **KRN** (DOMAIN-kernel invariants) · **AGG** (DOMAIN-aggregates placement) · **ARCH** · **RW** (REWRITE decision pack).
 
-### 3a. Custom entity types with EN (32)
+### 3a. Custom entity types with EN (31 custom types + core User shown for completeness)
 
 | Entity | EN | UC | KRN | AGG | ARCH | RW |
 |---|---|---|---|---|---|---|
@@ -140,8 +140,9 @@ long tail the inventory-closure pass is explicitly designed to leave un-expanded
 
 ## 5. Closure verdict on dim-1 (EN coverage)
 
-- **Domain coverage: complete.** 20/20 custom domain types + User have EN docs; all 32 EN entities are
-  placed in an aggregate (AG1–AG13, [DOMAIN-aggregates §4](DOMAIN-aggregates.md)).
+- **Domain coverage: complete.** 20/20 custom domain types + User have EN docs; the 32 EN entities present
+  at aggregate-modeling time are all placed in an aggregate (AG1–AG13, [DOMAIN-aggregates §4](DOMAIN-aggregates.md));
+  EN0033/EN0034 were added later (reference / projection — no new aggregate).
 - **Long tail: explicit and bounded.** 6 deferred custom types (1 join, 1 config-preset, 4 geo-reference)
   + 4 non-entity tables — each named, classified, and given a deferral rationale here and in EN-candidates
   §2. Nothing is silently missing.
@@ -150,5 +151,5 @@ long tail the inventory-closure pass is explicitly designed to leave un-expanded
   ambiguous case is covered.
 - **Recommendation:** current-state entity documentation can be treated as **sufficiently closed as-is**.
   Re-run **SpecClosureEvaluator** to upgrade closure dim-1 (EN coverage) from partial → covered, citing
-  this matrix (86.5 % of custom types have EN; 100 % of domain + projection; the residual 13.5 % is
+  this matrix (83.8 % of custom types have EN; 100 % of domain + projection; the residual 16.2 % is
   reference/join/preset/infra with documented deferral).
