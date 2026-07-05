@@ -14,13 +14,17 @@
 | MSG | 30 |
 | BR | 20 |
 | ARCH | 12 |
+| API | 18 |
+| JOB | 22 |
+| ACL | 10 |
+| QUERY | 14 |
 
 - **doc_id collisions:** 0
 - **dangling references:** 0
 - **deferred references:** 0
 - **orphans (registry row ↔ doc atomicity):** 0
-- **unreferenced docs (informational):** 10
-- **resolved references (declared + inline):** 960
+- **unreferenced docs (informational):** 33
+- **resolved references (declared + inline):** 1379
 
 ## Collisions
 
@@ -42,13 +46,36 @@ None — every authored doc has exactly one registry row and every registry row 
 
 The following docs are referenced by no other doc. The ARCH domain docs (ARCH0003–ARCH0012) are a **navigation layer** sitting beneath the ARCH0001/ARCH0002 overview — they reference deeper docs and are entered top-down, so being uncited is expected, not a gap.
 
-- `ARCH0003` (ARCH) — Application & Lead Domain
-- `ARCH0004` (ARCH) — Risk & Scoring Domain
-- `ARCH0005` (ARCH) — Campaign & Story Domain
-- `ARCH0006` (ARCH) — Donations & Payments Domain
-- `ARCH0007` (ARCH) — Finance & Reconciliation Domain
-- `ARCH0008` (ARCH) — Documents & Fulfilment Domain
-- `ARCH0010` (ARCH) — Messaging & Marketing Domain
-- `EN0033` (EN) — GiftCategory
-- `UC0023` (UC) — Browse & Filter Story Catalogue
-- `UC0025` (UC) — Resume or Discard Draft Application
+- `API0001` (API) — Account Profile & Auth API
+- `API0002` (API) — Application Intake & Lifecycle Api
+- `API0004` (API) — Donation And Payment Api
+- `API0005` (API) — RecurringDonationApi
+- `API0006` (API) — Voucher API
+- `API0007` (API) — Donation Confirmation Tax API
+- `API0009` (API) — Blog Content API
+- `API0010` (API) — Partner Logos API
+- `API0013` (API) — Organisation Dashboard Stats API
+- `API0014` (API) — Facebook Lead Webhook
+- `API0015` (API) — Contract API
+- `API0016` (API) — Contact API
+- `API0017` (API) — Email API
+- `API0018` (API) — Platform Base API (Initialization & RabbitMQ Stub)
+- `JOB0002` (JOB) — Scheduled Page Publish and Homepage Swap
+- `JOB0004` (JOB) — Daily Report CSV Export Batch
+- `JOB0005` (JOB) — Moneta AISP Daily Bank Import
+- `JOB0006` (JOB) — Bank Notification E-mail IMAP Import
+- `JOB0007` (JOB) — Organisation Elastic Cloud Daily Re-push
+- `JOB0008` (JOB) — Voucher Expiry Reminder and Expired-Voucher Sweep
+- `JOB0009` (JOB) — Application Data Housekeeping
+- `JOB0010` (JOB) — Application Auto Status Transition
+- `JOB0011` (JOB) — Payment Settlement Health Diagnostics
+- `JOB0017` (JOB) — OneDrive Invoice Import
+- `JOB0018` (JOB) — MAIB Close Business Day
+- `JOB0019` (JOB) — Netopia Transaction Status Reconciliation
+- `JOB0021` (JOB) — Sitemap Generation
+- `QUERY0002` (QUERY) — Fundraiser & Patron Account Zones
+- `QUERY0006` (QUERY) — Admin Lead / Application Work Lists
+- `QUERY0007` (QUERY) — Admin Story List
+- `QUERY0012` (QUERY) — Story / Entity Full-Text Search
+- `QUERY0013` (QUERY) — Admin Party / CRM & User Lists
+- `QUERY0014` (QUERY) — Communication, Activity & Audit Lists

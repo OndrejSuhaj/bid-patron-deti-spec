@@ -13,7 +13,11 @@ tooling/docs/registry-format.md (draft rows: Status=draft, Owner mode=AR, Create
 - MSG: 30 docs → `_ar/spec-draft/MSG/_REGISTRY.md`
 - BR: 20 docs → `_ar/spec-draft/BR/_REGISTRY.md`
 - ARCH: 12 docs → `_ar/spec-draft/ARCH/_REGISTRY.md`
-- Total registered doc_ids: 163
+- API: 18 docs → `_ar/spec-draft/API/_REGISTRY.md`
+- JOB: 22 docs → `_ar/spec-draft/JOB/_REGISTRY.md`
+- ACL: 10 docs → `_ar/spec-draft/ACL/_REGISTRY.md`
+- QUERY: 14 docs → `_ar/spec-draft/QUERY/_REGISTRY.md`
+- Total registered doc_ids: 227
 
 ## 3. doc_id collisions
 None.
@@ -25,7 +29,7 @@ None — all canonical references resolve.
 None.
 
 ## 6. Orphans / unreferenced
-Atomicity orphans (row ↔ doc): None. Unreferenced docs (informational): ARCH0003, ARCH0004, ARCH0005, ARCH0006, ARCH0007, ARCH0008, ARCH0010, EN0033, UC0023, UC0025 — the ARCH domain docs are a navigation layer, expected to be uncited.
+Atomicity orphans (row ↔ doc): None. Unreferenced docs (informational): API0001, API0002, API0004, API0005, API0006, API0007, API0009, API0010, API0013, API0014, API0015, API0016, API0017, API0018, JOB0002, JOB0004, JOB0005, JOB0006, JOB0007, JOB0008, JOB0009, JOB0010, JOB0011, JOB0017, JOB0018, JOB0019, JOB0021, QUERY0002, QUERY0006, QUERY0007, QUERY0012, QUERY0013, QUERY0014 — the ARCH domain docs are a navigation layer, expected to be uncited.
 
 ## 7. Recommended next step
 SpecClosureEvaluator (spec-closure gate), then RewriteDecisionCompiler and SpecFinalGenerator (publish to _ar/spec-final/BA/**).
